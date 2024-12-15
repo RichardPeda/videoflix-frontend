@@ -1,0 +1,22 @@
+<app-header></app-header>
+<div class="background-shadow">
+
+    <div class="dialog-card">
+        <div class="headline c-text">
+            Forgot your password?
+        </div>
+        <p class="c-text">We will send you an email with instructions to reset your password.</p>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <div class="dialog-input-frame">
+
+                <input placeholder="Email Address" id="email" type="email"
+                    pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-zA-Z]{2,4}" formControlName="email" autocomplete="email">
+            </div>
+            <button class="mg-top-0" [ngClass]="{'btn-disabled': !loginForm.valid}" type="submit" [disabled]="!loginForm.valid">Send
+                Email</button>
+        </form>
+
+    </div>
+</div>
+
+<app-footer></app-footer>

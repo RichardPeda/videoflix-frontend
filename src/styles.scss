@@ -54,7 +54,9 @@ body {
 p{
     font-size: 18px;
 }
-
+.d-flex{
+    display: flex;
+}
 .d-flex-row{
     display: flex;
     flex-direction: row;
@@ -94,6 +96,10 @@ a {
     }
 }
 
+
+.c-text{
+    text-align: center;
+}
 .dialog-card {
     width: 520px;
     padding: 43px 56px;
@@ -111,6 +117,7 @@ a {
         color: #2E3EDF;
         margin-bottom: 32px;
         line-height: 62.5px;
+
     }
 
     .dialog-input-frame {
