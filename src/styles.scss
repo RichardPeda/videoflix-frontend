@@ -60,6 +60,10 @@ p {
     display: flex;
 }
 
+.d-none{
+    display: none !important;
+}
+
 .d-flex-row {
     display: flex;
     flex-direction: row;
