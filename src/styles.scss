@@ -64,6 +64,10 @@ p{
     gap: 24px;
 }
 
+.mg-top-0{
+    margin-top: 0 !important;
+}
+
 button {
     background-color: #2E3EDF;
     font-size: 18px;
@@ -74,10 +78,9 @@ button {
     border: none;
     padding: 12px 24px;
     cursor: pointer;
-
 }
 
-.diabled {
+.btn-disabled {
     background-color: #8d93d1;
 }
 
@@ -100,6 +103,7 @@ a {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    position: relative;
 
     .headline {
         font-size: 48px;

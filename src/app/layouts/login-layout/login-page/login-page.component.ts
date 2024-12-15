@@ -4,22 +4,24 @@ import {
   FormGroup,
   FormControl,
   ReactiveFormsModule,
-  Validator,
   Validators,
 } from '@angular/forms';
+import { HeaderComponent } from '../../../shared/components/header/header.component';
+import { FooterComponent } from '../../../shared/components/footer/footer.component';
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HeaderComponent, FooterComponent],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss',
 })
 export class LoginPageComponent {
+
   loginForm = new FormGroup({
     email: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required),
-    remember: new FormControl(false)
+    remember: new FormControl(false),
   });
 
   passwordType = 'password';
@@ -27,7 +29,7 @@ export class LoginPageComponent {
 
   togglePasswordVisible() {
     this.isPasswordShown = !this.isPasswordShown;
-    this.passwordType = this.togglePasswordType(this.isPasswordShown)
+    this.passwordType = this.togglePasswordType(this.isPasswordShown);
   }
 
   togglePasswordType(show: boolean) {
@@ -37,6 +39,5 @@ export class LoginPageComponent {
 
   onSubmit() {
     console.log(this.loginForm.value.remember);
-    
   }
 }
