@@ -60,7 +60,7 @@ p {
     display: flex;
 }
 
-.d-none{
+.d-none {
     display: none !important;
 }
 
@@ -72,6 +72,9 @@ p {
 
 .gap-24 {
     gap: 24px;
+}
+.gap-12{
+    gap: 12px;
 }
 
 .mg-top-0 {
@@ -178,4 +181,9 @@ input {
     color: #2E3EDF;
     font-size: 18px;
     font-weight: 700;
+}
+
+:root {
+    --clr-bg-black: #141414;
+    --clr-gray: #868686;
 }

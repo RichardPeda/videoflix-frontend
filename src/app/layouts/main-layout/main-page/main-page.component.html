@@ -31,11 +31,14 @@
 </div>
 
 <div class="main-content">
-    <div class="main-thumbnail-container">
+
+    <app-thumbnail-slider></app-thumbnail-slider>
+<app-thumbnail-preview></app-thumbnail-preview>
+    <!-- <div class="main-thumbnail-container">
         <h2>New on Videoflix</h2>
         <div #container [ngStyle]="{'transform': 'translateX(' + slider.position + 'px)'}" class="thumbnail-slider">
 
-            <img class="thumbnail-img" src="../../../../assets/images/thumbnail_1-min.jpg" alt="">
+            <img #thumbnail class="thumbnail-img" src="../../../../assets/images/thumbnail_1-min.jpg" alt="">
             <img class="thumbnail-img" src="../../../../assets/images/thumbnail_2-min.jpg" alt="">
             <img class="thumbnail-img" src="../../../../assets/images/thumbnail_3-min.jpg" alt="">
             <img class="thumbnail-img" src="../../../../assets/images/thumbnail_4-min.jpg" alt="">
@@ -58,50 +61,9 @@
         </div>
 
 
-    </div>
+    </div> -->
 
-    <div class="main-thumbnail-container">
-        <h2>Documentary</h2>
-        <div class="thumbnail-slider">
-
-            <img class="thumbnail-img" src="../../../../assets/images/thumbnail_2-min.jpg" alt="">
-            <img class="thumbnail-img" src="../../../../assets/images/thumbnail_4-min.jpg" alt="">
-            <img class="thumbnail-img" src="../../../../assets/images/thumbnail_5-min.jpg" alt="">
-        </div>
-    </div>
-
-    <div class="main-thumbnail-container">
-        <h2>Drama</h2>
-        <div class="thumbnail-slider">
-
-            <img class="thumbnail-img" src="../../../../assets/images/thumbnail_1-min.jpg" alt="">
-            <img class="thumbnail-img" src="../../../../assets/images/thumbnail_2-min.jpg" alt="">
-            <img class="thumbnail-img" src="../../../../assets/images/thumbnail_3-min.jpg" alt="">
-            <img class="thumbnail-img" src="../../../../assets/images/thumbnail_4-min.jpg" alt="">
-            <img class="thumbnail-img" src="../../../../assets/images/thumbnail_5-min.jpg" alt="">
-            <img class="thumbnail-img" src="../../../../assets/images/thumbnail_6-min.jpg" alt="">
-            <img class="thumbnail-img" src="../../../../assets/images/thumbnail_7-min.jpg" alt="">
-            <img class="thumbnail-img" src="../../../../assets/images/thumbnail_8-min.jpg" alt="">
-        </div>
-    </div>
-
-    <div class="main-thumbnail-container">
-        <h2>Romance</h2>
-        <div class="thumbnail-slider">
-
-            <img class="thumbnail-img" src="../../../../assets/images/thumbnail_1-min.jpg" alt="">
-            <img class="thumbnail-img" src="../../../../assets/images/thumbnail_2-min.jpg" alt="">
-            <img class="thumbnail-img" src="../../../../assets/images/thumbnail_3-min.jpg" alt="">
-            <img class="thumbnail-img" src="../../../../assets/images/thumbnail_4-min.jpg" alt="">
-            <img class="thumbnail-img" src="../../../../assets/images/thumbnail_5-min.jpg" alt="">
-            <img class="thumbnail-img" src="../../../../assets/images/thumbnail_6-min.jpg" alt="">
-            <img class="thumbnail-img" src="../../../../assets/images/thumbnail_7-min.jpg" alt="">
-            <img class="thumbnail-img" src="../../../../assets/images/thumbnail_8-min.jpg" alt="">
-        </div>
-    </div>
-</div>
-
-
+   
 
 
 <app-footer></app-footer>
