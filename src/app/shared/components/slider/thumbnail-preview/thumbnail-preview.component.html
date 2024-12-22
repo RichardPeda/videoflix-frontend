@@ -1,9 +1,10 @@
-<div (mouseenter)="componentGrow()"  class="c-main">
+<div (click)="componentGrow()"     class="c-main">
 
     @if (show) {
 
-    <div (mouseenter)="componentGrow()" (mouseleave)="componentShrink($event)" [ngClass]="{'shrink': !isBig}" [ngClass]="{'big': isBig}">
-        <div class="c-preview">
+    <div appMouseOutside (mouseOutside)="componentShrink()"   [ngClass]="{'big': isBig, 'shrink':'isBig'}"
+  >
+        <div  class="c-preview">
 
             <video autoplay src="../../../../../assets/videos/147535-791696855_small.mp4"></video>
             <div class="title">

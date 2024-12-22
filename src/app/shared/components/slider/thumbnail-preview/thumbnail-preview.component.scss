@@ -16,7 +16,7 @@
 }
 
 .big {
-    position: absolute;
+    // position: absolute;
     left: 0;
     top: 0;
     transform: translate(-20%, -20%);
@@ -134,6 +134,6 @@
 
     &:hover {
         cursor: pointer;
-        transform: scale(1.5);
+        // transform: scale(1.5);
     }
 }
