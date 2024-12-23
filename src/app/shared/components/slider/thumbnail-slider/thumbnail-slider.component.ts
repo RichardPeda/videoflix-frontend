@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ThumbnailPreviewComponent } from '../thumbnail-preview/thumbnail-preview.component';
 
 interface SliderControl {
   allowRight: boolean;

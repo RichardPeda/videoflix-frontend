@@ -6,6 +6,7 @@
     background-color: var(--clr-bg-black);
     transition: all 175ms ease-in-out;
     position: relative;
+    
 }
 
 .shrink{
@@ -16,7 +17,7 @@
 }
 
 .big {
-    // position: absolute;
+    position: relative;
     left: 0;
     top: 0;
     transform: translate(-20%, -20%);
@@ -26,6 +27,7 @@
     animation-timing-function: ease-in-out;
     animation-fill-mode: both;
     // animation-direction: alternate;
+    z-index: 50;
 
 }
 

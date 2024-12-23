@@ -1,0 +1,17 @@
+<div class="video-frame">
+    <!-- <video src="../../../../assets/videos/escape.mp4" loop muted autoplay oncanplay="this.play()" onloadedmetadata="this.muted = true"></video> -->
+    <!-- <video src="../../../../assets/videos/escape.mp4"></video> -->
+    <video src="{{video()?.VideoURL}}"></video>
+
+
+</div>
+<div class="video-overlay">
+    <div class="overlay-container">
+
+
+        <h1>{{video()?.title}}</h1>
+        <p>{{video()?.description}}</p>
+        <app-play-button></app-play-button>
+       
+    </div>
+</div>

@@ -3,11 +3,10 @@
 
   
 </div> -->
-
-<div class="video-frame">
-    <!-- <video src="../../../../assets/videos/escape.mp4" loop muted autoplay oncanplay="this.play()" onloadedmetadata="this.muted = true"></video> -->
+<app-teaser [video]="videoData"></app-teaser>
+<!-- <div class="video-frame">
     <video src="../../../../assets/videos/escape.mp4"></video>
-   
+
 
 </div>
 <div class="video-overlay">
@@ -28,12 +27,12 @@
         </button>
     </div>
 
-</div>
+</div> -->
 
 <div class="main-content">
 
     <app-thumbnail-slider></app-thumbnail-slider>
-<app-thumbnail-preview></app-thumbnail-preview>
+    <!-- <app-thumbnail-preview></app-thumbnail-preview> -->
     <!-- <div class="main-thumbnail-container">
         <h2>New on Videoflix</h2>
         <div #container [ngStyle]="{'transform': 'translateX(' + slider.position + 'px)'}" class="thumbnail-slider">
@@ -63,7 +62,7 @@
 
     </div> -->
 
-   
 
 
-<app-footer></app-footer>
+
+    <app-footer></app-footer>
