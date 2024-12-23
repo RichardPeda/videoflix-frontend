@@ -1,17 +1,16 @@
 <div class="video-frame">
     <!-- <video src="../../../../assets/videos/escape.mp4" loop muted autoplay oncanplay="this.play()" onloadedmetadata="this.muted = true"></video> -->
     <!-- <video src="../../../../assets/videos/escape.mp4"></video> -->
-    <video loop muted autoplay oncanplay="this.play()" onloadedmetadata="this.muted = true" src="{{video()?.VideoURL}}"></video>
-<div class="shadow"></div>
+    <video loop muted autoplay oncanplay="this.play()" onloadedmetadata="this.muted = true"
+        src="{{currentVideo?.VideoURL}}"></video>
+    <div class="shadow" [ngClass]="{'fade': fadeActive}"></div>
 
 </div>
 <div class="video-overlay">
-    <div class="overlay-container">
-
-
-        <h1>{{video()?.title}}</h1>
-        <p>{{video()?.description}}</p>
+    <div class="overlay-container" [ngClass]="{'slide': fadeActive}">
+        <h1>{{currentVideo?.title}}</h1>
+        <p>{{currentVideo?.description}}</p>
         <app-play-button></app-play-button>
-       
+
     </div>
 </div>

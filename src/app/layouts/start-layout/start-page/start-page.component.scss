@@ -1,7 +1,8 @@
 :host {
     display: flex;
+    flex-direction: column;
     min-height: 100vh;
-    width: 100%;
+    align-items: center;
     background-image: url('../../../../assets/images/startpage_bg.jpg');
     background-position: center;
     background-repeat: no-repeat;
