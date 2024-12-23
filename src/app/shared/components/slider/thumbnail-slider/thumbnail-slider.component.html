@@ -2,26 +2,19 @@
     <h2>New on Videoflix</h2>
     <div #container [ngStyle]="{'transform': 'translateX(' + slider.position + 'px)'}" class="thumbnail-slider">
 
-        <img #thumbnail class="thumbnail-img" src="../../../../assets/images/thumbnail_1-min.jpg" alt="">
-        <!-- <app-thumbnail-preview></app-thumbnail-preview>
-        <app-thumbnail-preview></app-thumbnail-preview>
-        <app-thumbnail-preview></app-thumbnail-preview> -->
-        <img class="thumbnail-img" src="../../../../assets/images/thumbnail_2-min.jpg" alt="">
-        <img class="thumbnail-img" src="../../../../assets/images/thumbnail_3-min.jpg" alt="">
-        <img class="thumbnail-img" src="../../../../assets/images/thumbnail_4-min.jpg" alt="">
-        <img class="thumbnail-img" src="../../../../assets/images/thumbnail_5-min.jpg" alt="">
-        <img class="thumbnail-img" src="../../../../assets/images/thumbnail_6-min.jpg" alt="">
-        <img class="thumbnail-img" src="../../../../assets/images/thumbnail_7-min.jpg" alt="">
-        <img class="thumbnail-img" src="../../../../assets/images/thumbnail_8-min.jpg" alt="">
-        <img class="thumbnail-img" src="../../../../assets/images/thumbnail_9-min.jpg" alt="">
+        @for (video of videoData; track $index; let index = $index) {
+
+        <img (click)="selectVideo(index)" #thumbnail class="thumbnail-img" src="{{video.thumbImageURL}}" alt="">
+        }
 
     </div>
-    <div (click)="slideLeft()" [ngClass]="{'d-none': !slider.allowLeft}"   class="arrow-left">
+    <div (click)="slideLeft()" [ngClass]="{'d-none': !slider.allowLeft}" class="arrow-left">
         <svg xmlns="http://www.w3.org/2000/svg" height="50px" viewBox="0 -960 960 960" width="50px" fill="white">
             <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
         </svg>
     </div>
-    <div (click)="slideRight()" [ngClass]="{'d-none': !slider.allowRight}" class="arrow-right">
+    <!-- [ngClass]="{'d-none': !slider.allowRight}" -->
+    <div (click)="slideRight()" [ngStyle]="{'left': parentSize()! - 96 - 50 +'px'}"  class="arrow-right">
         <svg xmlns="http://www.w3.org/2000/svg" height="50px" viewBox="0 -960 960 960" width="50px" fill="white">
             <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
         </svg>

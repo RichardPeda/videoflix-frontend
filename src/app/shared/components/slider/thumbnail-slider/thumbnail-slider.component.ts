@@ -1,6 +1,16 @@
-import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  inject,
+  input,
+  effect,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ThumbnailPreviewComponent } from '../thumbnail-preview/thumbnail-preview.component';
+import { Video } from '../../../../core/models/video';
+import { VideoService } from '../../../../core/services/video.service';
 
 interface SliderControl {
   allowRight: boolean;
@@ -15,13 +25,19 @@ interface SliderControl {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './thumbnail-slider.component.html',
-  styleUrl: './thumbnail-slider.component.scss'
+  styleUrl: './thumbnail-slider.component.scss',
 })
 export class ThumbnailSliderComponent {
- @ViewChild('container') container: ElementRef | undefined;
+  @ViewChild('container') container: ElementRef | undefined;
   @ViewChild('thumbnail') thumbnail: ElementRef | undefined;
+  private videoService = inject(VideoService);
 
-  size = window.innerWidth;
+  parentSize = input<number | undefined>();
+
+  videoData: Video[] = [];
+
+  // size = window.innerWidth;
+  size = 0;
   offsetPosition = 0;
   offsetGap = 12;
 
@@ -33,14 +49,24 @@ export class ThumbnailSliderComponent {
     minPosition: 0,
   };
 
+  constructor() {
+    this.videoData = [...this.videoService.videoData];
+
+    effect(() => {
+      let parentSize = this.parentSize();
+      if (parentSize) this.size = parentSize;
+    });
+  }
+
   ngAfterViewInit() {
-    console.log('ngAfterViewInit');
+    console.log('size', this.size);
 
     let element = this.container?.nativeElement.getBoundingClientRect();
+    console.log("container",element.width)
     let thumb = this.thumbnail?.nativeElement.getBoundingClientRect();
     this.offsetPosition = thumb.width;
     console.log(this.offsetPosition);
-    
+
     this.slider.width = element.width;
     this.slider.minPosition = element.x;
 
@@ -52,17 +78,13 @@ export class ThumbnailSliderComponent {
         this.slider.allowRight = true;
       }
     }, 1000);
-
-   
   }
 
-  ngAfterContentInit() {
-    console.log('ngAfterContentInit');
-  }
+  ngAfterContentInit() {}
 
   slideRight() {
     // this.slider.position += -250;
-    this.slider.position += -(this.offsetPosition+this.offsetGap);
+    this.slider.position += -(this.offsetPosition + this.offsetGap);
     setTimeout(() => {
       if (this.container?.nativeElement.getBoundingClientRect().x <= 0) {
         this.slider.allowLeft = true;
@@ -82,7 +104,7 @@ export class ThumbnailSliderComponent {
   }
 
   slideLeft() {
-    this.slider.position += (this.offsetPosition+this.offsetGap);
+    this.slider.position += this.offsetPosition + this.offsetGap;
     setTimeout(() => {
       if (this.container?.nativeElement.getBoundingClientRect().x >= 0) {
         this.slider.allowLeft = false;
@@ -95,6 +117,8 @@ export class ThumbnailSliderComponent {
       }
     }, 1000);
   }
+
+  selectVideo(index: number) {
+    this.videoService.selectedVideo$.next(index);
+  }
 }
-
-

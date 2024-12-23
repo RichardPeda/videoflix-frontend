@@ -2,11 +2,14 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    width: 100%;
+    // width: 100%;
+    max-width: 1440px;
+    margin: auto;
     background-color: var(--clr-bg-black);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    padding-inline: 96px;
     overflow: hidden;
 }
 
@@ -23,67 +26,17 @@ app-header {
     background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.44), rgba(0, 0, 0, 0.8));
 }
 
-.video-frame {
-    width: 100%;
-    height: 800px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
-    video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: top;
-    }
-}
-
-.video-overlay {
-    margin: auto;
-    display: flex;
-    justify-content: center;
-    z-index: 40;
-    width: 100%;
-    height: 800px;
-    color: white;
-
-    .overlay-container {
-        width: 100%;
-        max-width: 1440px;
-        height: fit-content;
-        transform: translateY(50%);
-
-        h1 {
-            font-size: 88px;
-            line-height: 114px;
-            margin-bottom: 32px;
-        }
-
-        p {
-            max-width: 440px;
-        }
-    }
-}
-
-button svg {
-    margin-right: 10px;
-}
-
-h2 {
-    font-size: 22px;
-    color: white;
-}
 
 .main-content {
     margin-top: 20px;
     width: 100%;
-    padding-left: calc((100vw - 1440px)/2);
+    // padding-left: calc((100vw - 1440px)/2);
     z-index: 40;
     transform: translateY(-125px);
+    max-width: 1440px;
+    // overflow: hidden;
+    margin:auto
 }
 
 
