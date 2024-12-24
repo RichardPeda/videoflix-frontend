@@ -4,6 +4,7 @@ import { StartPageComponent } from './layouts/start-layout/start-page/start-page
 import { RegistrationPageComponent } from './layouts/registration-layout/registration-page/registration-page.component';
 import { PwResetPageComponent } from './layouts/pw-reset-layout/pw-reset-page/pw-reset-page.component';
 import { MainPageComponent } from './layouts/main-layout/main-page/main-page.component';
+import { VideoplayerComponent } from './layouts/videoplayer/videoplayer/videoplayer.component';
 
 export const routes: Routes = [
     {path: '', component: StartPageComponent},
@@ -11,4 +12,5 @@ export const routes: Routes = [
     {path: 'signup', component: RegistrationPageComponent},
     {path: 'reset', component: PwResetPageComponent},
     {path: 'overview', component: MainPageComponent},
+    {path: 'videoplayer', component: VideoplayerComponent},
 ];

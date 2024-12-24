@@ -2,7 +2,7 @@
     display: flex;
     justify-content: center;
     width: 100%;
-    // position: absolute;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
@@ -15,4 +15,11 @@
     justify-content: space-between;
     flex: 1;
     width: 100%;   
+}
+
+.btn-arrow-back{
+    cursor: pointer;
+    &:hover svg{
+        filter: drop-shadow(0px 0px 10px rgb(255, 255, 255));
+    }
 }
