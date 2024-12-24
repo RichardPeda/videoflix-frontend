@@ -7,7 +7,6 @@ import {
   HostListener,
   Self,
 } from '@angular/core';
-import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { FooterComponent } from '../../../shared/components/footer/footer.component';
 import { CommonModule } from '@angular/common';
 import { ThumbnailSliderComponent } from '../../../shared/components/slider/thumbnail-slider/thumbnail-slider.component';
@@ -15,6 +14,7 @@ import { ThumbnailPreviewComponent } from '../../../shared/components/slider/thu
 import { TeaserComponent } from '../teaser/teaser.component';
 import { Video } from '../../../core/models/video';
 import { VideoService } from '../../../core/services/video.service';
+import { HeaderComponent } from '../../../shared/components/header/header-main/header.component';
 
 @Component({
   selector: 'app-main-page',
