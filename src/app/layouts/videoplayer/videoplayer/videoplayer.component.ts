@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, signal, ViewChild, viewChild } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  signal,
+  ViewChild,
+  viewChild,
+} from '@angular/core';
 import { HeaderPlayerComponent } from '../../../shared/components/header/header-player/header-player/header-player.component';
 import { VolumeBarComponent } from '../volume-bar/volume-bar.component';
 
@@ -17,33 +25,32 @@ export class VideoplayerComponent {
   currentTime = 0;
   percentage = 0;
   isVideoPlay = false;
-  volume = 30
+  volume = signal(80);
+  originalVolume = this.volume();
+  videoMuted = computed(() => this.volume() == 0);
+
+  constructor() {
+    effect(() => {
+      this.videoPlayer.nativeElement.volume = this.volume() / 100;
+    });
+  }
 
   playPauseVideo() {
-    console.log(this.videoPlayer.nativeElement.currentTime);
-    console.log('duration', this.videoPlayer.nativeElement.duration);
-    console.log(this.videoPlayer.nativeElement);
-
     if (
       this.videoPlayer.nativeElement.paused ||
       this.videoPlayer.nativeElement.ended
     ) {
-      // Change the button to a pause button
-      // this.changeButtonType(this.btnPlayPause, 'pause');
       this.videoPlayer.nativeElement.play();
       this.isVideoPlay = true;
     } else {
-      // Change the button to a play button
-      // this.changeButtonType(this.btnPlayPause, 'play');
       this.videoPlayer.nativeElement.pause();
       this.isVideoPlay = false;
     }
   }
 
   onMetadata(e: any, video: { duration: number; currentTime: any }) {
-    console.log('metadata: ', e);
-    console.log('duration: ', (this.duration = video.duration));
-    console.log('currentTime: ', (this.currentTime = video.currentTime));
+    this.duration = video.duration;
+    this.currentTime = video.currentTime;
     this.updateProgressBar();
   }
 
@@ -52,6 +59,21 @@ export class VideoplayerComponent {
   }
   forwardVideo() {
     this.videoPlayer.nativeElement.currentTime += 5;
+  }
+
+  toggleMute(event: MouseEvent) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    /**
+     * Save the volume before video is muted.
+     * Set the saved volume when muting is off.
+     */
+    if (this.volume() > 0) {
+      this.originalVolume = this.volume();
+      this.volume.set(0);
+    } else {
+      this.volume.set(this.originalVolume);
+    }
   }
 
   updateProgressBar() {
@@ -63,7 +85,5 @@ export class VideoplayerComponent {
       (100 / this.videoPlayer.nativeElement.duration) *
         this.videoPlayer.nativeElement.currentTime
     );
-
-    // console.log("percentage", this.percentage);
   }
 }

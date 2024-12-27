@@ -47,12 +47,13 @@ app-header-player {
     .progress-bar {
         width: 100%;
         height: 4px;
-       
+
         background-color: #B5B5B5;
-        .progress-view{
-           
+
+        .progress-view {
+
             height: 100%;
-            background-color: white;
+            background-color: #413DFF;
         }
     }
 
@@ -61,7 +62,8 @@ app-header-player {
         flex-direction: row;
         justify-content: space-between;
         width: 100%;
-        > div {
+
+        >div {
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -69,10 +71,6 @@ app-header-player {
             gap: 24px
         }
     }
-
-   
-
-
 
     .btn {
         width: 48px;
@@ -101,4 +99,25 @@ app-header-player {
     .middle {
         color: white;
     }
+}
+
+.app-volume {
+    bottom: 50px;
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.5s ease-in-out;
+    transition-delay: 1s
+}
+
+
+#volume:hover .app-volume {
+    visibility: visible;
+    opacity: 1;
+    transition-delay: unset
+}
+
+.app-volume:hover {
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 1s
 }
