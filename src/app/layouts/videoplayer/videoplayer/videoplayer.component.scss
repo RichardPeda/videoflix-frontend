@@ -49,6 +49,11 @@ app-header-player {
         height: 4px;
        
         background-color: #B5B5B5;
+        .progress-view{
+           
+            height: 100%;
+            background-color: white;
+        }
     }
 
     .controls {
@@ -88,10 +93,10 @@ app-header-player {
 
     }
 
-    .play svg {
-        width: 60%;
-        height: 60%;
-    }
+    // .play svg {
+    //     width: 60%;
+    //     height: 60%;
+    // }
 
     .middle {
         color: white;
