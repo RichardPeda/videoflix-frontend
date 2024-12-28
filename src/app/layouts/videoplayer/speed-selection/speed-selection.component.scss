@@ -1,0 +1,18 @@
+.container {
+    gap: 6px;
+}
+
+.btn-speed {
+    min-width: 50px;
+    flex-wrap: nowrap;
+    padding: 3px 6px;
+    border-radius: 3px;
+
+    background-color: white;
+    opacity: 0.6;
+
+    &:hover {
+        cursor: pointer;
+        opacity: 1;
+    }
+}

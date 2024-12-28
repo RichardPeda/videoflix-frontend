@@ -1,7 +1,8 @@
 <div class="container dfc-c-c">
-   
-      
-        <input (change)="logVolume($event)" #volume type="range" id="volume" name="volume" min="0" max="100"  />
-  
-   
+        <div class="wrapper dfc-c-c pos-rel">
+                <input (input)="logVolume($event)" #volumeControl type="range" id="volume" name="volume" min="0"
+                        max="100" />
+                <div [ngStyle]="{'bottom': (volume() -12) + '%'}" [ngClass]="{'show-value': showValue}" class="volume-view pos-abs">{{volume()}}</div>
+
+        </div>
 </div>

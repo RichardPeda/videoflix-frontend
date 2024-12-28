@@ -10,11 +10,12 @@ import {
 } from '@angular/core';
 import { HeaderPlayerComponent } from '../../../shared/components/header/header-player/header-player/header-player.component';
 import { VolumeBarComponent } from '../volume-bar/volume-bar.component';
+import { SpeedSelectionComponent } from '../speed-selection/speed-selection.component';
 
 @Component({
   selector: 'app-videoplayer',
   standalone: true,
-  imports: [CommonModule, HeaderPlayerComponent, VolumeBarComponent],
+  imports: [CommonModule, HeaderPlayerComponent, VolumeBarComponent, SpeedSelectionComponent],
   templateUrl: './videoplayer.component.html',
   styleUrl: './videoplayer.component.scss',
 })
@@ -29,6 +30,9 @@ export class VideoplayerComponent {
   originalVolume = this.volume();
   videoMuted = computed(() => this.volume() == 0);
 
+  playSpeed = [1.0, 1.5, 2.0];
+  selectedSpeed = this.playSpeed[0]
+
   constructor() {
     effect(() => {
       this.videoPlayer.nativeElement.volume = this.volume() / 100;
@@ -40,6 +44,7 @@ export class VideoplayerComponent {
       this.videoPlayer.nativeElement.paused ||
       this.videoPlayer.nativeElement.ended
     ) {
+      
       this.videoPlayer.nativeElement.play();
       this.isVideoPlay = true;
     } else {
@@ -85,5 +90,11 @@ export class VideoplayerComponent {
       (100 / this.videoPlayer.nativeElement.duration) *
         this.videoPlayer.nativeElement.currentTime
     );
+  }
+
+  changeSpeed(speed:number){
+    
+    this.videoPlayer.nativeElement.playbackRate = speed
+    // this.videoPlayer.nativeElement.play();
   }
 }

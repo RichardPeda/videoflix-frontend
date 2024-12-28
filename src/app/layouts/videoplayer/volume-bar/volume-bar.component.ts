@@ -18,11 +18,17 @@ import {
 export class VolumeBarComponent {
   volume = model.required<number>();
 
-  @ViewChild('volume') volumeControl!: ElementRef;
+  @ViewChild('volumeControl') volumeControl!: ElementRef;
+
+  showValue = false;
 
   constructor() {
     effect(() => {
-      let volume = this.volume();
+      let volumeTemp = this.volume();
+      this.showValue = true;
+      setTimeout(() => {
+        this.showValue = false;
+      }, 3000);
       this.setVolume();
     });
   }
@@ -38,9 +44,9 @@ export class VolumeBarComponent {
     this.volumeControl.nativeElement.value = this.volume();
   }
 
-  logVolume(event:Event) {
-    event.preventDefault()
-    event.stopPropagation()
+  logVolume(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
     this.volume.set(this.volumeControl.nativeElement.value);
   }
 }
