@@ -14,7 +14,7 @@ export class VideoService {
       description:
         'In a high-security prison, a wrongly convicted man formulates a meticulous plan to break out and prove his innocence. He must navigate a web of alliances and betrayals to reclaim his freedom and expose the truth.',
       thumbImageURL: '../../../../assets/images/thumbnail_9-min.jpg',
-      VideoURL: '../../../../assets/videos/escape.mp4',
+      videoURL: '../../../../assets/videos/escape.mp4',
     },
     {
       id: 2,
@@ -22,7 +22,7 @@ export class VideoService {
       description:
         'Wale Wale',
       thumbImageURL: '../../../../assets/images/thumbnail_2-min.jpg',
-      VideoURL: '../../../../assets/videos/147535-791696855_small.mp4',
+      videoURL: '../../../../assets/videos/147535-791696855_small.mp4',
     },
     {
       id: 3,
@@ -30,7 +30,7 @@ export class VideoService {
       description:
         'Beispiel Beschreibung 1',
       thumbImageURL: '../../../../assets/images/thumbnail_3-min.jpg',
-      VideoURL: '../../../../assets/videos/147535-791696855_small.mp4',
+      videoURL: '../../../../assets/videos/147535-791696855_small.mp4',
     },
     {
       id: 4,
@@ -38,7 +38,7 @@ export class VideoService {
       description:
         'Beispiel Beschreibung 2',
       thumbImageURL: '../../../../assets/images/thumbnail_4-min.jpg',
-      VideoURL: '../../../../assets/videos/147535-791696855_small.mp4',
+      videoURL: '../../../../assets/videos/147535-791696855_small.mp4',
     },
     {
       id: 5,
@@ -46,7 +46,7 @@ export class VideoService {
       description:
         'Beispiel Beschreibung 3',
       thumbImageURL: '../../../../assets/images/thumbnail_5-min.jpg',
-      VideoURL: '../../../../assets/videos/147535-791696855_small.mp4',
+      videoURL: '../../../../assets/videos/147535-791696855_small.mp4',
     },
     {
       id: 6,
@@ -54,7 +54,7 @@ export class VideoService {
       description:
         'Beispiel Beschreibung 4',
       thumbImageURL: '../../../../assets/images/thumbnail_6-min.jpg',
-      VideoURL: '../../../../assets/videos/147535-791696855_small.mp4',
+      videoURL: '../../../../assets/videos/147535-791696855_small.mp4',
     },
     {
       id: 7,
@@ -62,7 +62,7 @@ export class VideoService {
       description:
         'Beispiel Beschreibung 5',
       thumbImageURL: '../../../../assets/images/thumbnail_7-min.jpg',
-      VideoURL: '../../../../assets/videos/147535-791696855_small.mp4',
+      videoURL: '../../../../assets/videos/147535-791696855_small.mp4',
     },
     {
       id: 8,
@@ -70,7 +70,7 @@ export class VideoService {
       description:
         'Beispiel Beschreibung 6',
       thumbImageURL: '../../../../assets/images/thumbnail_8-min.jpg',
-      VideoURL: '../../../../assets/videos/147535-791696855_small.mp4',
+      videoURL: '../../../../assets/videos/147535-791696855_small.mp4',
     },
    
   ];

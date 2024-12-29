@@ -4,6 +4,7 @@ import {
   computed,
   effect,
   ElementRef,
+  HostListener,
   signal,
   ViewChild,
   viewChild,
@@ -12,6 +13,8 @@ import { HeaderPlayerComponent } from '../../../shared/components/header/header-
 import { VolumeBarComponent } from '../volume-bar/volume-bar.component';
 import { SpeedSelectionComponent } from '../speed-selection/speed-selection.component';
 import { FormsModule } from '@angular/forms';
+import { Video } from '../../../core/models/video';
+import { QualitySelectionComponent } from '../quality-selection/quality-selection.component';
 
 @Component({
   selector: 'app-videoplayer',
@@ -21,6 +24,7 @@ import { FormsModule } from '@angular/forms';
     HeaderPlayerComponent,
     VolumeBarComponent,
     SpeedSelectionComponent,
+    QualitySelectionComponent,
     FormsModule,
   ],
   templateUrl: './videoplayer.component.html',
@@ -30,30 +34,52 @@ export class VideoplayerComponent {
   @ViewChild('videoPlayer') videoPlayer!: ElementRef;
   @ViewChild('speedControl') speedControl!: ElementRef;
 
+  video: Video = {
+    id: 1,
+    title: 'Mighty Wales',
+    description: 'See the wales',
+    videoURL: '../../../../assets/videos/147535-791696855_small.mp4',
+    thumbImageURL: '',
+  };
+
   duration = signal(0);
   currentTime = signal(0);
-   isVideoPlay = false;
-  volume = signal(80);
+  isVideoPlay = signal(false);
+  volume = signal(10);
   originalVolume = this.volume();
   videoMuted = computed(() => this.volume() == 0);
-
   timeRemaining = computed(() => this.duration() - this.currentTime());
- 
-  timeView = computed(
-    () => this.timeFormat(this.timeRemaining())
-  );
+  timeView = computed(() => this.timeFormat(this.timeRemaining()));
+  timebar = 0;
+  timeChangeValue = 5;
+  playSpeed = [2.0, 1.5, 1.0];
+  selectedSpeed = signal(this.playSpeed[2]);
 
+  qualities = [1080, 720, 360, 120];
+  selectedQuality = signal(this.qualities[3]);
 
- 
-  timebar = 80;
+  fullScreen = false;
 
-  playSpeed = [1.0, 1.5, 2.0];
-  selectedSpeed = this.playSpeed[0];
+  fadoutControls = signal(false);
+
+  timeout: number | undefined;
 
   constructor() {
     effect(() => {
       this.videoPlayer.nativeElement.volume = this.volume() / 100;
     });
+    effect(() => {
+      this.videoPlayer.nativeElement.playbackRate = this.selectedSpeed();
+    });
+  }
+
+  @HostListener('document:mousemove', ['$event'])
+  onMouseMove(e: any) {
+    window.clearTimeout(this.timeout);
+    this.fadoutControls.set(false);
+    this.timeout = window.setTimeout(() => {
+      this.fadoutControls.set(true);
+    }, 5000);
   }
 
   playPauseVideo() {
@@ -62,25 +88,24 @@ export class VideoplayerComponent {
       this.videoPlayer.nativeElement.ended
     ) {
       this.videoPlayer.nativeElement.play();
-      this.isVideoPlay = true;
+      this.isVideoPlay.set(true);
     } else {
       this.videoPlayer.nativeElement.pause();
-      this.isVideoPlay = false;
+      this.isVideoPlay.set(false);
     }
   }
 
   onMetadata(e: any, video: { duration: number; currentTime: any }) {
     this.duration.set(video.duration);
-    // this.duration.set(2*3600 + 15*60);
     this.currentTime.set(video.currentTime);
     this.updateProgressBar();
   }
 
   replayVideo() {
-    this.videoPlayer.nativeElement.currentTime -= 5;
+    this.videoPlayer.nativeElement.currentTime -= this.timeChangeValue;
   }
   forwardVideo() {
-    this.videoPlayer.nativeElement.currentTime += 5;
+    this.videoPlayer.nativeElement.currentTime += this.timeChangeValue;
   }
 
   toggleMute(event: MouseEvent) {
@@ -110,29 +135,35 @@ export class VideoplayerComponent {
     this.currentTime.set(this.videoPlayer.nativeElement.currentTime);
   }
 
-  changeSpeed(speed: number) {
-    this.videoPlayer.nativeElement.playbackRate = speed;
-  }
+  // changeSpeed(speed: number) {
+  //   this.videoPlayer.nativeElement.playbackRate = speed;
+  // }
 
   changeTime(number: Event) {
+    /**
+     * Set the currentTime of the videoplayer
+     */
     let currentTime = (this.timebar / 100) * this.duration();
     this.videoPlayer.nativeElement.currentTime = currentTime;
   }
 
-  timeFormat(duration:number):string {
+  timeFormat(duration: number): string {
+    /**
+     * Formats the duration [s] in an output like "1:01" or "4:03:59" or "123:03:59"
+     */
     const hrs = Math.floor(duration / 3600);
-    const mins = Math.floor(((duration % 3600) / 60));
+    const mins = Math.floor((duration % 3600) / 60);
     const secs = Math.floor(duration % 60);
-  
-    // Output like "1:01" or "4:03:59" or "123:03:59"
-    let ret = "";
-      if (hrs > 0) {
-      ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
+    let ret = '';
+    if (hrs > 0) {
+      ret += '' + hrs + ':' + (mins < 10 ? '0' : '');
     }
-    ret += "" + mins + ":" + (secs < 10 ? "0" : "");
-    ret += "" + secs;
-
+    ret += '' + mins + ':' + (secs < 10 ? '0' : '');
+    ret += '' + secs;
     return ret;
   }
 
+  toggleFullScreen() {
+    this.fullScreen = !this.fullScreen;
+  }
 }

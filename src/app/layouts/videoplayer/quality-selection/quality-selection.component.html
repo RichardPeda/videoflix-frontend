@@ -1,0 +1,5 @@
+<div class="container dfc-c-c">
+    @for (quality of qualities(); track $index) {
+        <div [ngClass]="{'selected': selectedQuality() == quality}" (click)="selectedQuality.set(quality)" class="btn dfr-c-c">{{quality}}p</div>
+    }
+</div>

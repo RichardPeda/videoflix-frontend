@@ -1,9 +1,11 @@
 .container {
     gap: 6px;
+    width: 100%;
 }
 
 .btn {
     min-width: 50px;
+    width: 100%;
     flex-wrap: nowrap;
     padding: 3px 6px;
     border-radius: 3px;

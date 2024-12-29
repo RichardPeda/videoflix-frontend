@@ -3,5 +3,5 @@ export interface Video{
     title:string,
     description:string;
     thumbImageURL: string;
-    VideoURL: string;
+    videoURL: string;
 }

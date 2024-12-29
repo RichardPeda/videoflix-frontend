@@ -29,22 +29,22 @@ export class VolumeBarComponent {
       setTimeout(() => {
         this.showValue = false;
       }, 3000);
-      this.setVolume();
+      this.setVolumeOfControl();
     });
   }
 
   ngAfterViewInit() {
     let control = this.volumeControl;
     if (control) {
-      this.setVolume();
+      this.setVolumeOfControl();
     }
   }
 
-  setVolume() {
+  setVolumeOfControl() {
     this.volumeControl.nativeElement.value = this.volume();
   }
 
-  logVolume(event: Event) {
+  setVolume(event: Event) {
     event.preventDefault();
     event.stopPropagation();
     this.volume.set(this.volumeControl.nativeElement.value);

@@ -1,8 +1,5 @@
-<div class="container dfr-c-c">
-
-    
+<div class="container dfc-c-c">
     @for (speed of speeds(); track $index) {
-        <div (click)="selectedSpeed.emit(speed)" class="btn-speed dfr-c-c">x {{speed}}</div>
+        <div [ngClass]="{'selected': selectedSpeed() == speed}" (click)="selectedSpeed.set(speed)" class="btn dfr-c-c">x {{speed}}</div>
     }
-
 </div>
