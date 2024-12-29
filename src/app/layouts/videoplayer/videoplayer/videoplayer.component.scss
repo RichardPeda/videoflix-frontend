@@ -135,3 +135,9 @@ app-header-player {
     opacity: 1;
     transition-delay: 1s
 }
+
+input[type="range"] {
+    background-color: red;
+    height: 100%;
+    accent-color:red;
+}
