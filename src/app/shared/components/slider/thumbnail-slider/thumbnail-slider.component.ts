@@ -7,6 +7,8 @@ import {
   input,
   effect,
   ViewContainerRef,
+  HostListener,
+  Self,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ThumbnailPreviewComponent } from '../thumbnail-preview/thumbnail-preview.component';
@@ -29,22 +31,25 @@ interface SliderControl {
   styleUrl: './thumbnail-slider.component.scss',
 })
 export class ThumbnailSliderComponent {
-
-  
   @ViewChild('container') container: ElementRef | undefined;
   @ViewChild('thumbnail') thumbnail: ElementRef | undefined;
   private videoService = inject(VideoService);
 
-  
-
   parentSize = input<number | undefined>();
 
-  videoData: Video[] = [];
+  windowWidth = window.innerWidth;
 
-  // size = window.innerWidth;
+  videoData: Video[] = [];
   size = 0;
-  offsetPosition = 0;
+  singeImageSize = 0;
+  contentWidth = 0;
   offsetGap = 12;
+  counter = 0;
+  numberOfImages = 0;
+
+  sliderX = 0;
+  sliderWidth = 0;
+  sliderXabs = 0;
 
   slider: SliderControl = {
     allowLeft: false,
@@ -54,92 +59,82 @@ export class ThumbnailSliderComponent {
     minPosition: 0,
   };
 
-  constructor() {
+  constructor(@Self() private element: ElementRef) {
     this.videoData = [...this.videoService.videoData];
+
+
+    //TESTING
+    // for (let index = 0; index < 6; index++) {
+    //   const element = this.videoService.videoData[index];
+    //   this.videoData.push(element);
+    // }
+
+    this.numberOfImages = this.videoData.length;
 
     effect(() => {
       let parentSize = this.parentSize();
-      if (parentSize) this.size = parentSize;
+      if (parentSize) this.size = parentSize;      
     });
   }
 
   ngAfterViewInit() {
-    console.log('size', this.size);
-
+    //get the left position of slider
     let element = this.container?.nativeElement.getBoundingClientRect();
-    console.log('container', element.width);
-    let thumb = this.thumbnail?.nativeElement.getBoundingClientRect();
-    this.offsetPosition = thumb.width;
-    console.log(this.offsetPosition);
+    this.sliderX = element.x;
 
-    this.slider.width = element.width;
-    this.slider.minPosition = element.x;
+    //get single image
+    let thumb = this.thumbnail?.nativeElement.getBoundingClientRect();
+    this.singeImageSize = thumb.width;
+
+    //content size of slider
+    this.sliderWidth =
+      this.singeImageSize * this.numberOfImages +
+      (this.numberOfImages - 1) * this.offsetGap;
+
+    this.sliderXabs = this.sliderX + this.sliderWidth; //absolute x position (right) of the slider element
 
     setTimeout(() => {
-      let elements = this.container?.nativeElement.children;
-      let lastChildPosition = this.getPositionOfLastChild(elements);
-
-      if (lastChildPosition >= this.size) {
-        this.slider.allowRight = true;
-      }
-    }, 1000);
+      this.slider.allowRight = this.isItAllowedToMoveRight();
+    }, 500);
   }
 
-  ngAfterContentInit() {}
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.windowWidth = window.innerWidth;
+    this.slider.allowRight = this.isItAllowedToMoveRight();
+  }
+
+  isItAllowedToMoveRight() {
+    return this.windowWidth <= this.sliderXabs ? true : false;
+  }
 
   slideRight() {
-    // this.slider.position += -250;
-    this.slider.position += -(this.offsetPosition + this.offsetGap);
+    let moveOffset = -(this.singeImageSize + this.offsetGap);
 
-    
+    this.slider.position += moveOffset; //new slider position
+    this.sliderXabs += moveOffset; //new slider abs position
+    this.counter += 1;
+
+    this.slider.allowRight = this.isItAllowedToMoveRight();
+
+    //check after slide animation is finished
     setTimeout(() => {
-
-      console.log(this.container?.nativeElement.getBoundingClientRect().x);
-
-
-
-      if (this.container?.nativeElement.getBoundingClientRect().x <= 0) {
-        this.slider.allowLeft = true;
-        console.log("allow");
-        
-      }
-      let elements = this.container?.nativeElement.children;
-      let lastChildPosition = this.getPositionOfLastChild(elements);
-// console.log(this.size);
-// console.log(lastChildPosition);
-
-
-      if (lastChildPosition <= this.size) {
-        this.slider.allowRight = false;
-        console.log(this.slider.allowRight);
-        
-      }
+      if (this.counter > 0) this.slider.allowLeft = true;
     }, 1000);
-  }
-
-  getPositionOfLastChild(children: any) {
-    let last = children.item(children.length - 1);
-    return last.getBoundingClientRect().right;
   }
 
   slideLeft() {
-    this.slider.position += this.offsetPosition + this.offsetGap;
+    let moveOffset = this.singeImageSize + this.offsetGap;
+    this.slider.position += moveOffset; //new slider position
+    this.sliderXabs += moveOffset; //new slider abs position
+    this.counter -= 1;
 
-    
-    
+    if (this.counter > 0) this.slider.allowLeft = true;
+    else this.slider.allowLeft = false;
+
+    //check after slide animation is finished
     setTimeout(() => {
-      if (this.container?.nativeElement.getBoundingClientRect().x >= 0) {
-        this.slider.allowLeft = false;
-      }
-      let elements = this.container?.nativeElement.children;
-      let lastChildPosition = this.getPositionOfLastChild(elements);
-
-      console.log(this.size);
-      console.log(lastChildPosition);
-
-      if (lastChildPosition >= this.size) {
-        this.slider.allowRight = true;
-      }
+      this.slider.allowRight = this.isItAllowedToMoveRight();
     }, 1000);
   }
 

@@ -4,8 +4,7 @@
 }
 
 .video-frame {
-    // width: 100%;
-    max-width: 1440px;
+    max-width: var(--content-max-width);
     margin: auto;
     height: 800px;
     position: absolute;
