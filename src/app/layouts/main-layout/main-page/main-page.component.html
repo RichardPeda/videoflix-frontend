@@ -6,8 +6,10 @@
 <app-teaser [video]="videoData[videoIndex]"></app-teaser>
 
 
-<div class="main-content">
+<div class="main-content flex column">
 
+    <app-thumbnail-slider [parentSize]="contentSize"></app-thumbnail-slider>
+    <app-thumbnail-slider [parentSize]="contentSize"></app-thumbnail-slider>
     <app-thumbnail-slider [parentSize]="contentSize"></app-thumbnail-slider>
 
 </div>

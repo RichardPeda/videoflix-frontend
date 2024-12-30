@@ -31,12 +31,13 @@ app-header {
 .main-content {
     margin-top: 20px;
     width: 100%;
+    flex: 1;
     // padding-left: calc((100vw - 1440px)/2);
     z-index: 40;
     transform: translateY(-125px);
     max-width: 1440px;
     // overflow: hidden;
-    margin:auto
+    // margin:auto
 }
 
 

@@ -6,6 +6,7 @@ import {
   inject,
   input,
   effect,
+  ViewContainerRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ThumbnailPreviewComponent } from '../thumbnail-preview/thumbnail-preview.component';
@@ -28,9 +29,13 @@ interface SliderControl {
   styleUrl: './thumbnail-slider.component.scss',
 })
 export class ThumbnailSliderComponent {
+
+  
   @ViewChild('container') container: ElementRef | undefined;
   @ViewChild('thumbnail') thumbnail: ElementRef | undefined;
   private videoService = inject(VideoService);
+
+  
 
   parentSize = input<number | undefined>();
 
@@ -62,7 +67,7 @@ export class ThumbnailSliderComponent {
     console.log('size', this.size);
 
     let element = this.container?.nativeElement.getBoundingClientRect();
-    console.log("container",element.width)
+    console.log('container', element.width);
     let thumb = this.thumbnail?.nativeElement.getBoundingClientRect();
     this.offsetPosition = thumb.width;
     console.log(this.offsetPosition);
@@ -85,15 +90,29 @@ export class ThumbnailSliderComponent {
   slideRight() {
     // this.slider.position += -250;
     this.slider.position += -(this.offsetPosition + this.offsetGap);
+
+    
     setTimeout(() => {
+
+      console.log(this.container?.nativeElement.getBoundingClientRect().x);
+
+
+
       if (this.container?.nativeElement.getBoundingClientRect().x <= 0) {
         this.slider.allowLeft = true;
+        console.log("allow");
+        
       }
       let elements = this.container?.nativeElement.children;
       let lastChildPosition = this.getPositionOfLastChild(elements);
+// console.log(this.size);
+// console.log(lastChildPosition);
+
 
       if (lastChildPosition <= this.size) {
         this.slider.allowRight = false;
+        console.log(this.slider.allowRight);
+        
       }
     }, 1000);
   }
@@ -105,12 +124,18 @@ export class ThumbnailSliderComponent {
 
   slideLeft() {
     this.slider.position += this.offsetPosition + this.offsetGap;
+
+    
+    
     setTimeout(() => {
       if (this.container?.nativeElement.getBoundingClientRect().x >= 0) {
         this.slider.allowLeft = false;
       }
       let elements = this.container?.nativeElement.children;
       let lastChildPosition = this.getPositionOfLastChild(elements);
+
+      console.log(this.size);
+      console.log(lastChildPosition);
 
       if (lastChildPosition >= this.size) {
         this.slider.allowRight = true;
