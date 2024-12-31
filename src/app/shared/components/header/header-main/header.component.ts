@@ -6,17 +6,21 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
+  private router = inject(Router);
+  hideLoginButton = false;
 
-  private router = inject(Router)
-  hideLoginButton = false
+  isUserLoggedIn = true
 
-  ngOnInit(){
-    if(this.router.url === '/login'){
-      this.hideLoginButton = true
+  ngOnInit() {
+    if (this.router.url === '/login') {
+      this.hideLoginButton = true;
     }
   }
 
+  logoutUser(){
+    
+  }
 }

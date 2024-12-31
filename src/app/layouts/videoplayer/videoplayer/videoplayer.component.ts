@@ -71,6 +71,7 @@ export class VideoplayerComponent {
     effect(() => {
       this.videoPlayer.nativeElement.playbackRate = this.selectedSpeed();
     });
+   
   }
 
   @HostListener('document:mousemove', ['$event'])
@@ -99,6 +100,7 @@ export class VideoplayerComponent {
     this.duration.set(video.duration);
     this.currentTime.set(video.currentTime);
     this.updateProgressBar();
+    this.videoPlayer.nativeElement.play()
   }
 
   replayVideo() {

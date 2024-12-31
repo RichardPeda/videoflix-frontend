@@ -45,19 +45,14 @@ export class MainPageComponent {
     this.videoService.selectedVideo$.subscribe((selected) => {
       this.videoIndex = selected;
     });
-
-    console.log(element);
   }
 
   ngAfterContentInit() {
-    // console.log(this.element.nativeElement.offsetWidth)
     this.contentSize = this.element.nativeElement.offsetWidth;
   }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    
-    this.contentSize =this.element.nativeElement.offsetWidth
-    
+    this.contentSize = this.element.nativeElement.offsetWidth;
   }
 }
