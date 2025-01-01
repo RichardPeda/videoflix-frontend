@@ -1,6 +1,11 @@
+:host {
+    pointer-events: none;
+}
+
 h2 {
     font-size: 22px;
     color: white;
+
 }
 
 .main-thumbnail-container {
@@ -8,13 +13,15 @@ h2 {
     flex-direction: column;
     justify-content: center;
     width: 100%;
-    z-index: 40;
+    // z-index: 40;
     margin-bottom: 48px;
-      &:hover .arrow-left, &:hover .arrow-right {
+
+    &:hover .arrow-left,
+    &:hover .arrow-right {
         background-color: rgba(0, 0, 0, 0.35);
-       
+
     }
-   
+
 }
 
 .thumbnail-slider {
@@ -23,7 +30,54 @@ h2 {
     width: 100%;
     height: 120px;
     transition: transform 1s ease-in-out;
-  
+    pointer-events: all;
+
+}
+
+.thumbnail-container:hover .thumbnail-preview {
+    visibility: visible !important;
+        opacity: 1;
+        z-index: 999;
+        cursor: pointer;
+        width: 300px;
+        height: 250px;
+}
+
+
+
+
+
+.thumbnail-preview {
+   
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--clr-bg-black-hightlight);
+    visibility: hidden;
+    opacity: 0;
+    transition: all 225ms ease-in-out;
+    width: 0;
+    height: 0;
+
+    &:hover {
+        visibility: visible !important;
+        opacity: 1;
+        z-index: 999;
+        cursor: pointer;
+        width: 300px;
+        height: 300px;
+    }
+
+    &:hover>* {
+        pointer-events: none;
+    }
+
+    img {
+        width: 100%;
+        height: 60%;
+        object-fit: cover;
+    }
+
 }
 
 
@@ -34,9 +88,10 @@ h2 {
     height: 120px;
     display: flex;
     align-items: center;
-  cursor: pointer;
-  background-color: rgba(0, 0, 0, 0.35);
-  
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.35);
+    pointer-events: all;
+
 
 }
 
@@ -52,8 +107,49 @@ h2 {
     object-fit: cover;
     transition: transform 175ms ease-in-out;
 
-    &:hover {
-        cursor: pointer;
-        outline: 2px solid white;
+   
+}
+
+.selected {
+    outline: 2px solid white;
+}
+
+.c-sub {
+    padding: 12px;
+    color: white;
+
+    .rect{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--clr-gray);
+        padding: 2px 5px;
+        min-width: 30px;
+        border-radius: 2px;
+    }
+
+    .play-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+        width: 40px;
+        aspect-ratio: 1;
+        border-radius: 50%;
+
+        &:hover {
+            cursor: pointer;
+            background-color: rgb(187, 187, 187);
+        }
+
+        svg {
+            width: 25px;
+            height: 25px;
+            transform: translateX(2px);
+
+            path {
+                fill: black;
+            }
+        }
     }
 }

@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 import { ThumbnailPreviewComponent } from '../thumbnail-preview/thumbnail-preview.component';
 import { Video } from '../../../../core/models/video';
 import { VideoService } from '../../../../core/services/video.service';
+import { PlayButtonComponent } from '../../buttons/play-button/play-button.component';
 
 interface SliderControl {
   allowRight: boolean;
@@ -33,9 +34,10 @@ interface SliderControl {
 export class ThumbnailSliderComponent {
   @ViewChild('container') container: ElementRef | undefined;
   @ViewChild('thumbnail') thumbnail: ElementRef | undefined;
-  private videoService = inject(VideoService);
+  public videoService = inject(VideoService);
 
   parentSize = input<number | undefined>();
+  genre = input<string>()
 
   windowWidth = window.innerWidth;
 
@@ -46,6 +48,7 @@ export class ThumbnailSliderComponent {
   offsetGap = 12;
   counter = 0;
   numberOfImages = 0;
+  selected: number | undefined = undefined;
 
   sliderX = 0;
   sliderWidth = 0;
@@ -62,7 +65,6 @@ export class ThumbnailSliderComponent {
   constructor(@Self() private element: ElementRef) {
     this.videoData = [...this.videoService.videoData];
 
-
     //TESTING
     // for (let index = 0; index < 6; index++) {
     //   const element = this.videoService.videoData[index];
@@ -73,7 +75,7 @@ export class ThumbnailSliderComponent {
 
     effect(() => {
       let parentSize = this.parentSize();
-      if (parentSize) this.size = parentSize;      
+      if (parentSize) this.size = parentSize;
     });
   }
 
@@ -140,5 +142,6 @@ export class ThumbnailSliderComponent {
 
   selectVideo(index: number) {
     this.videoService.selectedVideo$.next(index);
+    this.selected = index;
   }
 }

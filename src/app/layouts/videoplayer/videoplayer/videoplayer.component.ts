@@ -40,6 +40,8 @@ export class VideoplayerComponent {
     description: 'See the wales',
     videoURL: '../../../../assets/videos/147535-791696855_small.mp4',
     thumbImageURL: '',
+    duration: 20,
+    genre: 'Action',
   };
 
   duration = signal(0);
@@ -71,7 +73,6 @@ export class VideoplayerComponent {
     effect(() => {
       this.videoPlayer.nativeElement.playbackRate = this.selectedSpeed();
     });
-   
   }
 
   @HostListener('document:mousemove', ['$event'])
@@ -100,7 +101,7 @@ export class VideoplayerComponent {
     this.duration.set(video.duration);
     this.currentTime.set(video.currentTime);
     this.updateProgressBar();
-    this.videoPlayer.nativeElement.play()
+    this.videoPlayer.nativeElement.play();
   }
 
   replayVideo() {
