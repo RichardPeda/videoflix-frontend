@@ -12,7 +12,7 @@ export class HeaderComponent {
   private router = inject(Router);
   hideLoginButton = false;
 
-  isUserLoggedIn = true
+  isUserLoggedIn = false
 
   ngOnInit() {
     if (this.router.url === '/login') {
@@ -22,5 +22,9 @@ export class HeaderComponent {
 
   logoutUser(){
     
+  }
+
+  navToLogin(){
+    this.router.navigateByUrl('login')
   }
 }

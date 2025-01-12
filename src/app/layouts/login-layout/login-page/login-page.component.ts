@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   FormGroup,
   FormControl,
@@ -8,6 +8,8 @@ import {
 } from '@angular/forms';
 import { FooterComponent } from '../../../shared/components/footer/footer.component';
 import { HeaderComponent } from '../../../shared/components/header/header-main/header.component';
+import { Router, RouterLink } from '@angular/router';
+
 
 @Component({
   selector: 'app-login-page',
@@ -17,6 +19,8 @@ import { HeaderComponent } from '../../../shared/components/header/header-main/h
   styleUrl: './login-page.component.scss',
 })
 export class LoginPageComponent {
+
+router = inject(Router)
 
   loginForm = new FormGroup({
     email: new FormControl('', Validators.required),
@@ -40,4 +44,6 @@ export class LoginPageComponent {
   onSubmit() {
     console.log(this.loginForm.value.remember);
   }
+
+ 
 }
