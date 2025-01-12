@@ -7,6 +7,9 @@
     left: 0;
     right: 0;
     height: 108px;
+    max-width: calc(var(--content-max-width) + calc(2 * 96px));
+    padding-inline: 96px;
+    margin: auto;
 }
 
 .header-content{
