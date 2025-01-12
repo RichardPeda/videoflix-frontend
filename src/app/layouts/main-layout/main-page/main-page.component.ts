@@ -37,6 +37,8 @@ export class MainPageComponent {
 
   videoData: Video[] = [];
 
+  tempData:any
+
   videoIndex = 0;
 
   constructor(@Self() private element: ElementRef) {
@@ -45,6 +47,14 @@ export class MainPageComponent {
     this.videoService.selectedVideo$.subscribe((selected) => {
       this.videoIndex = selected;
     });
+
+    this.videoService.getMovies().subscribe({
+      next: (data:any) => {
+        console.log("data", data)
+        this.tempData = data
+      },
+      error: (err) => console.log(err)
+    })
   }
 
   ngAfterContentInit() {
