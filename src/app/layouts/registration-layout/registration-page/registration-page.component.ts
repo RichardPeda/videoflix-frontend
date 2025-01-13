@@ -1,41 +1,54 @@
-import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { FooterComponent } from '../../../shared/components/footer/footer.component';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../../shared/components/header/header-main/header.component';
+import { LoginService } from '../../../core/services/login.service';
 
 interface password {
-  type:string,
-  show:boolean
+  type: string;
+  show: boolean;
 }
-
 
 @Component({
   selector: 'app-registration-page',
   standalone: true,
-  imports: [HeaderComponent, FooterComponent, CommonModule, ReactiveFormsModule],
+  imports: [
+    HeaderComponent,
+    FooterComponent,
+    CommonModule,
+    ReactiveFormsModule,
+  ],
   templateUrl: './registration-page.component.html',
-  styleUrl: './registration-page.component.scss'
+  styleUrl: './registration-page.component.scss',
 })
 export class RegistrationPageComponent {
+  private loginService = inject(LoginService);
 
-  loginForm = new FormGroup({
+  registerForm = new FormGroup({
+    username: new FormControl('', Validators.required),
     email: new FormControl('', Validators.required),
     password_0: new FormControl('', Validators.required),
     password_1: new FormControl('', Validators.required),
   });
 
-  passwords:password[] = [
-    {type: 'password', show: false},
-    {type: 'password', show: false},
-  ]
- 
-  showPasswordMatchWarning = false
+  passwords: password[] = [
+    { type: 'password', show: false },
+    { type: 'password', show: false },
+  ];
 
-  togglePasswordVisible(index:number) {
-    console.log(index)
-    this.passwords[index].show = !this.passwords[index].show
-    this.passwords[index].type = this.togglePasswordType(this.passwords[index].show);
+
+  togglePasswordVisible(index: number) {
+    console.log(index);
+    this.passwords[index].show = !this.passwords[index].show;
+    this.passwords[index].type = this.togglePasswordType(
+      this.passwords[index].show
+    );
   }
 
   togglePasswordType(show: boolean) {
@@ -44,9 +57,26 @@ export class RegistrationPageComponent {
   }
 
   onSubmit() {
+    if (this.registerForm.valid) {
+      let pw_0 = this.registerForm.get('password_0')?.value;
+      let pw_1 = this.registerForm.get('password_1')?.value;
+      let username = this.registerForm.get('username')?.value;
+      let email = this.registerForm.get('email')?.value;
 
-    console.log("password 0", this.loginForm.value.password_0)
-    console.log("password 1", this.loginForm.value.password_1)
-   
+      if (pw_0 && pw_1 && username && email) {
+        let password = this.checkIfPasswordsmatch(pw_0!, pw_1!);
+        if (password) {
+          this.loginService.postRegisterUser(username, email, pw_0, pw_1).subscribe({
+            next: (resp:any) => {
+              console.log(resp)
+            }
+          });
+        }
+      }
+    }
+  }
+
+  checkIfPasswordsmatch(password_0: string, password_1: string): string | null {
+    return password_0 === password_1 ? password_1 : null;
   }
 }

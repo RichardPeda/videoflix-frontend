@@ -8,23 +8,37 @@ import { environment } from '../../../environments/environment.development';
 export class LoginService {
   private http = inject(HttpClient);
   private BASE_URL = environment.apiUrl;
-  userEmail = ''
+  userEmail = '';
 
   constructor() {}
 
-  
+  postRegisterUser(
+    username: string,
+    email: string,
+    password: string,
+    repeated_password: string
+  ) {
+    let body = {
+      username: username,
+      email: email,
+      password: password,
+      repeated_password: repeated_password,
+    };
 
-  loginOrSignUp(email: string) {
+    return this.http.post(`${this.BASE_URL}api/register/`, body);
+  }
+
+  postLoginOrSignUp(email: string) {
     let body = { email: email };
     return this.http.post(`${this.BASE_URL}api/login-signup/`, {
       email: email,
     });
   }
 
-  setSessionStorage(key: string, data:string) {
-    
+  setSessionStorage(key: string, data: string) {
     sessionStorage.setItem(key, data);
   }
+
   getSessionStorage(key: string) {
     return sessionStorage.getItem(key.toString());
   }

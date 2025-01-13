@@ -28,7 +28,7 @@ export class StartPageComponent {
     if (this.profileForm.valid) {
       let email = this.profileForm.get('email');
       if (email && email.value) {
-        this.loginService.loginOrSignUp(email.value).subscribe({
+        this.loginService.postLoginOrSignUp(email.value).subscribe({
           next: (data: any) => {
             if (data.message) {
               if (data.message == 'user does not exist') {

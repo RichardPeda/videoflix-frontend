@@ -5,9 +5,13 @@
         <div class="headline">
             Sign up
         </div>
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
             <div class="dialog-input-frame">
+                <input placeholder="Username" id="username" type="text"
+                     formControlName="username" autocomplete="username">
+            </div>
 
+            <div class="dialog-input-frame">
                 <input placeholder="Email Address" id="email" type="email"
                     pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}" formControlName="email" autocomplete="email">
             </div>
@@ -41,7 +45,8 @@
                 </div>
             </div>
             }
-            @if (showPasswordMatchWarning) {
+
+            @if (registerForm.controls.password_0.valid && registerForm.controls.password_1.valid && (registerForm.controls.password_0.value != registerForm.controls.password_1.value)) {
             <div class="match">
                 <svg width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -52,7 +57,7 @@
             </div>
             }
 
-            <button class="mg-top-0" [ngClass]="{'btn-disabled': !loginForm.valid}" type="submit" [disabled]="!loginForm.valid">Get
+            <button class="mg-top-0" [ngClass]="{'btn-disabled': !registerForm.valid}" type="submit" [disabled]="!registerForm.valid">Get
                 Started</button>
         </form>
 
