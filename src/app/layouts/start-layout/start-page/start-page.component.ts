@@ -34,7 +34,11 @@ export class StartPageComponent {
               if (data.message == 'user does not exist') {
                 this.router.navigateByUrl('signup');
               } else if (data.message == 'user exists' && data.email) {
-                this.router.navigate(['/login', { email: data.email }]);
+                console.log(typeof(data.email));
+                
+                this.loginService.setSessionStorage('email', data.email)
+
+                this.router.navigateByUrl('login');
               }
             }
           },
@@ -43,5 +47,6 @@ export class StartPageComponent {
         });
       }
     }
+    else this.router.navigateByUrl('signup');
   }
 }
