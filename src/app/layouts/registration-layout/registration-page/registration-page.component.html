@@ -1,14 +1,16 @@
 <app-header class="pos-abs"></app-header>
 <div class="background-shadow">
 
+    @if (!emailWasSent) {
     <div class="dialog-card">
+
         <div class="headline">
             Sign up
         </div>
         <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
             <div class="dialog-input-frame">
-                <input placeholder="Username" id="username" type="text"
-                     formControlName="username" autocomplete="username">
+                <input placeholder="Username" id="username" type="text" formControlName="username"
+                    autocomplete="username">
             </div>
 
             <div class="dialog-input-frame">
@@ -46,7 +48,8 @@
             </div>
             }
 
-            @if (registerForm.controls.password_0.valid && registerForm.controls.password_1.valid && (registerForm.controls.password_0.value != registerForm.controls.password_1.value)) {
+            @if (registerForm.controls.password_0.valid && registerForm.controls.password_1.valid &&
+            (registerForm.controls.password_0.value != registerForm.controls.password_1.value)) {
             <div class="match">
                 <svg width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -57,11 +60,23 @@
             </div>
             }
 
-            <button class="mg-top-0" [ngClass]="{'btn-disabled': !registerForm.valid}" type="submit" [disabled]="!registerForm.valid">Get
+            <button class="mg-top-0" [ngClass]="{'btn-disabled': !registerForm.valid}" type="submit"
+                [disabled]="!registerForm.valid">Get
                 Started</button>
         </form>
 
     </div>
+    }@else {
+    <div class="dialog-card">
+        <p>
+            Thank you for registration. <br>
+            We have sent you an email to verify your account. Please check your email inbox.
+        </p>
+    </div>
+    }
+
 </div>
+
+<app-error-toast [errorText]="errorText" (closeMessage)="closeMessage()" class="pos-abs" [ngClass]="{'slide-message-out' : !showError && ! initialState, 'slide-message-in' : showError}"></app-error-toast>
 
 <app-footer></app-footer>

@@ -1,0 +1,49 @@
+.container{
+   
+    height: 80px;
+    min-height: 80px;
+    min-width: 540px;
+    border-radius: 20px;
+  
+}
+
+.red-corner{
+    background-color: var(--clr-red);
+    height: 100%;
+    width: 20px;
+    border-radius: 20px 0px 0px 20px;
+  
+}
+.blue-field{
+    flex: 1;
+    gap: 16px;
+    padding: 24px 32px;
+   
+
+    background-color: var(--clr-blue);
+    height: 100%;
+    border-radius: 0px 20px 20px 0px;
+    .text{
+        color: white;
+        max-width: 372px;
+    }
+    .divider{
+        height: 100%;
+        width: 2px;
+        background-color: white;
+        margin-right: 8px;
+    }
+    .btn-cross{
+        height: 100%;
+        width: 20px;
+        &:hover{
+            cursor: pointer;
+        }
+        svg{
+            transition: transform 175ms ease-in-out;
+        }
+       &:hover > svg {
+        transform: scale(1.3);
+       }
+    }
+}

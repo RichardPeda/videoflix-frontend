@@ -9,6 +9,8 @@ import { FooterComponent } from '../../../shared/components/footer/footer.compon
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../../shared/components/header/header-main/header.component';
 import { LoginService } from '../../../core/services/login.service';
+import { Router } from '@angular/router';
+import { ErrorToastComponent } from '../../../shared/components/message/error-toast/error-toast.component';
 
 interface password {
   type: string;
@@ -19,16 +21,24 @@ interface password {
   selector: 'app-registration-page',
   standalone: true,
   imports: [
+    CommonModule,
     HeaderComponent,
     FooterComponent,
     CommonModule,
     ReactiveFormsModule,
+    ErrorToastComponent,
   ],
   templateUrl: './registration-page.component.html',
   styleUrl: './registration-page.component.scss',
 })
 export class RegistrationPageComponent {
   private loginService = inject(LoginService);
+  private router = inject(Router);
+
+  emailWasSent = false;
+  showError = false;
+  initialState = true
+  errorText = 'Please check your entries and try again';
 
   registerForm = new FormGroup({
     username: new FormControl('', Validators.required),
@@ -42,6 +52,10 @@ export class RegistrationPageComponent {
     { type: 'password', show: false },
   ];
 
+  ngOnInit() {
+    this.emailWasSent = false;
+    this.showError = false;
+  }
 
   togglePasswordVisible(index: number) {
     console.log(index);
@@ -66,14 +80,30 @@ export class RegistrationPageComponent {
       if (pw_0 && pw_1 && username && email) {
         let password = this.checkIfPasswordsmatch(pw_0!, pw_1!);
         if (password) {
-          this.loginService.postRegisterUser(username, email, pw_0, pw_1).subscribe({
-            next: (resp:any) => {
-              console.log(resp)
-            }
-          });
+          this.loginService
+            .postRegisterUser(username, email, pw_0, pw_1)
+            .subscribe({
+              next: (resp: any) => {
+                if (resp.message == 'verification email was sent') {
+                  this.emailWasSent = true;
+                }
+              },
+              error: (err) => {
+                this.openMessage();
+              },
+            });
         }
       }
     }
+  }
+
+  openMessage() {
+    this.showError = true;
+    this.initialState = false
+    this.errorText = 'Please check your entries and try again';
+  }
+  closeMessage() {
+    this.showError = false;
   }
 
   checkIfPasswordsmatch(password_0: string, password_1: string): string | null {
