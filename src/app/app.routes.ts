@@ -5,11 +5,13 @@ import { RegistrationPageComponent } from './layouts/registration-layout/registr
 import { PwResetPageComponent } from './layouts/pw-reset-layout/pw-reset-page/pw-reset-page.component';
 import { MainPageComponent } from './layouts/main-layout/main-page/main-page.component';
 import { VideoplayerComponent } from './layouts/videoplayer/videoplayer/videoplayer.component';
+import { VerifyPageComponent } from './layouts/verify-layout/verify-page/verify-page.component';
 
 export const routes: Routes = [
     {path: '', component: StartPageComponent},
     {path: 'login', component: LoginPageComponent},
     {path: 'signup', component: RegistrationPageComponent},
+    {path: 'verify', component: VerifyPageComponent},
     {path: 'reset', component: PwResetPageComponent},
     {path: 'overview', component: MainPageComponent},
     {path: 'videoplayer', component: VideoplayerComponent},

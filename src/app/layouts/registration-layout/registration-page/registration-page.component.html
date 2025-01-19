@@ -68,6 +68,7 @@
     </div>
     }@else {
     <div class="dialog-card">
+        <h3>Verify your email</h3>
         <p>
             Thank you for registration. <br>
             We have sent you an email to verify your account. Please check your email inbox.
@@ -77,6 +78,7 @@
 
 </div>
 
-<app-error-toast [errorText]="errorText" (closeMessage)="closeMessage()" class="pos-abs" [ngClass]="{'slide-message-out' : !showError && ! initialState, 'slide-message-in' : showError}"></app-error-toast>
+<app-error-toast [errorText]="errorText" (closeMessage)="closeMessage()" class="pos-abs"
+    [ngClass]="{'slide-message-out' : !showError && ! initialState, 'slide-message-in' : showError}"></app-error-toast>
 
 <app-footer></app-footer>
