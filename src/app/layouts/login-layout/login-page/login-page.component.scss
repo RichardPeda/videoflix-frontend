@@ -115,8 +115,24 @@ form button{
     width: fit-content;
 }
 
-// app-header {
-//     max-width: calc(var(--content-max-width) + calc(2 * 96px));
-//     padding-inline: 96px;
-//     margin: auto;
-// }
+app-message-toast{
+    bottom: 20px;
+    z-index: 50;
+    transform: translateX(-100%)
+}
+.slide-message-in{
+    animation: slideIn 1s ease-in-out forwards;
+}
+.slide-message-out{
+    animation: slideOut 1s ease-in-out forwards;
+}
+
+@keyframes slideIn {
+    from{transform: translateX(-100%)}
+    to{transform: translateX(0);}
+}
+
+@keyframes slideOut {
+    from{transform: translateX(0);}
+    to{transform: translateX(-100%)}
+}

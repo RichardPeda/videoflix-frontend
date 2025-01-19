@@ -37,7 +37,7 @@ export class RegistrationPageComponent {
 
   emailWasSent = false;
   showError = false;
-  initialState = true
+  initialState = true;
   errorText = 'Please check your entries and try again';
 
   registerForm = new FormGroup({
@@ -99,7 +99,7 @@ export class RegistrationPageComponent {
 
   openMessage() {
     this.showError = true;
-    this.initialState = false
+    this.initialState = false;
     this.errorText = 'Please check your entries and try again';
   }
   closeMessage() {

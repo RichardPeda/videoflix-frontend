@@ -1,3 +1,6 @@
+@use '@angular/material' as mat;
+
+
 /* dm-sans-regular - latin */
 @font-face {
     font-display: swap;
@@ -244,7 +247,17 @@ input {
     --clr-gray: #868686;
     --clr-blue: #2E3EDF;
     --clr-red: #FF002E;
+    --clr-green: #51ff00;
     --content-max-width: 1920px;
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+
+// Customize the entire app. Change :root to your selector if you want to scope the styles.
+:root {
+  @include mat.progress-spinner-overrides((
+    size : 20
+  ));
+}

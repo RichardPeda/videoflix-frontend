@@ -10,6 +10,7 @@ import { FooterComponent } from '../../../shared/components/footer/footer.compon
 import { HeaderComponent } from '../../../shared/components/header/header-main/header.component';
 import { Router, RouterLink } from '@angular/router';
 import { LoginService } from '../../../core/services/login.service';
+import { MessageToastComponent } from '../../../shared/components/message/message-toast/message-toast.component';
 
 @Component({
   selector: 'app-login-page',
@@ -19,6 +20,7 @@ import { LoginService } from '../../../core/services/login.service';
     ReactiveFormsModule,
     HeaderComponent,
     FooterComponent,
+    MessageToastComponent
   ],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss',
@@ -28,6 +30,9 @@ export class LoginPageComponent {
   private loginService = inject(LoginService);
 
   userEmail = '';
+  messageText = 'Verification successful'
+  showError = false;
+  initialState = true
 
   ngOnInit() {
     let sessionData = this.loginService.getSessionStorage('email');
@@ -37,6 +42,8 @@ export class LoginPageComponent {
       this.userEmail = sessionData;
       this.initForm();
     }
+
+    this.openMessage('Verification successful, you can login now')
   }
 
   initForm() {
@@ -68,5 +75,15 @@ export class LoginPageComponent {
 
   onSubmit() {
     console.log(this.loginForm.value.remember);
+  }
+
+
+  openMessage(text:string) {
+    this.showError = true;
+    this.initialState = false;
+    this.messageText = text;
+  }
+  closeMessage() {
+    this.showError = false;
   }
 }

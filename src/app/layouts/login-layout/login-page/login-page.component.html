@@ -60,4 +60,9 @@
     </div>
 </div>
 
+<app-message-toast [messageText]="messageText" (closeMessage)="closeMessage()" class="pos-abs"
+    [ngClass]="{'slide-message-out' : !showError && ! initialState, 'slide-message-in' : showError}"></app-message-toast>
+
+
+
 <app-footer></app-footer>

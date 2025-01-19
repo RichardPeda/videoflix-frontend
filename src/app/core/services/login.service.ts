@@ -9,6 +9,8 @@ export class LoginService {
   private http = inject(HttpClient);
   private BASE_URL = environment.apiUrl;
   userEmail = '';
+  verificationSuccess = false
+  verificationError = false
 
   constructor() {}
 
@@ -41,5 +43,14 @@ export class LoginService {
 
   getSessionStorage(key: string) {
     return sessionStorage.getItem(key.toString());
+  }
+
+  postVerifyEmail(user_id: string, code: string) {
+    let body = {
+      user_id: user_id,
+      code: code,
+    };
+
+    return this.http.post(`${this.BASE_URL}api/verification/`, body);
   }
 }
