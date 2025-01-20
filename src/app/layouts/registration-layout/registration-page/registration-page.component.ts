@@ -58,7 +58,6 @@ export class RegistrationPageComponent {
   }
 
   togglePasswordVisible(index: number) {
-    console.log(index);
     this.passwords[index].show = !this.passwords[index].show;
     this.passwords[index].type = this.togglePasswordType(
       this.passwords[index].show

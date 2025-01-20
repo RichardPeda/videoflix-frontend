@@ -53,4 +53,14 @@ export class LoginService {
 
     return this.http.post(`${this.BASE_URL}api/verification/`, body);
   }
+
+  postPasswordResetInquiry(email: string) {
+    /**
+     * Send user email to backend for a passwort reset inquiry
+     */
+    let body = {
+      email: email,
+    };
+    return this.http.post(`${this.BASE_URL}api/password-reset-inquiry/`, body, {observe:'response'});
+  }
 }

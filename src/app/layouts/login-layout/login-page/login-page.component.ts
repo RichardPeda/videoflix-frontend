@@ -43,7 +43,15 @@ export class LoginPageComponent {
       this.initForm();
     }
 
-    this.openMessage('Verification successful, you can login now')
+    if(this.loginService.verificationSuccess){
+      this.openMessage('Verification successful, you can login now')
+      setTimeout(() => {
+        this.closeMessage()
+        this.loginService.verificationSuccess=false
+      }, 2000);
+
+    }
+
   }
 
   initForm() {
