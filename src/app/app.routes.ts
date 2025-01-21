@@ -6,13 +6,15 @@ import { MainPageComponent } from './layouts/main-layout/main-page/main-page.com
 import { VideoplayerComponent } from './layouts/videoplayer/videoplayer/videoplayer.component';
 import { VerifyPageComponent } from './layouts/verify-layout/verify-page/verify-page.component';
 import { PwResetPageComponent } from './layouts/password-layout/pw-reset-page/pw-reset-page.component';
+import { ResetPasswordComponent } from './layouts/password-layout/reset-password/reset-password.component';
 
 export const routes: Routes = [
     {path: '', component: StartPageComponent},
     {path: 'login', component: LoginPageComponent},
     {path: 'signup', component: RegistrationPageComponent},
     {path: 'verify', component: VerifyPageComponent},
-    {path: 'reset', component: PwResetPageComponent},
+    {path: 'forgot-password', component: PwResetPageComponent},
+    {path: 'reset-password', component: ResetPasswordComponent},
     {path: 'overview', component: MainPageComponent},
     {path: 'videoplayer', component: VideoplayerComponent},
 ];

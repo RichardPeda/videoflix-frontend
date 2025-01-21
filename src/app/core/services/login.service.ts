@@ -63,4 +63,18 @@ export class LoginService {
     };
     return this.http.post(`${this.BASE_URL}api/password-reset-inquiry/`, body, {observe:'response'});
   }
+
+  postPasswordResetCommand(user_id: string, code: string, password:string, repeated_password:string) {
+    /**
+     * Send new user password for reset
+     */
+    let body = {
+      user_id: user_id,
+      code: code,
+      password:password,
+      repeated_password:repeated_password
+
+    };
+    return this.http.post(`${this.BASE_URL}api/password-reset/`, body, {observe:'response'});
+  }
 }

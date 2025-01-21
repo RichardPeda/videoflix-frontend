@@ -1,6 +1,6 @@
 <app-header class="pos-abs"></app-header>
 <div class="background-shadow">
-
+    @if (!emailSent) {
     <div class="dialog-card">
         <div class="headline c-text">
             Forgot your password?
@@ -12,11 +12,22 @@
                 <input placeholder="Email Address" id="email" type="email"
                     pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-zA-Z]{2,4}" formControlName="email" autocomplete="email">
             </div>
-            <button class="mg-top-0" [ngClass]="{'btn-disabled': !emailForm.valid}" type="submit" [disabled]="!emailForm.valid">Send
+            <button class="mg-top-0" [ngClass]="{'btn-disabled': !emailForm.valid}" type="submit"
+                [disabled]="!emailForm.valid">Send
                 Email</button>
         </form>
 
     </div>
+    }
+    @else {
+    <div class="dialog-card">
+        <div class="headline c-text">
+            Email was sent successfully
+        </div>
+        <p class="c-text">Please check your email inbox and follow the instructions to reset your password</p>
+    </div>
+    }
+
 </div>
 
 <app-footer></app-footer>
