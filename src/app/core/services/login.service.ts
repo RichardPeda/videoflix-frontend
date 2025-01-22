@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment.development';
 
 @Injectable({
@@ -12,7 +12,13 @@ export class LoginService {
   verificationSuccess = false
   verificationError = false
 
-  constructor() {}
+  headers = new HttpHeaders()
+  constructor() {
+    this.headers = this.headers.append(
+      'Authorization',
+      'Token ' + this.getLocalStorage('token')
+    );
+  }
 
   postRegisterUser(
     username: string,
@@ -26,8 +32,15 @@ export class LoginService {
       password: password,
       repeated_password: repeated_password,
     };
-
     return this.http.post(`${this.BASE_URL}api/register/`, body);
+  }
+
+  postLoginUser(email:string, password:string){
+    let body = {
+      email:email,
+      password:password
+    }
+    return this.http.post(`${this.BASE_URL}api/login/`, body);
   }
 
   postLoginOrSignUp(email: string) {
@@ -43,6 +56,18 @@ export class LoginService {
 
   getSessionStorage(key: string) {
     return sessionStorage.getItem(key.toString());
+  }
+
+  setLocalStorage(key: string, data: string) {
+    localStorage.setItem(key, data);
+  }
+
+  getLocalStorage(key: string) {
+    return localStorage.getItem(key.toString());
+  }
+
+  deleteLocalStorage(key:string){
+    localStorage.removeItem(key)
   }
 
   postVerifyEmail(user_id: string, code: string) {

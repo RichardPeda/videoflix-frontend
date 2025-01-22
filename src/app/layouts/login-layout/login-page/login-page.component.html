@@ -43,7 +43,7 @@
             </div>
             <div class="checkbox-frame">
 
-                <input class="checkbox" type="checkbox" id="remember" name="remember" value="remember"
+                <input (change)="setRemember()" class="checkbox" type="checkbox" id="remember" name="remember" value="remember"
                     formControlName="remember">
                 <label for="remember"> Remember me</label><br>
 

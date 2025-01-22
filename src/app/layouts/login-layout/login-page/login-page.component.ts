@@ -20,7 +20,7 @@ import { MessageToastComponent } from '../../../shared/components/message/messag
     ReactiveFormsModule,
     HeaderComponent,
     FooterComponent,
-    MessageToastComponent
+    MessageToastComponent,
   ],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss',
@@ -30,36 +30,33 @@ export class LoginPageComponent {
   private loginService = inject(LoginService);
 
   userEmail = '';
-  messageText = 'Verification successful'
+  messageText = 'Verification successful';
   showError = false;
-  initialState = true
+  initialState = true;
 
   ngOnInit() {
-    let sessionData = this.loginService.getSessionStorage('email');
-    console.log(sessionData);
+    let rem = this.loginService.getLocalStorage('remember');
+    if (rem && rem == 'true') {
+      let remember = true;
+      let email = this.loginService.getLocalStorage('email');
+      let password = this.loginService.getLocalStorage('password');
+      if (email && password) {
+        
+        this.loginForm.setValue({
+          email: email,
+          password: password,
+          remember: remember,
+        });
+      }else this.loginService.deleteLocalStorage('remember');
+    } 
 
-    if (sessionData != null) {
-      this.userEmail = sessionData;
-      this.initForm();
-    }
-
-    if(this.loginService.verificationSuccess){
-      this.openMessage('Verification successful, you can login now')
+    if (this.loginService.verificationSuccess) {
+      this.openMessage('Verification successful, you can login now');
       setTimeout(() => {
-        this.closeMessage()
-        this.loginService.verificationSuccess=false
+        this.closeMessage();
+        this.loginService.verificationSuccess = false;
       }, 2000);
-
     }
-
-  }
-
-  initForm() {
-    this.loginForm.setValue({
-      email: this.userEmail,
-      password: null,
-      remember: null
-    })
   }
 
   loginForm = new FormGroup({
@@ -82,16 +79,42 @@ export class LoginPageComponent {
   }
 
   onSubmit() {
+    if (this.loginForm.valid) {
+      let email = this.loginForm.get('email')?.value;
+      let password = this.loginForm.get('password')?.value;
+      if (email && password) {
+        this.loginService.postLoginUser(email, password).subscribe({
+          next: (resp: any) => {
+            this.loginService.setLocalStorage('token', resp.token);
+            if (this.loginForm.value.remember) {
+              this.loginService.setLocalStorage('remember', 'true');
+              this.loginService.setLocalStorage('email', resp.email);
+              this.loginService.setLocalStorage('password', password);
+            }
+          },
+        });
+      }
+    }
     console.log(this.loginForm.value.remember);
   }
 
-
-  openMessage(text:string) {
+  openMessage(text: string) {
     this.showError = true;
     this.initialState = false;
     this.messageText = text;
   }
   closeMessage() {
     this.showError = false;
+  }
+
+  setRemember() {
+    let rem = this.loginForm.value.remember;
+    if (rem && rem == true)
+      this.loginService.setLocalStorage('remember', 'true');
+    else {
+      this.loginService.deleteLocalStorage('remember');
+      this.loginService.deleteLocalStorage('password');
+      this.loginService.deleteLocalStorage('email');
+    }
   }
 }
