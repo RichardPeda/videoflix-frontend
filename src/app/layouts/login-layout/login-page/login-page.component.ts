@@ -91,6 +91,7 @@ export class LoginPageComponent {
               this.loginService.setLocalStorage('email', resp.email);
               this.loginService.setLocalStorage('password', password);
             }
+            this.router.navigateByUrl('overview')
           },
         });
       }

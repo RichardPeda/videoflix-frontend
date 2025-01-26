@@ -3,14 +3,14 @@
     <div #container [ngStyle]="{'transform': 'translateX(' + slider.position + 'px)', 'gap' : offsetGap + 'px'}"
         class="thumbnail-slider">
 
-        @for (video of videoData; track $index; let index = $index) {
+        @for (video of videos(); track $index; let index = $index) {
 
 
         <div class="thumbnail-container pos-rel">
-            <img #thumbnail class="thumbnail-img" src="{{video.thumbImageURL}}" [ngClass]="{'selected': selected == index}" alt="">
+            <img #thumbnail class="thumbnail-img" src="{{video.image_url}}" [ngClass]="{'selected': selected == index}" alt="">
 
             <div (click)="selectVideo(index)" class="thumbnail-preview pos-abs" [ngClass]="{'selected': selected == index}">
-                <img src="{{video.thumbImageURL}}" alt="">
+                <img src="{{video.image_url}}" alt="">
 
                 <div class="c-sub flex column">
 

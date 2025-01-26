@@ -8,12 +8,21 @@
 
 <div class="main-content flex column">
 
-    <app-thumbnail-slider [genre]="'New on Videoflix'" [parentSize]="contentSize"></app-thumbnail-slider>
+    <!-- <app-thumbnail-slider [videos]="newVideos" [genre]="'New on Videoflix'" [parentSize]="contentSize"></app-thumbnail-slider>
     <app-thumbnail-slider [genre]="'Action'" [parentSize]="contentSize"></app-thumbnail-slider>
-    <app-thumbnail-slider [genre]="'Drama'" [parentSize]="contentSize"></app-thumbnail-slider>
+    <app-thumbnail-slider [genre]="'Drama'" [parentSize]="contentSize"></app-thumbnail-slider> -->
+
+    @for (videos of videoArray; track $index; let index = $index) {
+        @if (videos.length > 0) {
+        <app-thumbnail-slider [videos]="videos" [genre]="titles[index]" [parentSize]="contentSize"></app-thumbnail-slider>
+        }
+    }
 
 </div>
 
-<img [src]="tempData[0].image" alt="">
+<!-- @if (tempData) {
+
+    <img [src]="tempData[0].image" alt="">
+} -->
 
 <app-footer></app-footer>

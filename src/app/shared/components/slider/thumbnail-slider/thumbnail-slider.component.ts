@@ -37,11 +37,12 @@ export class ThumbnailSliderComponent {
   public videoService = inject(VideoService);
 
   parentSize = input<number | undefined>();
-  genre = input<string>()
+  genre = input<string>();
+  videos = input<Video[] | undefined>(undefined);
 
   windowWidth = window.innerWidth;
 
-  videoData: Video[] = [];
+  // videoData: Video[] = [];
   size = 0;
   singeImageSize = 0;
   contentWidth = 0;
@@ -63,7 +64,7 @@ export class ThumbnailSliderComponent {
   };
 
   constructor(@Self() private element: ElementRef) {
-    this.videoData = [...this.videoService.videoData];
+    // this.videoData = [...this.videoService.videoData];
 
     //TESTING
     // for (let index = 0; index < 6; index++) {
@@ -71,11 +72,29 @@ export class ThumbnailSliderComponent {
     //   this.videoData.push(element);
     // }
 
-    this.numberOfImages = this.videoData.length;
+    this.numberOfImages = this.videos.length;
 
     effect(() => {
       let parentSize = this.parentSize();
       if (parentSize) this.size = parentSize;
+    });
+    effect(() => {
+      
+
+      let videos = this.videos()
+      if (videos != undefined && videos.length > 0) {
+        console.log("videos",videos)
+        //get single image
+        let thumb = this.thumbnail?.nativeElement.getBoundingClientRect();
+        this.singeImageSize = thumb.width;
+
+        //content size of slider
+        this.sliderWidth =
+          this.singeImageSize * this.numberOfImages +
+          (this.numberOfImages - 1) * this.offsetGap;
+
+        this.sliderXabs = this.sliderX + this.sliderWidth; //absolute x position (right) of the slider element
+      }
     });
   }
 
@@ -83,17 +102,6 @@ export class ThumbnailSliderComponent {
     //get the left position of slider
     let element = this.container?.nativeElement.getBoundingClientRect();
     this.sliderX = element.x;
-
-    //get single image
-    let thumb = this.thumbnail?.nativeElement.getBoundingClientRect();
-    this.singeImageSize = thumb.width;
-
-    //content size of slider
-    this.sliderWidth =
-      this.singeImageSize * this.numberOfImages +
-      (this.numberOfImages - 1) * this.offsetGap;
-
-    this.sliderXabs = this.sliderX + this.sliderWidth; //absolute x position (right) of the slider element
 
     setTimeout(() => {
       this.slider.allowRight = this.isItAllowedToMoveRight();

@@ -39,7 +39,7 @@ export class VideoplayerComponent {
     title: 'Mighty Wales',
     description: 'See the wales',
     videoURL: '../../../../assets/videos/147535-791696855_small.mp4',
-    thumbImageURL: '',
+    image_url: '',
     duration: 20,
     genre: 'Action',
   };

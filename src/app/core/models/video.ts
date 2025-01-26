@@ -4,6 +4,6 @@ export interface Video{
     description:string;
     genre:string;
     duration:number;
-    thumbImageURL: string;
+    image_url: string;
     videoURL: string;
 }

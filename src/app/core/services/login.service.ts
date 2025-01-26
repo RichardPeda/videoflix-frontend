@@ -12,13 +12,7 @@ export class LoginService {
   verificationSuccess = false
   verificationError = false
 
-  headers = new HttpHeaders()
-  constructor() {
-    this.headers = this.headers.append(
-      'Authorization',
-      'Token ' + this.getLocalStorage('token')
-    );
-  }
+  
 
   postRegisterUser(
     username: string,
