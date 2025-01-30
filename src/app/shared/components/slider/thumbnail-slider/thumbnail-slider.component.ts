@@ -64,14 +64,7 @@ export class ThumbnailSliderComponent {
   };
 
   constructor(@Self() private element: ElementRef) {
-    // this.videoData = [...this.videoService.videoData];
-
-    //TESTING
-    // for (let index = 0; index < 6; index++) {
-    //   const element = this.videoService.videoData[index];
-    //   this.videoData.push(element);
-    // }
-
+   
     this.numberOfImages = this.videos.length;
 
     effect(() => {
@@ -149,7 +142,7 @@ export class ThumbnailSliderComponent {
   }
 
   selectVideo(index: number) {
-    this.videoService.selectedVideo$.next(index);
+    this.videoService.selectedVideoIdSignal.set(index);
     this.selected = index;
   }
 }

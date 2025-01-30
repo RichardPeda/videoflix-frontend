@@ -6,13 +6,14 @@ import {
   inject,
   HostListener,
   Self,
+  effect,
 } from '@angular/core';
 import { FooterComponent } from '../../../shared/components/footer/footer.component';
 import { CommonModule } from '@angular/common';
 import { ThumbnailSliderComponent } from '../../../shared/components/slider/thumbnail-slider/thumbnail-slider.component';
 import { ThumbnailPreviewComponent } from '../../../shared/components/slider/thumbnail-preview/thumbnail-preview.component';
 import { TeaserComponent } from '../teaser/teaser.component';
-import { Video } from '../../../core/models/video';
+import { ConvertableVideo, Video } from '../../../core/models/video';
 import { VideoService } from '../../../core/services/video.service';
 import { HeaderComponent } from '../../../shared/components/header/header-main/header.component';
 import { Genre } from '../../../core/models/genre';
@@ -37,15 +38,24 @@ export class MainPageComponent {
   contentSize = 0;
 
   videoData: Video[] = [];
+  videoForTeaser: Video | undefined;
+  teaserVideoSrc: string = '';
 
   videoIndex = 0;
 
   genres: 'NEW' | 'DOKUMENTARY' | 'ACTION' | 'ROMANTIC' | 'DRAMA' =
     'DOKUMENTARY';
 
-  titles = ['New on Videoflix', 'Action', 'Dokumentary', 'Romantic', 'Drama'];
+  genreTitles = [
+    'New on Videoflix',
+    'Action',
+    'Dokumentary',
+    'Romantic',
+    'Drama',
+  ];
 
   videoArray: Video[][] = [];
+  convertVideoArray: ConvertableVideo[] = [];
 
   newVideos: Video[] = [];
   documantaryVideos: Video[] = [];
@@ -54,15 +64,41 @@ export class MainPageComponent {
   dramaVideos: Video[] = [];
 
   constructor(@Self() private element: ElementRef) {
-    this.videoService.selectedVideo$.subscribe((selected) => {
-      this.videoIndex = selected;
+    console.log(window.innerWidth)
+    effect(() => {
+      let selectedVideo = this.videoService.selectedVideoIdSignal();
+      if (selectedVideo) {
+        this.videoForTeaser = this.videoData.find(
+          (video) => video.id == selectedVideo
+        );
+        this.getTeaser(selectedVideo);
+      }
     });
 
+    this.loadVideos();
+   
+  }
+
+  loadVideos() {
     this.videoService.getMovies().subscribe({
       next: (data: any) => {
-        console.log('data', data);
+        // console.log('data', data);
         this.videoData = data;
+      },
+      complete: () => {
         this.sortVideosForGenre();
+        this.loadConvertableVideos();
+      },
+      error: (err) => console.log(err),
+    });
+  }
+
+  loadConvertableVideos() {
+    this.videoService.getConvertedMovies().subscribe({
+      next: (data: any) => {
+        // console.log('convert', data);
+        this.convertVideoArray = data;
+        this.getFirstTeaser();
       },
       error: (err) => console.log(err),
     });
@@ -74,6 +110,8 @@ export class MainPageComponent {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
+    console.log(window.innerWidth)
+    this.videoService.setBestVideoSize(window.innerWidth)
     this.contentSize = this.element.nativeElement.offsetWidth;
   }
 
@@ -99,5 +137,48 @@ export class MainPageComponent {
     this.videoArray[genre.documentary] = [...this.documantaryVideos];
     this.videoArray[genre.romantic] = [...this.romanticVideos];
     this.videoArray[genre.drama] = [...this.dramaVideos];
+
+    this.videoForTeaser = this.findFirstVideo(this.videoArray);
+    console.log('this.videoForTeaser', this.videoForTeaser);
+  }
+
+  findFirstVideo(multiArray: Video[][]) {
+    let teaser;
+    for (let index = 0; index < multiArray.length; index++) {
+      const firstDimension = multiArray[index];
+      if (firstDimension.length > 0) {
+        for (let i = 0; index < firstDimension.length; index++) {
+          const secondDimension = firstDimension[index];
+          if (secondDimension) {
+            teaser = secondDimension;
+            break;
+          }
+        }
+      }
+    }
+    return teaser;
+  }
+
+  getFirstTeaser() {
+    console.log('getFirstTeaser Funktion');
+    if (this.videoForTeaser && this.convertVideoArray) {
+      this.convertVideoArray.find((convert) => {
+        if (convert.movie === this.videoForTeaser?.id) {
+          this.teaserVideoSrc = convert.video_720p;
+          console.log('this.teaserVideoSrc', this.teaserVideoSrc);
+        }
+      });
+    }
+  }
+
+  getTeaser(findId: number) {
+    if (this.convertVideoArray) {
+      this.convertVideoArray.find((convert) => {
+        if (convert.movie === findId) {
+          this.teaserVideoSrc = convert.video_720p;
+          console.log(this.teaserVideoSrc);
+        }
+      });
+    }
   }
 }

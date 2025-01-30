@@ -3,7 +3,7 @@
 
   
 </div> -->
-<app-teaser [video]="videoData[videoIndex]"></app-teaser>
+<app-teaser [video]="videoForTeaser" [videoSrc]="teaserVideoSrc"></app-teaser>
 
 
 <div class="main-content flex column">
@@ -14,7 +14,7 @@
 
     @for (videos of videoArray; track $index; let index = $index) {
         @if (videos.length > 0) {
-        <app-thumbnail-slider [videos]="videos" [genre]="titles[index]" [parentSize]="contentSize"></app-thumbnail-slider>
+        <app-thumbnail-slider [videos]="videos" [genre]="genreTitles[index]" [parentSize]="contentSize"></app-thumbnail-slider>
         }
     }
 

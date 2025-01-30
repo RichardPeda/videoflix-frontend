@@ -1,11 +1,9 @@
-import { inject, Injectable } from '@angular/core';
-import { Video } from '../models/video';
-import { BehaviorSubject, of, tap } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
+import { ConvertableVideo, Video } from '../models/video';
+import { of, tap } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment.development';
 import { LoginService } from './login.service';
-
-
 
 @Injectable({
   providedIn: 'root',
@@ -99,12 +97,38 @@ export class VideoService {
   ];
 
   private cachedVideos: Video[] | null = null;
+  private cachedConvertableVideos: ConvertableVideo[] | null = null;
 
-  selectedVideo$ = new BehaviorSubject<number>(0);
+  selectedVideoIdSignal = signal<number>(0);
+
+  videoSizeSetpoint = signal<number>(120);
+  videoResolution = {
+    minimal: 120,
+    low: 360,
+    middle: 720,
+    high: 1080,
+  };
+  threshold = {
+    low: 240,
+    middle: 540,
+    high: 900,
+  };
 
   private http = inject(HttpClient);
 
   private BASE_URL = environment.apiUrl;
+
+  setBestVideoSize(windowSize: number) {
+    if (windowSize <= this.threshold.low)
+      this.videoSizeSetpoint.set(this.videoResolution.minimal);
+    else {
+      if (windowSize > this.threshold.high)
+        this.videoSizeSetpoint.set(this.videoResolution.high);
+      else if (windowSize > this.threshold.middle)
+        this.videoSizeSetpoint.set(this.videoResolution.middle);
+      else this.videoSizeSetpoint.set(this.videoResolution.low);
+    }
+  }
 
   getMovies() {
     if (this.cachedVideos) {
@@ -116,6 +140,19 @@ export class VideoService {
         })
         .pipe(
           tap((data) => (this.cachedVideos = data)) // Daten cachen
+        );
+    }
+  }
+  getConvertedMovies() {
+    if (this.cachedConvertableVideos) {
+      return of(this.cachedConvertableVideos);
+    } else {
+      return this.http
+        .get<any>(`${this.BASE_URL}api/movies-convert/`, {
+          headers: this.headers,
+        })
+        .pipe(
+          tap((data) => (this.cachedConvertableVideos = data)) // Daten cachen
         );
     }
   }

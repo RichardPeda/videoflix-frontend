@@ -9,7 +9,7 @@
         <div class="thumbnail-container pos-rel">
             <img #thumbnail class="thumbnail-img" src="{{video.image_url}}" [ngClass]="{'selected': selected == index}" alt="">
 
-            <div (click)="selectVideo(index)" class="thumbnail-preview pos-abs" [ngClass]="{'selected': selected == index}">
+            <div (click)="selectVideo(video.id)" class="thumbnail-preview pos-abs" [ngClass]="{'selected': selected == index}">
                 <img src="{{video.image_url}}" alt="">
 
                 <div class="c-sub flex column">
