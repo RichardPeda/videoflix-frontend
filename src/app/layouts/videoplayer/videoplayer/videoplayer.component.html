@@ -3,7 +3,7 @@
     <app-header-player [ngClass]="{'fadeout': fadoutControls() && isVideoPlay()}"></app-header-player>
 
     <div class="player">
-        <video (click)="playPauseVideo()" (ended)="isVideoPlay.set(false)" #videoPlayer [src]="video.videoURL"
+        <video (click)="playPauseVideo()" (ended)="isVideoPlay.set(false)" #videoPlayer [src]="videoSrc"
             (loadedmetadata)="onMetadata($event, videoPlayer)" (timeupdate)="updateProgressBar()"></video>
 
         <div class="video-controls" [ngClass]="{'fadeout': fadoutControls() && isVideoPlay()}">
@@ -70,7 +70,7 @@
 
                 </div>
                 <div class="middle">
-                    <h2>{{video.title}}</h2>
+                    <!-- <h2>{{video.title}}</h2> -->
                 </div>
                 <div class="right">
                     <div id="quality" class="btn quality pos-rel">

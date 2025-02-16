@@ -5,6 +5,7 @@ import {
   effect,
   ElementRef,
   HostListener,
+  inject,
   signal,
   ViewChild,
   viewChild,
@@ -13,8 +14,9 @@ import { HeaderPlayerComponent } from '../../../shared/components/header/header-
 import { VolumeBarComponent } from '../volume-bar/volume-bar.component';
 import { SpeedSelectionComponent } from '../speed-selection/speed-selection.component';
 import { FormsModule } from '@angular/forms';
-import { Video } from '../../../core/models/video';
+import { ConvertableVideo, Video } from '../../../core/models/video';
 import { QualitySelectionComponent } from '../quality-selection/quality-selection.component';
+import { VideoService } from '../../../core/services/video.service';
 
 @Component({
   selector: 'app-videoplayer',
@@ -31,18 +33,13 @@ import { QualitySelectionComponent } from '../quality-selection/quality-selectio
   styleUrl: './videoplayer.component.scss',
 })
 export class VideoplayerComponent {
-  @ViewChild('videoPlayer') videoPlayer!: ElementRef;
+  @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
   @ViewChild('speedControl') speedControl!: ElementRef;
 
-  video: Video = {
-    id: 1,
-    title: 'Mighty Wales',
-    description: 'See the wales',
-    videoURL: '../../../../assets/videos/147535-791696855_small.mp4',
-    image_url: '',
-    duration: 20,
-    genre: 'Action',
-  };
+  private videoService = inject(VideoService);
+
+  video: ConvertableVideo | undefined = undefined;
+  videoSrc = '';
 
   duration = signal(0);
   currentTime = signal(0);
@@ -75,6 +72,40 @@ export class VideoplayerComponent {
     });
   }
 
+  ngOnInit() {
+    // this.videoService.getSingleConvertedMovie(5).subscribe({
+    //   next: (resp: any) => {
+    //     this.video = resp;
+    //     console.log(this.video);
+
+    //     this.videoSrc = this.video?.video_120p!;
+    //   },
+    // });
+    this.testSpeed();
+  }
+
+  testFileUrl = '';
+
+  testSpeed() {
+    const startTime = performance.now();
+
+    this.videoService.measureNetworkSpeed().subscribe({
+      next: (resp: any) => {
+        this.testFileUrl = resp.file;
+      },
+      complete: async () => {
+        await fetch(this.testFileUrl + '?nocache=' + new Date().getTime(), { method: 'GET' });
+        const endTime = performance.now();
+        const duration = (endTime - startTime) / 1000; // Dauer in Sekunden
+        console.log('duration', duration);
+        const fileSizeInBits = 100 * 1024 * 8; // 100 KB in Bits
+        const speedMbps = (fileSizeInBits / duration) / (1024 * 1024);
+        console.log('speedmps:', speedMbps);
+        
+      },
+    });
+  }
+
   @HostListener('document:mousemove', ['$event'])
   onMouseMove(e: any) {
     window.clearTimeout(this.timeout);
@@ -101,7 +132,32 @@ export class VideoplayerComponent {
     this.duration.set(video.duration);
     this.currentTime.set(video.currentTime);
     this.updateProgressBar();
-    this.videoPlayer.nativeElement.play();
+    // this.videoPlayer.nativeElement.play();
+    console.log(this.videoPlayer.nativeElement.buffered.length);
+    let lastBufferedEnd = 0;
+
+    this.videoPlayer.nativeElement.addEventListener('timeupdate', () => {
+      const bufferedEnd = this.videoPlayer.nativeElement.buffered.end(
+        this.videoPlayer.nativeElement.buffered.length - 1
+      );
+      const remainingBuffer = bufferedEnd - video.currentTime;
+      const totalDuration = video.duration;
+      const buffer = this.videoPlayer.nativeElement.buffered;
+
+      // Berechnung des relativen Puffers: Wie viel Prozent des Videos ist geladen?
+      const bufferedPercentage = (bufferedEnd / totalDuration) * 100;
+      const bufferGrowth = bufferedEnd - lastBufferedEnd; // Wie schnell wächst der Buffer?
+
+      console.log(`Buffered: ${bufferedPercentage.toFixed(2)}%`);
+      console.log(`Buffer Growth: ${bufferGrowth.toFixed(2)}s`);
+      console.log(`Remaining Buffer: ${remainingBuffer.toFixed(2)}s`);
+      console.log(`Buffer : ${bufferedEnd}s`);
+      lastBufferedEnd = bufferedEnd;
+    });
+
+    // setTimeout(() => {
+    //   this.videoSrc = this.video?.video_360p!
+    // }, 5000);
   }
 
   replayVideo() {

@@ -156,4 +156,17 @@ export class VideoService {
         );
     }
   }
+
+  getSingleConvertedMovie(id: number) {
+    return this.http.get<any>(`${this.BASE_URL}api/movie-convert/${id}`, {
+      headers: this.headers,
+    });
+  }
+
+  measureNetworkSpeed() {
+    return this.http.get<any>(`${this.BASE_URL}api/connection/`, {
+      headers: this.headers,
+    });
+    
+    }
 }

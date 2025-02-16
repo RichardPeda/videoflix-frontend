@@ -96,7 +96,6 @@ export class MainPageComponent {
   loadConvertableVideos() {
     this.videoService.getConvertedMovies().subscribe({
       next: (data: any) => {
-        // console.log('convert', data);
         this.convertVideoArray = data;
         this.getFirstTeaser();
       },
@@ -110,7 +109,6 @@ export class MainPageComponent {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    console.log(window.innerWidth)
     this.videoService.setBestVideoSize(window.innerWidth)
     this.contentSize = this.element.nativeElement.offsetWidth;
   }
