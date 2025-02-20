@@ -81,30 +81,12 @@ export class VideoplayerComponent {
     //     this.videoSrc = this.video?.video_120p!;
     //   },
     // });
-    this.testSpeed();
+   
   }
 
-  testFileUrl = '';
+  
 
-  testSpeed() {
-    const startTime = performance.now();
-
-    this.videoService.measureNetworkSpeed().subscribe({
-      next: (resp: any) => {
-        this.testFileUrl = resp.file;
-      },
-      complete: async () => {
-        await fetch(this.testFileUrl + '?nocache=' + new Date().getTime(), { method: 'GET' });
-        const endTime = performance.now();
-        const duration = (endTime - startTime) / 1000; // Dauer in Sekunden
-        console.log('duration', duration);
-        const fileSizeInBits = 100 * 1024 * 8; // 100 KB in Bits
-        const speedMbps = (fileSizeInBits / duration) / (1024 * 1024);
-        console.log('speedmps:', speedMbps);
-        
-      },
-    });
-  }
+  
 
   @HostListener('document:mousemove', ['$event'])
   onMouseMove(e: any) {

@@ -14,11 +14,15 @@ export class VideoService {
   headers = new HttpHeaders();
 
   constructor() {
+    
     this.headers = this.headers.append(
       'Authorization',
       'Token ' + this.loginService.getLocalStorage('token')
     );
+   
   }
+
+  
 
   videoData: Video[] = [
     {
@@ -163,10 +167,5 @@ export class VideoService {
     });
   }
 
-  measureNetworkSpeed() {
-    return this.http.get<any>(`${this.BASE_URL}api/connection/`, {
-      headers: this.headers,
-    });
-    
-    }
+  
 }
