@@ -1,4 +1,4 @@
-import { effect, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment.development';
 
@@ -11,20 +11,12 @@ export class LoginService {
   userEmail = '';
   verificationSuccess = false;
   verificationError = false;
-  speedMbps = signal<number | undefined>(undefined);
-  networkSpeed = 0;
+  // networkSpeed:number|undefined = undefined
+
+  
 
   constructor() {
-    this.testSpeed();
-
-    effect(() => {
-      const speed = this.speedMbps();
-      if (speed) {
-        this.networkSpeed = this.classifyNetwork(speed);
-        console.log(this.networkSpeed);
-        
-      }
-    });
+   
   }
 
   postRegisterUser(
@@ -118,64 +110,7 @@ export class LoginService {
     });
   }
 
-  measureNetworkSpeed() {
-    return this.http.get<any>(`${this.BASE_URL}api/connection/`);
-  }
-
-  testFileUrl = '';
-
-  testSpeed() {
-    this.measureNetworkSpeed().subscribe({
-      next: (resp: any) => {
-        this.testFileUrl = resp.file;
-      },
-      complete: async () => {
-        let response = await fetch(
-          this.testFileUrl + '?nocache=' + new Date().getTime(),
-          {
-            method: 'GET',
-          }
-        );
-
-        const reader = response.body?.getReader();
-        if (!reader) {
-          console.error('Reader konnte nicht erstellt werden!');
-          this.speedMbps.set(5);
-        } else {
-          const contentLength = response.headers.get('content-length')
-            ? parseInt(response.headers.get('content-length')!)
-            : 102400;
-
-          const fileSizeInBits = contentLength * 8;
-
-          let received = 0;
-          const startTime = new Date().getTime();
-
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            received += value.length;
-          }
-
-          const endTime = new Date().getTime();
-          const durationInSeconds = (endTime - startTime) / 1000;
-          const speedMbps = fileSizeInBits / durationInSeconds / (1024 * 1024);
-          console.log(
-            `Berechnete Geschwindigkeit: ${speedMbps.toFixed(2)} Mbps`
-          );
-          this.speedMbps.set(speedMbps);
-        }
-      },
-    });
-  }
-
-  classifyNetwork(speedMbps: number): number {
-    if (speedMbps < 0.5) return 120
-    if (speedMbps < 2) return 360
-    if (speedMbps >2 && speedMbps < 5) return 720
-    if (speedMbps > 5) return 1080
-    return 0
-  }
+  
 }
 
 // < 0.5 Mbps	120p (sehr niedrig)	Nur für sehr langsames Internet (3G, 2G, schlechte Verbindungen)

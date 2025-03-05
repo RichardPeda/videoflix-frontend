@@ -19,11 +19,21 @@ app-header-player {
     width: 100%;
     padding-inline: 32px;
 }
+.spinner{
+    position: absolute;
+    z-index: 50;
+    width: 10vw !important;
+    height: 10vw !important;
+    top: 50%;
+    transform: translateY(-50%);
+   
+}
 
 .player {
     width: 100%;
     height: 100%;
     position: relative;
+   
 
     video {
         width: 100%;

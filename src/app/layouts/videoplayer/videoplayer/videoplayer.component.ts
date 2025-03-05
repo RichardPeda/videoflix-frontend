@@ -17,6 +17,8 @@ import { FormsModule } from '@angular/forms';
 import { ConvertableVideo, Video } from '../../../core/models/video';
 import { QualitySelectionComponent } from '../quality-selection/quality-selection.component';
 import { VideoService } from '../../../core/services/video.service';
+import { LoginService } from '../../../core/services/login.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-videoplayer',
@@ -28,6 +30,7 @@ import { VideoService } from '../../../core/services/video.service';
     SpeedSelectionComponent,
     QualitySelectionComponent,
     FormsModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './videoplayer.component.html',
   styleUrl: './videoplayer.component.scss',
@@ -37,9 +40,12 @@ export class VideoplayerComponent {
   @ViewChild('speedControl') speedControl!: ElementRef;
 
   private videoService = inject(VideoService);
+  private loginService = inject(LoginService);
 
   video: ConvertableVideo | undefined = undefined;
+  videoData: ConvertableVideo[] = [];
   videoSrc = '';
+  isLoading = true;
 
   duration = signal(0);
   currentTime = signal(0);
@@ -55,9 +61,11 @@ export class VideoplayerComponent {
   selectedSpeed = signal(this.playSpeed[2]);
 
   qualities = [1080, 720, 360, 120];
-  selectedQuality = signal(this.qualities[3]);
+  // selectedQuality = signal(this.qualities[3]);
+  selectedQuality = signal(this.videoService.recommendedResolution());
 
   fullScreen = false;
+  switchVideo = false;
 
   fadoutControls = signal(false);
 
@@ -70,23 +78,94 @@ export class VideoplayerComponent {
     effect(() => {
       this.videoPlayer.nativeElement.playbackRate = this.selectedSpeed();
     });
+
+    effect(() => {
+      const videoElement = this.videoPlayer.nativeElement;
+      const currentTime = videoElement.currentTime; // Speichere aktuelle Zeit
+      const isPlaying = !videoElement.paused;
+
+      const quality = this.selectedQuality();
+      if (quality && this.video) {
+        const preloadedVideo = document.createElement('video');
+        preloadedVideo.src = this.videoService.getConvertableVideoForResolution(
+          this.video!,
+          quality
+        );
+        preloadedVideo.preload = 'auto';
+
+        videoElement.addEventListener('loadedmetadata', () => {
+          videoElement.currentTime = currentTime; // Stelle vorherige Zeit wieder her
+
+          if (isPlaying) videoElement.play(); // Falls es vorher spielte, weiter abspielen
+
+          this.isLoading = false;
+        });
+
+        preloadedVideo.addEventListener('canplaythrough', () => {
+          this.switchVideo = true;
+
+          // Quelle umschalten, wenn Video geladen wurde
+          this.videoSrc = preloadedVideo.src;
+          this.videoPlayer.nativeElement.currentTime = currentTime;
+
+          // console.log(time)
+          setTimeout(() => {
+            this.switchVideo = false;
+          }, 100);
+        });
+      }
+    });
   }
 
   ngOnInit() {
-    // this.videoService.getSingleConvertedMovie(5).subscribe({
-    //   next: (resp: any) => {
-    //     this.video = resp;
-    //     console.log(this.video);
-
-    //     this.videoSrc = this.video?.video_120p!;
-    //   },
-    // });
-   
+    this.loadVideos();
   }
 
-  
+  loadVideos() {
+    this.videoService.getConvertedMovies().subscribe({
+      next: (data: any) => {
+        this.videoData = data;
+      },
+      complete: () => {
+        this.video = this.findSelectedConvertableVideo();
+        if (this.video) this.videoSrc = this.findQuality(this.video);
+      },
+      error: (err) => console.log(err),
+    });
+  }
 
-  
+  findSelectedConvertableVideo() {
+    const sessionID = this.loginService.getSessionStorage('videoID');
+    if (sessionID) {
+      return this.videoData.find((video) => video.id == +sessionID);
+    } else {
+      console.warn('video not found');
+      return undefined;
+    }
+  }
+
+  findQuality(video: ConvertableVideo) {
+    if (video) {
+      // let quality = this.videoService.userSelectedResolution();
+      let quality = this.selectedQuality();
+console.log('quality', quality);
+
+      if (quality) {
+        return this.videoService.getConvertableVideoForResolution(
+          video,
+          quality
+        );
+      } else {
+        quality = this.videoService.recommendedResolution();
+        if (quality) {
+          return this.videoService.getConvertableVideoForResolution(
+            video,
+            quality
+          );
+        } else return '';
+      }
+    } else return '';
+  }
 
   @HostListener('document:mousemove', ['$event'])
   onMouseMove(e: any) {
@@ -118,24 +197,24 @@ export class VideoplayerComponent {
     console.log(this.videoPlayer.nativeElement.buffered.length);
     let lastBufferedEnd = 0;
 
-    this.videoPlayer.nativeElement.addEventListener('timeupdate', () => {
-      const bufferedEnd = this.videoPlayer.nativeElement.buffered.end(
-        this.videoPlayer.nativeElement.buffered.length - 1
-      );
-      const remainingBuffer = bufferedEnd - video.currentTime;
-      const totalDuration = video.duration;
-      const buffer = this.videoPlayer.nativeElement.buffered;
+    // this.videoPlayer.nativeElement.addEventListener('timeupdate', () => {
+    //   const bufferedEnd = this.videoPlayer.nativeElement.buffered.end(
+    //     this.videoPlayer.nativeElement.buffered.length - 1
+    //   );
+    //   const remainingBuffer = bufferedEnd - video.currentTime;
+    //   const totalDuration = video.duration;
+    //   const buffer = this.videoPlayer.nativeElement.buffered;
 
-      // Berechnung des relativen Puffers: Wie viel Prozent des Videos ist geladen?
-      const bufferedPercentage = (bufferedEnd / totalDuration) * 100;
-      const bufferGrowth = bufferedEnd - lastBufferedEnd; // Wie schnell wächst der Buffer?
+    //   // Berechnung des relativen Puffers: Wie viel Prozent des Videos ist geladen?
+    //   const bufferedPercentage = (bufferedEnd / totalDuration) * 100;
+    //   const bufferGrowth = bufferedEnd - lastBufferedEnd; // Wie schnell wächst der Buffer?
 
-      console.log(`Buffered: ${bufferedPercentage.toFixed(2)}%`);
-      console.log(`Buffer Growth: ${bufferGrowth.toFixed(2)}s`);
-      console.log(`Remaining Buffer: ${remainingBuffer.toFixed(2)}s`);
-      console.log(`Buffer : ${bufferedEnd}s`);
-      lastBufferedEnd = bufferedEnd;
-    });
+    //   console.log(`Buffered: ${bufferedPercentage.toFixed(2)}%`);
+    //   console.log(`Buffer Growth: ${bufferGrowth.toFixed(2)}s`);
+    //   console.log(`Remaining Buffer: ${remainingBuffer.toFixed(2)}s`);
+    //   console.log(`Buffer : ${bufferedEnd}s`);
+    //   lastBufferedEnd = bufferedEnd;
+    // });
 
     // setTimeout(() => {
     //   this.videoSrc = this.video?.video_360p!

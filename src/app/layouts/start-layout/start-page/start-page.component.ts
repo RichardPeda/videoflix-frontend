@@ -9,6 +9,7 @@ import { FooterComponent } from '../../../shared/components/footer/footer.compon
 import { HeaderComponent } from '../../../shared/components/header/header-main/header.component';
 import { LoginService } from '../../../core/services/login.service';
 import { Router } from '@angular/router';
+import { NetworkService } from '../../../core/services/network.service';
 
 @Component({
   selector: 'app-start-page',
@@ -19,10 +20,13 @@ import { Router } from '@angular/router';
 })
 export class StartPageComponent {
   private loginService = inject(LoginService);
+  private networkService = inject(NetworkService)
   private router = inject(Router);
   profileForm = new FormGroup({
     email: new FormControl('', Validators.required),
   });
+
+  
 
   onSubmit() {
     if (this.profileForm.valid) {

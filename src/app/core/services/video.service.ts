@@ -1,28 +1,34 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { ConvertableVideo, Video } from '../models/video';
 import { of, tap } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment.development';
 import { LoginService } from './login.service';
+import { NetworkService } from './network.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class VideoService {
   private loginService = inject(LoginService);
-
+  private networkService = inject(NetworkService);
   headers = new HttpHeaders();
 
+  recommendedResolution = computed(() => {
+    const networkRes = sessionStorage.getItem('networkRes');
+    const videoSize = this.setBestVideoSize(window.innerWidth)
+    if (videoSize && networkRes) return Math.min(videoSize, +networkRes);
+    else return videoSize;
+  });
+
+  userSelectedResolution = signal<number | undefined>(undefined);
+
   constructor() {
-    
     this.headers = this.headers.append(
       'Authorization',
       'Token ' + this.loginService.getLocalStorage('token')
     );
-   
   }
-
-  
 
   videoData: Video[] = [
     {
@@ -104,8 +110,9 @@ export class VideoService {
   private cachedConvertableVideos: ConvertableVideo[] | null = null;
 
   selectedVideoIdSignal = signal<number>(0);
+  selectedVideoSignal = signal<Video | undefined>(undefined);
 
-  videoSizeSetpoint = signal<number>(120);
+  // videoSizeSetpoint = signal<number | undefined>(undefined);
   videoResolution = {
     minimal: 120,
     low: 360,
@@ -124,13 +131,13 @@ export class VideoService {
 
   setBestVideoSize(windowSize: number) {
     if (windowSize <= this.threshold.low)
-      this.videoSizeSetpoint.set(this.videoResolution.minimal);
+      return (this.videoResolution.minimal);
     else {
       if (windowSize > this.threshold.high)
-        this.videoSizeSetpoint.set(this.videoResolution.high);
+        return (this.videoResolution.high);
       else if (windowSize > this.threshold.middle)
-        this.videoSizeSetpoint.set(this.videoResolution.middle);
-      else this.videoSizeSetpoint.set(this.videoResolution.low);
+        return(this.videoResolution.middle);
+      else return(this.videoResolution.low);
     }
   }
 
@@ -167,5 +174,25 @@ export class VideoService {
     });
   }
 
-  
+  getConvertableVideoForResolution(
+    convertable: ConvertableVideo,
+    minRes: number
+  ) {
+    switch (minRes) {
+      case 120:
+        return convertable.video_120p;
+        break;
+      case 360:
+        return convertable.video_360p;
+        break;
+      case 720:
+        return convertable.video_720p;
+        break;
+      case 1080:
+        return convertable.video_1080p;
+      default:
+        return convertable.video_120p;
+        break;
+    }
+  }
 }

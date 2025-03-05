@@ -2,11 +2,15 @@
 
     <app-header-player [ngClass]="{'fadeout': fadoutControls() && isVideoPlay()}"></app-header-player>
 
+    @if (isLoading) {
+
+    <!-- <mat-spinner class="spinner"></mat-spinner> -->
+    }
     <div class="player">
         <video (click)="playPauseVideo()" (ended)="isVideoPlay.set(false)" #videoPlayer [src]="videoSrc"
             (loadedmetadata)="onMetadata($event, videoPlayer)" (timeupdate)="updateProgressBar()"></video>
 
-        <div class="video-controls" [ngClass]="{'fadeout': fadoutControls() && isVideoPlay()}">
+        <div class="video-controls" [ngClass]="{'fadeout': fadoutControls() && isVideoPlay(), 'd-none': switchVideo}">
 
             <div class="flex ai-center full-width gap-12 font-12">
                 <input #speedControl (input)="changeTime($event)" type="range" min="0" max="100" [(ngModel)]="timebar">

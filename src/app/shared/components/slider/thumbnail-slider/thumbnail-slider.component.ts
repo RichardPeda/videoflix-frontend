@@ -64,7 +64,6 @@ export class ThumbnailSliderComponent {
   };
 
   constructor(@Self() private element: ElementRef) {
-   
     this.numberOfImages = this.videos.length;
 
     effect(() => {
@@ -72,11 +71,9 @@ export class ThumbnailSliderComponent {
       if (parentSize) this.size = parentSize;
     });
     effect(() => {
-      
-
-      let videos = this.videos()
+      let videos = this.videos();
       if (videos != undefined && videos.length > 0) {
-        console.log("videos",videos)
+        console.log('videos', videos);
         //get single image
         let thumb = this.thumbnail?.nativeElement.getBoundingClientRect();
         this.singeImageSize = thumb.width;
@@ -144,5 +141,14 @@ export class ThumbnailSliderComponent {
   selectVideo(index: number) {
     this.videoService.selectedVideoIdSignal.set(index);
     this.selected = index;
+  }
+
+  getDuration(duration: number) {
+    if (duration < 60) return duration.toFixed(0) + ' s';
+    else {
+      const min = Math.floor(duration / 60);
+      const sec = duration - min * 60;
+      return min.toFixed(0) + ' min ' + sec.toFixed(0) + ' s';
+    }
   }
 }

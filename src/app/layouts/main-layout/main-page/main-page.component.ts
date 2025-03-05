@@ -17,6 +17,7 @@ import { ConvertableVideo, Video } from '../../../core/models/video';
 import { VideoService } from '../../../core/services/video.service';
 import { HeaderComponent } from '../../../shared/components/header/header-main/header.component';
 import { Genre } from '../../../core/models/genre';
+import { LoginService } from '../../../core/services/login.service';
 
 @Component({
   selector: 'app-main-page',
@@ -34,6 +35,7 @@ import { Genre } from '../../../core/models/genre';
 export class MainPageComponent {
   private elementRef = inject(ElementRef);
   private videoService = inject(VideoService);
+  private loginService = inject(LoginService);
 
   contentSize = 0;
 
@@ -64,25 +66,27 @@ export class MainPageComponent {
   dramaVideos: Video[] = [];
 
   constructor(@Self() private element: ElementRef) {
-    console.log(window.innerWidth)
-    effect(() => {
-      let selectedVideo = this.videoService.selectedVideoIdSignal();
-      if (selectedVideo) {
-        this.videoForTeaser = this.videoData.find(
-          (video) => video.id == selectedVideo
-        );
-        this.getTeaser(selectedVideo);
-      }
-    });
+    console.log(window.innerWidth);
+    this.videoService.setBestVideoSize(window.innerWidth);
+    effect(
+      () => {
+        let selectedVideo = this.videoService.selectedVideoIdSignal();
+        if (selectedVideo) {
+          this.videoForTeaser = this.videoData.find(
+            (video) => video.id == selectedVideo
+          );
+          this.getTeaser(selectedVideo);
+        }
+      },
+      { allowSignalWrites: true }
+    );
 
     this.loadVideos();
-   
   }
 
   loadVideos() {
     this.videoService.getMovies().subscribe({
       next: (data: any) => {
-        // console.log('data', data);
         this.videoData = data;
       },
       complete: () => {
@@ -97,7 +101,10 @@ export class MainPageComponent {
     this.videoService.getConvertedMovies().subscribe({
       next: (data: any) => {
         this.convertVideoArray = data;
-        this.getFirstTeaser();
+
+        const id = sessionStorage.getItem('videoID');
+        if (id) this.getTeaser(+id);
+        else this.getFirstTeaser();
       },
       error: (err) => console.log(err),
     });
@@ -109,7 +116,7 @@ export class MainPageComponent {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.videoService.setBestVideoSize(window.innerWidth)
+    this.videoService.setBestVideoSize(window.innerWidth);
     this.contentSize = this.element.nativeElement.offsetWidth;
   }
 
@@ -137,7 +144,6 @@ export class MainPageComponent {
     this.videoArray[genre.drama] = [...this.dramaVideos];
 
     this.videoForTeaser = this.findFirstVideo(this.videoArray);
-    console.log('this.videoForTeaser', this.videoForTeaser);
   }
 
   findFirstVideo(multiArray: Video[][]) {
@@ -158,12 +164,15 @@ export class MainPageComponent {
   }
 
   getFirstTeaser() {
-    console.log('getFirstTeaser Funktion');
     if (this.videoForTeaser && this.convertVideoArray) {
       this.convertVideoArray.find((convert) => {
         if (convert.movie === this.videoForTeaser?.id) {
-          this.teaserVideoSrc = convert.video_720p;
-          console.log('this.teaserVideoSrc', this.teaserVideoSrc);
+          this.teaserVideoSrc =
+            this.videoService.getConvertableVideoForResolution(
+              convert,
+              this.videoService.recommendedResolution()
+            );
+          this.saveVideoID(this.videoForTeaser.id);
         }
       });
     }
@@ -173,10 +182,19 @@ export class MainPageComponent {
     if (this.convertVideoArray) {
       this.convertVideoArray.find((convert) => {
         if (convert.movie === findId) {
-          this.teaserVideoSrc = convert.video_720p;
+          this.teaserVideoSrc =
+            this.videoService.getConvertableVideoForResolution(
+              convert,
+              this.videoService.recommendedResolution()
+            );
           console.log(this.teaserVideoSrc);
+          this.saveVideoID(findId);
         }
       });
     }
+  }
+
+  saveVideoID(id: number) {
+    this.loginService.setSessionStorage('videoID', id.toString());
   }
 }
