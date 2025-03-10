@@ -46,4 +46,14 @@
         transform: scale(1.3);
        }
     }
+
+    button{
+        background-color: white;
+        color: var(--clr-blue);
+        padding: 12px 24px;
+        cursor: pointer;
+        &:hover{
+            background-color: rgb(185, 185, 185) !important;
+        }
+    }
 }

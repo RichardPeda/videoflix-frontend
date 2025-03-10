@@ -1,4 +1,4 @@
-<div class="content" [ngClass]="{'full-screen': fullScreen}">
+<div class="content pos-rel" [ngClass]="{'full-screen': fullScreen}">
 
     <app-header-player [ngClass]="{'fadeout': fadoutControls() && isVideoPlay()}"></app-header-player>
 
@@ -110,4 +110,8 @@
 
         </div>
     </div>
+
+
+    <app-error-toast [errorText]="messageText" (closeMessage)="closeMessage()" (acceptMessage)="resumePlaying()" class="pos-abs"
+        [ngClass]="{'slide-message-out' : !showError && ! initialState, 'slide-message-in' : showError}"></app-error-toast>
 </div>

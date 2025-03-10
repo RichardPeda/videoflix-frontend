@@ -6,7 +6,8 @@
 
 .content {
     width: 100%;
-    max-width: 1440px;
+    max-width: var(--content-max-width);
+    // max-width: 1440px;
     margin: auto;
     position: relative;
     display: flex;
@@ -190,4 +191,27 @@ input[type="range"] {
     height: 100vh;
     margin: 0;
     overflow: hidden;
+}
+
+app-error-toast{
+    bottom: 20px;
+    z-index: 50;
+    transform: translateX(-100%);
+    left: 0;
+}
+.slide-message-in{
+    animation: slideIn 1s ease-in-out forwards;
+}
+.slide-message-out{
+    animation: slideOut 1s ease-in-out forwards;
+}
+
+@keyframes slideIn {
+    from{transform: translateX(-100%)}
+    to{transform: translateX(0);}
+}
+
+@keyframes slideOut {
+    from{transform: translateX(0);}
+    to{transform: translateX(-100%)}
 }

@@ -16,7 +16,7 @@ export class VideoService {
 
   recommendedResolution = computed(() => {
     const networkRes = sessionStorage.getItem('networkRes');
-    const videoSize = this.setBestVideoSize(window.innerWidth)
+    const videoSize = this.setBestVideoSize(window.innerWidth);
     if (videoSize && networkRes) return Math.min(videoSize, +networkRes);
     else return videoSize;
   });
@@ -130,14 +130,12 @@ export class VideoService {
   private BASE_URL = environment.apiUrl;
 
   setBestVideoSize(windowSize: number) {
-    if (windowSize <= this.threshold.low)
-      return (this.videoResolution.minimal);
+    if (windowSize <= this.threshold.low) return this.videoResolution.minimal;
     else {
-      if (windowSize > this.threshold.high)
-        return (this.videoResolution.high);
+      if (windowSize > this.threshold.high) return this.videoResolution.high;
       else if (windowSize > this.threshold.middle)
-        return(this.videoResolution.middle);
-      else return(this.videoResolution.low);
+        return this.videoResolution.middle;
+      else return this.videoResolution.low;
     }
   }
 
@@ -194,5 +192,23 @@ export class VideoService {
         return convertable.video_120p;
         break;
     }
+  }
+
+  getMovieProgress(videoId: number) {
+    return this.http.get<any>(`${this.BASE_URL}api/movie-progress/${videoId}`, {
+      headers: this.headers,
+    });
+  }
+  postMovieProgress(videoId: number, time: number) {
+    const body = {
+      time: time,
+    };
+    return this.http.post<any>(
+      `${this.BASE_URL}api/movie-progress/${videoId}`,
+      body,
+      {
+        headers: this.headers,
+      }
+    );
   }
 }

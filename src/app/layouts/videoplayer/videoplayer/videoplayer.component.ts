@@ -19,6 +19,13 @@ import { QualitySelectionComponent } from '../quality-selection/quality-selectio
 import { VideoService } from '../../../core/services/video.service';
 import { LoginService } from '../../../core/services/login.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MessageToastComponent } from '../../../shared/components/message/message-toast/message-toast.component';
+import { ErrorToastComponent } from '../../../shared/components/message/error-toast/error-toast.component';
+
+interface progress {
+  time: number | undefined;
+  id: number | undefined;
+}
 
 @Component({
   selector: 'app-videoplayer',
@@ -31,6 +38,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     QualitySelectionComponent,
     FormsModule,
     MatProgressSpinnerModule,
+    ErrorToastComponent,
   ],
   templateUrl: './videoplayer.component.html',
   styleUrl: './videoplayer.component.scss',
@@ -46,6 +54,7 @@ export class VideoplayerComponent {
   videoData: ConvertableVideo[] = [];
   videoSrc = '';
   isLoading = true;
+  messageText = 'You already played this video. Resume playing?';
 
   duration = signal(0);
   currentTime = signal(0);
@@ -64,6 +73,13 @@ export class VideoplayerComponent {
   // selectedQuality = signal(this.qualities[3]);
   selectedQuality = signal(this.videoService.recommendedResolution());
 
+  progressFound = signal(false);
+  videoProgress: progress = {
+    id: undefined,
+    time: undefined,
+  };
+  showError = false;
+  initialState = true;
   fullScreen = false;
   switchVideo = false;
 
@@ -115,9 +131,28 @@ export class VideoplayerComponent {
         });
       }
     });
+    effect(() => {
+      let foundProgress = this.progressFound();
+      if (foundProgress) {
+        this.openMessage('You already played this video. Resume playing?');
+      }
+    });
   }
 
   ngOnInit() {
+    let id = this.loginService.getSessionStorage('videoID');
+    if (id) {
+      this.videoService.getMovieProgress(Number(id)).subscribe({
+        next: (data: any) => {
+          if (data) {
+            this.videoProgress.id = data.id;
+            this.videoProgress.time = data.time;
+            this.progressFound.set(true);
+          }
+        },
+      });
+    }
+
     this.loadVideos();
   }
 
@@ -148,7 +183,7 @@ export class VideoplayerComponent {
     if (video) {
       // let quality = this.videoService.userSelectedResolution();
       let quality = this.selectedQuality();
-console.log('quality', quality);
+      console.log('quality', quality);
 
       if (quality) {
         return this.videoService.getConvertableVideoForResolution(
@@ -285,5 +320,21 @@ console.log('quality', quality);
 
   toggleFullScreen() {
     this.fullScreen = !this.fullScreen;
+  }
+
+  openMessage(text: string) {
+    this.showError = true;
+    this.initialState = false;
+    this.messageText = text;
+  }
+
+  closeMessage() {
+    this.showError = false;
+  }
+
+  resumePlaying() {
+    this.videoPlayer.nativeElement.currentTime = this.videoProgress.time!;
+    this.videoPlayer.nativeElement.play();
+    this.closeMessage();
   }
 }

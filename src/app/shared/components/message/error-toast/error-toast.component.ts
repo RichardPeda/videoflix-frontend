@@ -10,8 +10,12 @@ import { Component, input, output } from '@angular/core';
 export class ErrorToastComponent {
  errorText = input('')
  closeMessage = output<boolean>()
+ acceptMessage = output<boolean>()
 
  dismissComponent(){
   this.closeMessage.emit(true)
+ }
+ acceptAndClose(){
+  this.acceptMessage.emit(true)
  }
 }
