@@ -199,6 +199,7 @@ export class VideoService {
       headers: this.headers,
     });
   }
+  
   postMovieProgress(videoId: number, time: number) {
     const body = {
       time: time,

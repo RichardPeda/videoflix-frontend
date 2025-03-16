@@ -5,6 +5,7 @@
 }
 
 .content {
+    max-height: 100vh;
     width: 100%;
     max-width: var(--content-max-width);
     // max-width: 1440px;
@@ -12,6 +13,7 @@
     position: relative;
     display: flex;
     justify-content: center;
+    overflow: hidden;
 }
 
 app-header-player {
@@ -31,8 +33,9 @@ app-header-player {
 }
 
 .player {
+   
     width: 100%;
-    height: 100%;
+    // height: 100%;
     position: relative;
    
 

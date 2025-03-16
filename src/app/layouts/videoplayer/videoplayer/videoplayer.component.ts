@@ -55,6 +55,7 @@ export class VideoplayerComponent {
   videoSrc = '';
   isLoading = true;
   messageText = 'You already played this video. Resume playing?';
+  timestamp: number = 0;
 
   duration = signal(0);
   currentTime = signal(0);
@@ -62,7 +63,12 @@ export class VideoplayerComponent {
   volume = signal(10);
   originalVolume = this.volume();
   videoMuted = computed(() => this.volume() == 0);
-  timeRemaining = computed(() => this.duration() - this.currentTime());
+  timeRemaining = computed(() => {
+    let time = this.duration() - this.currentTime();
+    if (time > 0) return time;
+    else return 0;
+  });
+
   timeView = computed(() => this.timeFormat(this.timeRemaining()));
   timebar = 0;
   timeChangeValue = 5;
@@ -88,6 +94,7 @@ export class VideoplayerComponent {
   timeout: number | undefined;
 
   constructor() {
+    this.timestamp = Date.now();
     effect(() => {
       this.videoPlayer.nativeElement.volume = this.volume() / 100;
     });
@@ -220,7 +227,9 @@ export class VideoplayerComponent {
       this.isVideoPlay.set(true);
     } else {
       this.videoPlayer.nativeElement.pause();
+      let time = this.videoPlayer.nativeElement.currentTime;
       this.isVideoPlay.set(false);
+      if (this.video) this.saveTimeInAPI(this.video?.id, time);
     }
   }
 
@@ -231,36 +240,15 @@ export class VideoplayerComponent {
     // this.videoPlayer.nativeElement.play();
     console.log(this.videoPlayer.nativeElement.buffered.length);
     let lastBufferedEnd = 0;
-
-    // this.videoPlayer.nativeElement.addEventListener('timeupdate', () => {
-    //   const bufferedEnd = this.videoPlayer.nativeElement.buffered.end(
-    //     this.videoPlayer.nativeElement.buffered.length - 1
-    //   );
-    //   const remainingBuffer = bufferedEnd - video.currentTime;
-    //   const totalDuration = video.duration;
-    //   const buffer = this.videoPlayer.nativeElement.buffered;
-
-    //   // Berechnung des relativen Puffers: Wie viel Prozent des Videos ist geladen?
-    //   const bufferedPercentage = (bufferedEnd / totalDuration) * 100;
-    //   const bufferGrowth = bufferedEnd - lastBufferedEnd; // Wie schnell wächst der Buffer?
-
-    //   console.log(`Buffered: ${bufferedPercentage.toFixed(2)}%`);
-    //   console.log(`Buffer Growth: ${bufferGrowth.toFixed(2)}s`);
-    //   console.log(`Remaining Buffer: ${remainingBuffer.toFixed(2)}s`);
-    //   console.log(`Buffer : ${bufferedEnd}s`);
-    //   lastBufferedEnd = bufferedEnd;
-    // });
-
-    // setTimeout(() => {
-    //   this.videoSrc = this.video?.video_360p!
-    // }, 5000);
   }
 
   replayVideo() {
     this.videoPlayer.nativeElement.currentTime -= this.timeChangeValue;
+    if (this.video) this.saveTimeInAPI(this.video?.id, this.timeChangeValue);
   }
   forwardVideo() {
     this.videoPlayer.nativeElement.currentTime += this.timeChangeValue;
+    if (this.video) this.saveTimeInAPI(this.video?.id, this.timeChangeValue);
   }
 
   toggleMute(event: MouseEvent) {
@@ -290,16 +278,42 @@ export class VideoplayerComponent {
     this.currentTime.set(this.videoPlayer.nativeElement.currentTime);
   }
 
+  timeStorage: number | undefined = undefined;
+
+  updateProgressTime() {
+    const duration = this.videoPlayer.nativeElement.duration;
+    const currentVideoTime = this.videoPlayer.nativeElement.currentTime;
+    const actTime = Date.now();
+
+    if (this.timeStorage === undefined) this.timeStorage = currentVideoTime;
+
+    if (this.video?.id) {
+      if (currentVideoTime == duration) {
+        this.timeStorage = 0;
+        this.saveTimeInAPI(this.video.id, this.timeStorage);
+      } else if (this.timestamp + 5000 < actTime) {
+        this.timeStorage = currentVideoTime;
+        this.saveTimeInAPI(this.video.id, this.timeStorage);
+      }
+    }
+  }
+
+  saveTimeInAPI(id: number, time: number) {
+    this.videoService.postMovieProgress(id, time).subscribe();
+    this.timestamp = Date.now();
+  }
+
   // changeSpeed(speed: number) {
   //   this.videoPlayer.nativeElement.playbackRate = speed;
   // }
 
   changeTime(number: Event) {
     /**
-     * Set the currentTime of the videoplayer
+     * Set the currentTime of the videoplayer and save in API
      */
     let currentTime = (this.timebar / 100) * this.duration();
     this.videoPlayer.nativeElement.currentTime = currentTime;
+    if (this.video) this.saveTimeInAPI(this.video?.id, currentTime);
   }
 
   timeFormat(duration: number): string {
@@ -315,7 +329,10 @@ export class VideoplayerComponent {
     }
     ret += '' + mins + ':' + (secs < 10 ? '0' : '');
     ret += '' + secs;
-    return ret;
+
+    if (secs > 0) {
+      return ret;
+    } else return '0:00';
   }
 
   toggleFullScreen() {
@@ -335,6 +352,7 @@ export class VideoplayerComponent {
   resumePlaying() {
     this.videoPlayer.nativeElement.currentTime = this.videoProgress.time!;
     this.videoPlayer.nativeElement.play();
+    this.isVideoPlay.set(true);
     this.closeMessage();
   }
 }

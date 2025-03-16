@@ -8,7 +8,7 @@
     }
     <div class="player">
         <video (click)="playPauseVideo()" (ended)="isVideoPlay.set(false)" #videoPlayer [src]="videoSrc"
-            (loadedmetadata)="onMetadata($event, videoPlayer)" (timeupdate)="updateProgressBar()"></video>
+            (loadedmetadata)="onMetadata($event, videoPlayer)" (timeupdate)="updateProgressBar(); updateProgressTime()"></video>
 
         <div class="video-controls" [ngClass]="{'fadeout': fadoutControls() && isVideoPlay(), 'd-none': switchVideo}">
 
