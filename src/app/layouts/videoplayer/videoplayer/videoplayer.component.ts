@@ -149,7 +149,7 @@ export class VideoplayerComponent {
   ngOnInit() {
     let id = this.loginService.getSessionStorage('videoID');
     if (id) {
-      this.videoService.getMovieProgress(Number(id)).subscribe({
+      this.videoService.getSingleMovieProgress(Number(id)).subscribe({
         next: (data: any) => {
           if (data) {
             this.videoProgress.id = data.id;
@@ -299,7 +299,7 @@ export class VideoplayerComponent {
   }
 
   saveTimeInAPI(id: number, time: number) {
-    this.videoService.postMovieProgress(id, time).subscribe();
+    this.videoService.postSingleMovieProgress(id, time).subscribe();
     this.timestamp = Date.now();
   }
 

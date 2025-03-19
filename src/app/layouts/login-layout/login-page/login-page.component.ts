@@ -86,6 +86,7 @@ export class LoginPageComponent {
         this.loginService.postLoginUser(email, password).subscribe({
           next: (resp: any) => {
             this.loginService.setLocalStorage('token', resp.token);
+            this.loginService.setLocalStorage('loginSuccess', 'true')
             if (this.loginForm.value.remember) {
               this.loginService.setLocalStorage('remember', 'true');
               this.loginService.setLocalStorage('email', resp.email);

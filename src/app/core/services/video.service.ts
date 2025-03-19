@@ -194,18 +194,25 @@ export class VideoService {
     }
   }
 
-  getMovieProgress(videoId: number) {
-    return this.http.get<any>(`${this.BASE_URL}api/movie-progress/${videoId}`, {
+  getMoviesProgress() {
+    return this.http.get<any>(`${this.BASE_URL}api/movie-progress/`, {
+      headers: this.headers,
+    });
+  }
+
+
+  getSingleMovieProgress(videoId: number) {
+    return this.http.get<any>(`${this.BASE_URL}api/single-movie-progress/${videoId}`, {
       headers: this.headers,
     });
   }
   
-  postMovieProgress(videoId: number, time: number) {
+  postSingleMovieProgress(videoId: number, time: number) {
     const body = {
       time: time,
     };
     return this.http.post<any>(
-      `${this.BASE_URL}api/movie-progress/${videoId}`,
+      `${this.BASE_URL}api/single-movie-progress/${videoId}`,
       body,
       {
         headers: this.headers,

@@ -13,7 +13,11 @@ import { CommonModule } from '@angular/common';
 import { ThumbnailSliderComponent } from '../../../shared/components/slider/thumbnail-slider/thumbnail-slider.component';
 import { ThumbnailPreviewComponent } from '../../../shared/components/slider/thumbnail-preview/thumbnail-preview.component';
 import { TeaserComponent } from '../teaser/teaser.component';
-import { ConvertableVideo, Video } from '../../../core/models/video';
+import {
+  ConvertableVideo,
+  Video,
+  VideoProgress,
+} from '../../../core/models/video';
 import { VideoService } from '../../../core/services/video.service';
 import { HeaderComponent } from '../../../shared/components/header/header-main/header.component';
 import { Genre } from '../../../core/models/genre';
@@ -45,10 +49,11 @@ export class MainPageComponent {
 
   videoIndex = 0;
 
-  genres: 'NEW' | 'DOKUMENTARY' | 'ACTION' | 'ROMANTIC' | 'DRAMA' =
+  genres: 'SEEN' | 'NEW' | 'DOKUMENTARY' | 'ACTION' | 'ROMANTIC' | 'DRAMA' =
     'DOKUMENTARY';
 
   genreTitles = [
+    'Resume',
     'New on Videoflix',
     'Action',
     'Dokumentary',
@@ -59,11 +64,13 @@ export class MainPageComponent {
   videoArray: Video[][] = [];
   convertVideoArray: ConvertableVideo[] = [];
 
+  seenVideos: Video[] = [];
   newVideos: Video[] = [];
   documantaryVideos: Video[] = [];
   actionVideos: Video[] = [];
   romanticVideos: Video[] = [];
   dramaVideos: Video[] = [];
+  VideosInProgress: VideoProgress[] = [];
 
   constructor(@Self() private element: ElementRef) {
     console.log(window.innerWidth);
@@ -80,8 +87,19 @@ export class MainPageComponent {
       },
       { allowSignalWrites: true }
     );
+    this.loadProgress();
+    // this.loadVideos();
+  }
 
-    this.loadVideos();
+  loadProgress() {
+    this.videoService.getMoviesProgress().subscribe({
+      next: (progress: any) => {
+        if (progress) {
+          this.VideosInProgress = progress;
+        }
+      },
+      complete: () => this.loadVideos(),
+    });
   }
 
   loadVideos() {
@@ -124,7 +142,12 @@ export class MainPageComponent {
     let genre = Genre;
 
     this.videoData.forEach((video) => {
-      if (video.genre == 'NEW') {
+      let videoAllreadyPlayed = this.VideosInProgress.find(
+        (process) => process.movie == video.id
+      );
+
+      if (videoAllreadyPlayed) this.seenVideos.push(video);
+      else if (video.genre == 'NEW') {
         this.newVideos.push(video);
       } else if (video.genre == 'DOCUMENTARY') {
         this.documantaryVideos.push(video);
@@ -137,6 +160,7 @@ export class MainPageComponent {
       }
     });
 
+    this.videoArray[genre.seen] = [...this.seenVideos]
     this.videoArray[genre.new] = [...this.newVideos];
     this.videoArray[genre.action] = [...this.actionVideos];
     this.videoArray[genre.documentary] = [...this.documantaryVideos];

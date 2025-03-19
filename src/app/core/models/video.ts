@@ -8,6 +8,12 @@ export interface Video {
   videoURL: string;
 }
 
+export interface VideoProgress {
+  id: number;
+  time: number;
+  movie: number;
+}
+
 export interface ConvertableVideo {
   id: number;
   video_120p: string;

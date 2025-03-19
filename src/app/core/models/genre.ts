@@ -1,8 +1,8 @@
 export enum Genre {
-    new, 
-    documentary, 
-    action, 
-    romantic, 
-    drama
-  }
-
+  seen,
+  new,
+  documentary,
+  action,
+  romantic,
+  drama,
+}
