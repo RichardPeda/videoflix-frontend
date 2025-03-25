@@ -160,7 +160,7 @@ export class MainPageComponent {
       }
     });
 
-    this.videoArray[genre.seen] = [...this.seenVideos]
+    this.videoArray[genre.seen] = [...this.seenVideos];
     this.videoArray[genre.new] = [...this.newVideos];
     this.videoArray[genre.action] = [...this.actionVideos];
     this.videoArray[genre.documentary] = [...this.documantaryVideos];
@@ -175,13 +175,7 @@ export class MainPageComponent {
     for (let index = 0; index < multiArray.length; index++) {
       const firstDimension = multiArray[index];
       if (firstDimension.length > 0) {
-        for (let i = 0; index < firstDimension.length; index++) {
-          const secondDimension = firstDimension[index];
-          if (secondDimension) {
-            teaser = secondDimension;
-            break;
-          }
-        }
+        teaser = firstDimension[0];
       }
     }
     return teaser;
@@ -206,6 +200,9 @@ export class MainPageComponent {
     if (this.convertVideoArray) {
       this.convertVideoArray.find((convert) => {
         if (convert.movie === findId) {
+          this.videoForTeaser = this.videoData.find(
+            (video) => video.id == findId
+          );
           this.teaserVideoSrc =
             this.videoService.getConvertableVideoForResolution(
               convert,

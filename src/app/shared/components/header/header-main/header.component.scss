@@ -10,6 +10,12 @@
     max-width: calc(var(--content-max-width) + calc(2 * 96px));
     padding-inline: 96px;
     margin: auto;
+    @media (max-width: 1000px){
+        padding-inline: 48px;
+    }
+    @media (max-width: 555px){
+        padding-inline: 16px;
+    }
 }
 
 .header-content{
@@ -22,4 +28,17 @@
 
 .header-btn-logout{
     gap: 2.5px;
+}
+
+.mobile{
+    display: none;
+}
+
+@media (max-width: 555px){
+    .desktop{
+        display: none;
+    }
+    .mobile{
+        display: block;
+    }
 }

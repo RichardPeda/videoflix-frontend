@@ -10,6 +10,9 @@
     background-size: cover;
     padding-inline: 96px;
     overflow: hidden;
+    @media (max-width: 1000px) {
+        padding-inline: 49px;
+    }
 }
 
 app-header {

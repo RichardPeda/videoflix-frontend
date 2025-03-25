@@ -112,6 +112,32 @@
             max-width: 440px;
         }
     }
+    @media(max-width: 1300px){
+        height: auto;
+        aspect-ratio: 2 / 1.45;
+    }
+    @media(max-width: 1100px){
+        height: 660px;
+        .overlay-container{
+
+            h1 {
+                font-size: 60px;
+                line-height: normal;
+                margin-bottom: 12px;
+            }
+        }
+    }
+    @media(max-width: 900px){
+        min-height: 500px;
+        justify-content: flex-start;
+        align-items: center;
+        .overlay-container{
+
+           position: relative;
+           bottom: 0;
+           height: 50%;
+        }
+    }
 }
 
 

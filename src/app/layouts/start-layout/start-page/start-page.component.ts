@@ -26,6 +26,9 @@ export class StartPageComponent {
     email: new FormControl('', Validators.required),
   });
 
+  ngOnInit(){
+    this.loginService.deleteLocalStorage('loginSuccess')
+  }
   
 
   onSubmit() {
