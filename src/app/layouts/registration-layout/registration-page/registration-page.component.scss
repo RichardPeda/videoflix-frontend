@@ -145,3 +145,31 @@ app-error-toast{
     from{transform: translateX(0);}
     to{transform: translateX(-100%)}
 }
+
+.dialog-card .dialog-input-frame {
+    @media(max-width:490px) {
+        width: 100%;
+    }
+}
+
+form {
+    @media(max-width:490px) {
+        width: calc(100% - 32px);
+    }
+}
+
+@media (max-width:550px) {
+    .dialog-card {
+
+        width: 100%;
+        padding-inline: 0;
+        margin-inline: 16px;
+
+        input {
+            font-size: 16px;
+        }
+        .headline{
+            font-size: 40px;
+        }
+    }
+}

@@ -104,36 +104,79 @@ input:-webkit-autofill:active {
         width: auto;
     }
 }
-form{
+
+form {
     display: flex;
     flex-direction: column;
 }
-form button{
+
+form button {
     margin: auto;
     margin-top: 32px;
     margin-bottom: 16px;
     width: fit-content;
 }
 
-app-message-toast{
+app-message-toast {
     bottom: 20px;
     // left: 0;
     z-index: 50;
     transform: translateX(-100%)
 }
-.slide-message-in{
+
+.slide-message-in {
     animation: slideIn 1s ease-in-out forwards;
 }
-.slide-message-out{
+
+.slide-message-out {
     animation: slideOut 1s ease-in-out forwards;
 }
 
 @keyframes slideIn {
-    from{transform: translateX(-100%)}
-    to{transform: translateX(0);}
+    from {
+        transform: translateX(-100%)
+    }
+
+    to {
+        transform: translateX(0);
+    }
 }
 
 @keyframes slideOut {
-    from{transform: translateX(0);}
-    to{transform: translateX(-100%)}
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-100%)
+    }
+}
+
+
+.dialog-card .dialog-input-frame {
+    @media(max-width:490px) {
+        width: 100%;
+    }
+}
+
+form {
+    @media(max-width:490px) {
+        width: calc(100% - 32px);
+    }
+}
+
+@media (max-width:550px) {
+    .dialog-card {
+
+        width: 100%;
+        padding-inline: 0;
+        margin-inline: 16px;
+
+        input {
+            font-size: 16px;
+        }
+        .headline{
+            font-size: 40px;
+        }
+    }
 }

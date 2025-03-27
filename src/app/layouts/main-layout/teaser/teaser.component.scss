@@ -3,6 +3,9 @@
     height: fit-content;
     max-height: 800px;
 
+    @media(max-width: 900px) {
+        margin-bottom: 60px;
+    }
 }
 
 .video-frame {
@@ -112,13 +115,16 @@
             max-width: 440px;
         }
     }
-    @media(max-width: 1300px){
+
+    @media(max-width: 1300px) {
         height: auto;
         aspect-ratio: 2 / 1.45;
     }
-    @media(max-width: 1100px){
+
+    @media(max-width: 1100px) {
         height: 660px;
-        .overlay-container{
+
+        .overlay-container {
 
             h1 {
                 font-size: 60px;
@@ -127,15 +133,23 @@
             }
         }
     }
-    @media(max-width: 900px){
-        min-height: 500px;
+
+    @media(max-width: 900px) {
+        margin-bottom: 60px;
+        height: auto;
         justify-content: flex-start;
         align-items: center;
-        .overlay-container{
 
-           position: relative;
-           bottom: 0;
-           height: 50%;
+        .overlay-container {
+
+            position: relative;
+            bottom: 0;
+            height: fit-content;
+            margin-bottom: 60px;
+            padding-top: 60px;
+            h1 {
+                font-size: 50px;
+            }
         }
     }
 }
