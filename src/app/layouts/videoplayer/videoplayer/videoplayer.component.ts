@@ -21,6 +21,7 @@ import { LoginService } from '../../../core/services/login.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MessageToastComponent } from '../../../shared/components/message/message-toast/message-toast.component';
 import { ErrorToastComponent } from '../../../shared/components/message/error-toast/error-toast.component';
+import { HeaderPlayerMobileComponent } from "../../../shared/components/header/header-player-mobile/header-player-mobile.component";
 
 interface progress {
   time: number | undefined;
@@ -39,7 +40,8 @@ interface progress {
     FormsModule,
     MatProgressSpinnerModule,
     ErrorToastComponent,
-  ],
+    HeaderPlayerMobileComponent
+],
   templateUrl: './videoplayer.component.html',
   styleUrl: './videoplayer.component.scss',
 })
@@ -50,6 +52,8 @@ export class VideoplayerComponent {
   private videoService = inject(VideoService);
   private loginService = inject(LoginService);
 
+  videoName = ''
+  videoFullData : Video[] = []
   video: ConvertableVideo | undefined = undefined;
   videoData: ConvertableVideo[] = [];
   videoSrc = '';
@@ -93,7 +97,12 @@ export class VideoplayerComponent {
 
   timeout: number | undefined;
 
+  isMobile = false;
+
   constructor() {
+    if (window.innerWidth < 550) this.isMobile = true;
+    else this.isMobile = false;
+
     this.timestamp = Date.now();
     effect(() => {
       this.videoPlayer.nativeElement.volume = this.volume() / 100;
@@ -158,6 +167,18 @@ export class VideoplayerComponent {
           }
         },
       });
+      this.videoService.getMovies().subscribe({
+        next: (data: any) => {
+          if (data) {
+           this.videoFullData = data
+           this.videoFullData.forEach(element => {
+              if(element.id == Number(id)){
+                this.videoName = element.title
+              }
+           });
+          }
+        },
+      })
     }
 
     this.loadVideos();

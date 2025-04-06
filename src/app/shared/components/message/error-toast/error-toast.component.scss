@@ -1,59 +1,100 @@
-.container{
-   
-    height: 80px;
+.container {
+
+    // height: 80px;
     min-height: 80px;
-    min-width: 540px;
+    // min-width: 540px;
     border-radius: 20px;
-  
+    max-width: 100vw;
+
+    @media(max-width: 555px) {
+        flex-direction: column;
+        height: 232px;
+    }
+
 }
 
-.red-corner{
+.red-corner {
     background-color: var(--clr-red);
-    height: 100%;
+    // height: 100%;
     width: 20px;
     border-radius: 20px 0px 0px 20px;
-  
+
+    @media(max-width: 555px) {
+        height: 16px;
+        width: 100%;
+        border-radius: 20px 20px 0px 0px;
+    }
+
 }
-.blue-field{
+
+.blue-field {
     flex: 1;
     gap: 16px;
     padding: 24px 32px;
-   
+
 
     background-color: var(--clr-blue);
     height: 100%;
     border-radius: 0px 20px 20px 0px;
-    .text{
+
+    @media(max-width: 555px) {
+
+        border-radius: 0;
+        align-items: flex-start;
+        padding-top: 50px;
+    }
+
+    .text {
         color: white;
         max-width: 372px;
     }
-    .divider{
+
+    .divider {
         height: 100%;
         width: 2px;
         background-color: white;
         margin-right: 8px;
-    }
-    .btn-cross{
-        height: 100%;
-        width: 20px;
-        &:hover{
-            cursor: pointer;
+
+        @media(max-width:550px) {
+            display: none;
         }
-        svg{
-            transition: transform 175ms ease-in-out;
-        }
-       &:hover > svg {
-        transform: scale(1.3);
-       }
     }
 
-    button{
+    .btn-cross {
+        height: 100%;
+        width: 20px;
+        @media(max-width:550px){
+            height: max-content;
+            transform: translateY(3px);
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        svg {
+            transition: transform 175ms ease-in-out;
+        }
+
+        &:hover>svg {
+            transform: scale(1.3);
+        }
+    }
+
+    button {
         background-color: white;
         color: var(--clr-blue);
         padding: 12px 24px;
         cursor: pointer;
-        &:hover{
+
+        &:hover {
             background-color: rgb(185, 185, 185) !important;
+        }
+        @media(max-width:550px) {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          bottom: 50px;
         }
     }
 }

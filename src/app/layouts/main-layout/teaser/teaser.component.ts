@@ -1,7 +1,8 @@
-import { Component, effect, ElementRef, input, ViewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, input, ViewChild } from '@angular/core';
 import { Video } from '../../../core/models/video';
 import { PlayButtonComponent } from '../../../shared/components/buttons/play-button/play-button.component';
 import { CommonModule } from '@angular/common';
+import { VideoService } from '../../../core/services/video.service';
 
 @Component({
   selector: 'app-teaser',
@@ -12,6 +13,7 @@ import { CommonModule } from '@angular/common';
 })
 export class TeaserComponent {
   @ViewChild('video') videoContainer!: ElementRef<HTMLVideoElement>;
+  public videoService = inject(VideoService)
 
   ngAfterViewInit() {
     const video = this.videoContainer.nativeElement;
@@ -45,17 +47,22 @@ export class TeaserComponent {
         } else {
           this.newVideo = video;
           this.newVideoSrc = videoSrc;
-          this.fadeOut(video, videoSrc);
+          if (window.innerWidth > 555) this.fadeOut(video, videoSrc);
+          else this.changeSourceNow(video, videoSrc);
         }
       }
     });
   }
 
+  changeSourceNow(video: Video, videoSrc: string) {
+    this.currentVideo = video;
+    this.currentVideoSrc = videoSrc;
+  }
+
   fadeOut(video: Video, videoSrc: string) {
     this.fadeActive = true;
     setTimeout(() => {
-      this.currentVideo = video;
-      this.currentVideoSrc = videoSrc;
+      this.changeSourceNow(video, videoSrc);
     }, 1500);
     setTimeout(() => {
       this.fadeActive = false;

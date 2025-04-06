@@ -1,0 +1,33 @@
+<div class="main-thumbnail-container pos-rel">
+    <h2>{{genre()}}</h2>
+    <div class="thumbnail-slider">
+
+        @for (video of videos(); track $index; let index = $index) {
+
+
+        <div class="thumbnail-container pos-rel">
+            <img (click)="selectVideo(video.id)" class="thumbnail-img" src="{{video.image_url}}" [ngClass]="{'selected': selected == index}"
+                alt="">
+
+            <!-- <div (click)="selectVideo(video.id)" class="thumbnail-preview pos-abs"
+                [ngClass]="{'selected': selected == index}">
+                <img src="{{video.image_url}}" alt="">
+
+                <div class="c-sub flex column">
+
+                    <div class="info d-flex-row gap-12">
+
+                        {{getDuration(video.duration)}}
+                        <div class="rect">HD</div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+
+
+
+        }
+
+    </div>
+
+</div>

@@ -1,0 +1,48 @@
+:host{
+    padding-left: 16px;
+    width: 100%;
+    overflow-x: scroll;
+    margin-bottom: 48px;
+}
+
+
+.main-thumbnail-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+ 
+   
+
+    &:hover .arrow-left,
+    &:hover .arrow-right {
+        background-color: rgba(0, 0, 0, 0.35);
+
+    }
+
+}
+h2 {
+    font-size: 22px;
+    color: white;
+
+}
+.thumbnail-slider {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 120px;
+    transition: transform 1s ease-in-out;
+    pointer-events: all;
+    gap: 7px;
+
+}
+
+.thumbnail-img {
+    width: 213px;
+    min-width: 213px;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    transition: transform 175ms ease-in-out;
+
+   
+}

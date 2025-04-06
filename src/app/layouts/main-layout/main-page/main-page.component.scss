@@ -10,14 +10,24 @@
     background-size: cover;
     padding-inline: 96px;
     overflow: hidden;
+
     @media (max-width: 1000px) {
         padding-inline: 49px;
+    }
+
+    @media (max-width: 555px) {
+        padding-inline: 16px;
     }
 }
 
 app-header {
     z-index: 50;
     padding-inline: 0;
+}
+
+.mobile-header {
+    margin-top: 0;
+    margin-bottom: 40px;
 }
 
 .background-shadow {
@@ -40,6 +50,30 @@ app-header {
     max-width: var(--content-max-width);
 }
 
+.mobile-main {
+    transform: none;
+    // padding-left: 16px;
+    margin-top: 150px;
+}
+
 app-footer {
     position: relative;
+}
+
+.mobile-content {
+    display: grid;
+    grid-template-columns: 100vw 100vw;
+    grid-template-rows: minmax(90vh, max-content);
+    transform: translateX(0%);
+    margin-left: -16px;
+    transition: transform 1s ease-in-out;
+}
+
+.mobile-transform {
+   
+    transform: translateX(-100vw);
+}
+
+.mobile-header{
+    padding-inline: 16px;
 }

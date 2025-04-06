@@ -1,10 +1,16 @@
 :host {
+
     margin-top: -108px;
     height: fit-content;
     max-height: 800px;
 
     @media(max-width: 900px) {
         margin-bottom: 60px;
+    }
+
+    @media(max-width: 555px) {
+        position: relative;
+        margin-top: 0
     }
 }
 
@@ -25,9 +31,16 @@
 
     video {
         width: 100%;
-        height: 100%;
+        // height: 100%;
         object-fit: contain;
         object-position: top;
+        aspect-ratio: 16 / 9;
+
+        @media (max-width:555px) {
+            width: auto;
+           height: 360px;
+          
+        }
     }
 
     ::after {
@@ -139,6 +152,7 @@
         height: auto;
         justify-content: flex-start;
         align-items: center;
+        
 
         .overlay-container {
 
@@ -147,10 +161,17 @@
             height: fit-content;
             margin-bottom: 60px;
             padding-top: 60px;
+
             h1 {
                 font-size: 50px;
             }
         }
+    }
+    @media(max-width: 555px){
+        align-items: flex-start;
+        transform: translateY(305px);
+        padding-left: 16px;
+        flex-direction: column;
     }
 }
 
@@ -158,4 +179,10 @@
 h2 {
     font-size: 22px;
     color: white;
+}
+.fit-content{
+    width: max-content;
+    @media(min-width: 555px){
+        display: none
+    }
 }

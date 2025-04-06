@@ -111,6 +111,8 @@ export class VideoService {
 
   selectedVideoIdSignal = signal<number>(0);
   selectedVideoSignal = signal<Video | undefined>(undefined);
+  slideMobileVideo = signal(false)
+  isScreenMobile = false
 
   // videoSizeSetpoint = signal<number | undefined>(undefined);
   videoResolution = {

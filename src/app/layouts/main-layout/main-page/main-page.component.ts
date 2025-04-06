@@ -22,6 +22,7 @@ import { VideoService } from '../../../core/services/video.service';
 import { HeaderComponent } from '../../../shared/components/header/header-main/header.component';
 import { Genre } from '../../../core/models/genre';
 import { LoginService } from '../../../core/services/login.service';
+import { ThumbnailMobileComponent } from "../../../shared/components/slider/thumbnail-mobile/thumbnail-mobile.component";
 
 @Component({
   selector: 'app-main-page',
@@ -32,16 +33,19 @@ import { LoginService } from '../../../core/services/login.service';
     FooterComponent,
     ThumbnailSliderComponent,
     TeaserComponent,
-  ],
+    ThumbnailMobileComponent
+],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.scss',
 })
 export class MainPageComponent {
   private elementRef = inject(ElementRef);
-  private videoService = inject(VideoService);
+  public videoService = inject(VideoService);
   private loginService = inject(LoginService);
 
   contentSize = 0;
+  screenWidth = 0;
+  isScreenMobile = false;
 
   videoData: Video[] = [];
   videoForTeaser: Video | undefined;
@@ -71,8 +75,11 @@ export class MainPageComponent {
   romanticVideos: Video[] = [];
   dramaVideos: Video[] = [];
   VideosInProgress: VideoProgress[] = [];
+  mobileVideoChange = false;
 
   constructor(@Self() private element: ElementRef) {
+    this.screenWidth = window.innerWidth;
+    this.isScreenMobile = this.checkIfSreenMobile(window.innerWidth);
     console.log(window.innerWidth);
     this.videoService.setBestVideoSize(window.innerWidth);
     effect(
@@ -89,6 +96,12 @@ export class MainPageComponent {
     );
     this.loadProgress();
     // this.loadVideos();
+  }
+
+  checkIfSreenMobile(size: number) {
+    console.warn(size)
+    if (size < 555) return true;
+    else return false;
   }
 
   loadProgress() {
@@ -136,6 +149,9 @@ export class MainPageComponent {
   onResize(event: any) {
     this.videoService.setBestVideoSize(window.innerWidth);
     this.contentSize = this.element.nativeElement.offsetWidth;
+    this.screenWidth = window.innerWidth;
+    this.isScreenMobile = this.checkIfSreenMobile(window.innerWidth);
+    this.videoService.isScreenMobile = this.checkIfSreenMobile(window.innerWidth)
   }
 
   sortVideosForGenre() {

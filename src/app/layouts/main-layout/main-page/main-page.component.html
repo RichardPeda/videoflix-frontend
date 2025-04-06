@@ -1,28 +1,42 @@
-<app-header></app-header>
-<!-- <div class="background-shadow">
+@if (isScreenMobile) {
+<app-header class="pos-abs header-mobile" [ngClass]="{'mobile-header': isScreenMobile}"></app-header>
+<div class="mobile-content" [ngClass]="{'mobile-transform': this.videoService.slideMobileVideo()}">
 
-  
-</div> -->
+
+    <div class="main-content flex column" [ngClass]="{'mobile-main': isScreenMobile}">
+
+
+        @for (videos of videoArray; track $index; let index = $index) {
+        @if (videos.length > 0) {
+        <app-thumbnail-mobile [videos]="videos" [genre]="genreTitles[index]"></app-thumbnail-mobile>
+
+        }
+        }
+
+    </div>
+    <app-teaser [video]="videoForTeaser" [videoSrc]="teaserVideoSrc"></app-teaser>
+</div>
+
+}
+@else {
+<app-header [ngClass]="{'mobile-header': isScreenMobile}"></app-header>
 <app-teaser [video]="videoForTeaser" [videoSrc]="teaserVideoSrc"></app-teaser>
 
 
 <div class="main-content flex column">
 
-    <!-- <app-thumbnail-slider [videos]="newVideos" [genre]="'New on Videoflix'" [parentSize]="contentSize"></app-thumbnail-slider>
-    <app-thumbnail-slider [genre]="'Action'" [parentSize]="contentSize"></app-thumbnail-slider>
-    <app-thumbnail-slider [genre]="'Drama'" [parentSize]="contentSize"></app-thumbnail-slider> -->
 
     @for (videos of videoArray; track $index; let index = $index) {
-        @if (videos.length > 0) {
-        <app-thumbnail-slider [videos]="videos" [genre]="genreTitles[index]" [parentSize]="contentSize"></app-thumbnail-slider>
-        }
+    @if (videos.length > 0) {
+    <app-thumbnail-slider [videos]="videos" [genre]="genreTitles[index]"
+        [parentSize]="contentSize"></app-thumbnail-slider>
+    }
     }
 
 </div>
+}
 
-<!-- @if (tempData) {
 
-    <img [src]="tempData[0].image" alt="">
-} -->
+
 
 <app-footer></app-footer>

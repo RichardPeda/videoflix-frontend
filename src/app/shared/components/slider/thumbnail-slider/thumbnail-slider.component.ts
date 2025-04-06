@@ -141,6 +141,7 @@ export class ThumbnailSliderComponent {
   selectVideo(index: number) {
     this.videoService.selectedVideoIdSignal.set(index);
     this.selected = index;
+    this.videoService.slideMobileVideo.set(true)
   }
 
   getDuration(duration: number) {
