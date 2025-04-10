@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common'
 
@@ -13,6 +13,7 @@ import { Location } from '@angular/common'
 export class HeaderPlayerComponent {
 private router = inject(Router)
 private location = inject(Location)
+ name = input<string>()
 
 navigateBack(){
   this.location.back()

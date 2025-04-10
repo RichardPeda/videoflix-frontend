@@ -232,3 +232,56 @@ app-error-toast{
     from{transform: translateX(0);}
     to{transform: translateX(-100%)}
 }
+
+.control-mid-mobile{
+    display: flex;
+   justify-content: center;
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    gap: 30px;
+    .btn {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+            // width: 80%;
+            // height: 80%;
+            height: 40px;
+
+            &:hover {
+                cursor: pointer;
+                filter: drop-shadow(0px 0px 10px rgb(255, 255, 255));
+            }
+        }
+
+    }
+}
+
+.controls-mobile{
+    padding-bottom: 8px;
+    gap: 8px;
+    .btn {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+            // width: 80%;
+            // height: 80%;
+            height: 40px;
+
+            &:hover {
+                cursor: pointer;
+                filter: drop-shadow(0px 0px 10px rgb(255, 255, 255));
+            }
+        }
+
+    }
+}

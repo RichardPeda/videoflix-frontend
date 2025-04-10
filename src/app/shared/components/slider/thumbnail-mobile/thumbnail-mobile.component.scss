@@ -1,7 +1,8 @@
 :host{
     padding-left: 16px;
     width: 100%;
-    overflow-x: scroll;
+    overflow-x: auto;
+    overflow-y: hidden;
     margin-bottom: 48px;
 }
 

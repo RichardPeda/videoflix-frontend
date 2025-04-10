@@ -155,6 +155,12 @@ export class VideoplayerComponent {
     });
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    if (window.innerWidth < 550) this.isMobile = true;
+    else this.isMobile = false;
+  }
+
   ngOnInit() {
     let id = this.loginService.getSessionStorage('videoID');
     if (id) {
