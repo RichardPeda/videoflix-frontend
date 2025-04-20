@@ -59,8 +59,8 @@ export class MainPageComponent {
   genreTitles = [
     'Resume',
     'New on Videoflix',
-    'Action',
     'Dokumentary',
+    'Action',
     'Romantic',
     'Drama',
   ];

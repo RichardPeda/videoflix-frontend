@@ -64,16 +64,20 @@ export class ThumbnailSliderComponent {
   };
 
   constructor(@Self() private element: ElementRef) {
-    this.numberOfImages = this.videos.length;
+   
 
     effect(() => {
       let parentSize = this.parentSize();
-      if (parentSize) this.size = parentSize;
+      if (parentSize) {this.size = parentSize
+        console.log("parentsize", this.size);
+        
+      };
     });
     effect(() => {
       let videos = this.videos();
       if (videos != undefined && videos.length > 0) {
         console.log('videos', videos);
+        this.numberOfImages = videos.length;
         //get single image
         let thumb = this.thumbnail?.nativeElement.getBoundingClientRect();
         this.singeImageSize = thumb.width;
@@ -105,6 +109,10 @@ export class ThumbnailSliderComponent {
   }
 
   isItAllowedToMoveRight() {
+    console.log(this.sliderXabs);
+    console.log(this.windowWidth);
+    
+    
     return this.windowWidth <= this.sliderXabs ? true : false;
   }
 
@@ -116,7 +124,7 @@ export class ThumbnailSliderComponent {
     this.counter += 1;
 
     this.slider.allowRight = this.isItAllowedToMoveRight();
-
+    
     //check after slide animation is finished
     setTimeout(() => {
       if (this.counter > 0) this.slider.allowLeft = true;

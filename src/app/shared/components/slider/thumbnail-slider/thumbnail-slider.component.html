@@ -35,7 +35,8 @@
             <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
         </svg>
     </div>
-    <div (click)="slideRight()" [ngStyle]="{'left': parentSize()! - 96 - 50 +'px'}"
+    <!-- [ngStyle]="{'left': parentSize()! - 96 - 50 +'px'}" -->
+    <div (click)="slideRight()" [ngStyle]="{'right': - 50 +'px'}"
         [ngClass]="{'d-none': !slider.allowRight}" class="arrow-right">
         <svg xmlns="http://www.w3.org/2000/svg" height="50px" viewBox="0 -960 960 960" width="50px" fill="white">
             <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
