@@ -1,17 +1,19 @@
+import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
 
 @Component({
   selector: 'app-message-toast',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './message-toast.component.html',
-  styleUrl: './message-toast.component.scss'
+  styleUrl: './message-toast.component.scss',
 })
 export class MessageToastComponent {
- messageText = input('')
- closeMessage = output<boolean>()
+  messageText = input('');
+  messageType = input<'good' | 'bad'>('good');
+  closeMessage = output<boolean>();
 
- dismissComponent(){
-  this.closeMessage.emit(true)
- }
+  dismissComponent() {
+    this.closeMessage.emit(true);
+  }
 }

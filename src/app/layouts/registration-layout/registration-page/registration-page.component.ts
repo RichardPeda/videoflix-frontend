@@ -42,7 +42,7 @@ export class RegistrationPageComponent {
 
   registerForm = new FormGroup({
     username: new FormControl('', Validators.required),
-    email: new FormControl('', Validators.required),
+    email : new FormControl('', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$')]),
     password_0: new FormControl('', Validators.required),
     password_1: new FormControl('', Validators.required),
   });

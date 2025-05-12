@@ -31,6 +31,7 @@ export class LoginPageComponent {
 
   userEmail = '';
   messageText = 'Verification successful';
+  messageType: 'good' | 'bad' = 'good'
   showError = false;
   initialState = true;
 
@@ -41,17 +42,16 @@ export class LoginPageComponent {
       let email = this.loginService.getLocalStorage('email');
       let password = this.loginService.getLocalStorage('password');
       if (email && password) {
-        
         this.loginForm.setValue({
           email: email,
           password: password,
           remember: remember,
         });
-      }else this.loginService.deleteLocalStorage('remember');
-    } 
+      } else this.loginService.deleteLocalStorage('remember');
+    }
 
     if (this.loginService.verificationSuccess) {
-      this.openMessage('Verification successful, you can login now');
+      this.openMessage('Verification successful, you can login now', 'good');
       setTimeout(() => {
         this.closeMessage();
         this.loginService.verificationSuccess = false;
@@ -60,7 +60,7 @@ export class LoginPageComponent {
   }
 
   loginForm = new FormGroup({
-    email: new FormControl('', Validators.required),
+    email : new FormControl('', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$')]),
     password: new FormControl('', Validators.required),
     remember: new FormControl(false),
   });
@@ -86,13 +86,22 @@ export class LoginPageComponent {
         this.loginService.postLoginUser(email, password).subscribe({
           next: (resp: any) => {
             this.loginService.setLocalStorage('token', resp.token);
-            this.loginService.setLocalStorage('loginSuccess', 'true')
+            this.loginService.setLocalStorage('loginSuccess', 'true');
             if (this.loginForm.value.remember) {
               this.loginService.setLocalStorage('remember', 'true');
               this.loginService.setLocalStorage('email', resp.email);
               this.loginService.setLocalStorage('password', password);
             }
-            this.router.navigateByUrl('overview')
+            this.router.navigateByUrl('overview');
+          },
+          error: (err) => {
+            if (err.status === 401) {
+             
+              this.openMessage('The combination of email and password was not found.', 'bad')
+              setTimeout(() => {
+                this.closeMessage()
+              }, 5000);
+            }
           },
         });
       }
@@ -100,7 +109,9 @@ export class LoginPageComponent {
     console.log(this.loginForm.value.remember);
   }
 
-  openMessage(text: string) {
+
+  openMessage(text: string, type:"good" | "bad") {
+    this.messageType = type
     this.showError = true;
     this.initialState = false;
     this.messageText = text;
