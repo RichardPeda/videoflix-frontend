@@ -113,7 +113,7 @@
     position: relative;
 
     .overlay-container {
-        max-width: 50%;
+        max-width: 60%;
         position: absolute;
         bottom: 230px;
         left: 0;
@@ -186,3 +186,15 @@ h2 {
         display: none
     }
 }
+
+.stars{
+    display: flex;
+    gap: 5px;
+}
+  .star-img{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px ;
+    height: 15px ;
+     }

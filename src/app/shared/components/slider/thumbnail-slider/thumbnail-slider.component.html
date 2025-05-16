@@ -19,7 +19,13 @@
                     <div class="info d-flex-row gap-12">
 
                         {{getDuration(video.duration)}}
-                        <div class="rect">HD</div>
+                        <!-- <div class="rect">HD</div> -->
+                        |
+                        FSK {{video.rating}}
+
+                    </div>
+                    <div>
+                        {{video.ranking}}
                     </div>
                 </div>
             </div>
@@ -36,8 +42,8 @@
         </svg>
     </div>
     <!-- [ngStyle]="{'left': parentSize()! - 96 - 50 +'px'}" -->
-    <div (click)="slideRight()" [ngStyle]="{'right': - 50 +'px'}"
-        [ngClass]="{'d-none': !slider.allowRight}" class="arrow-right">
+    <div (click)="slideRight()" [ngStyle]="{'right': - 50 +'px'}" [ngClass]="{'d-none': !slider.allowRight}"
+        class="arrow-right">
         <svg xmlns="http://www.w3.org/2000/svg" height="50px" viewBox="0 -960 960 960" width="50px" fill="white">
             <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
         </svg>

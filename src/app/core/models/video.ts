@@ -6,6 +6,8 @@ export interface Video {
   duration: number;
   image_url: string;
   videoURL: string;
+  ranking: number;
+  rating: number;
 }
 
 export interface VideoProgress {

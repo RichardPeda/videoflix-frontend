@@ -24,6 +24,11 @@ interface SliderControl {
   minPosition: number;
 }
 
+interface VideoStars {
+  id: number;
+  stars: ('full' | 'half' | 'empty')[];
+}
+
 @Component({
   selector: 'app-thumbnail-slider',
   standalone: true,
@@ -54,6 +59,9 @@ export class ThumbnailSliderComponent {
   sliderX = 0;
   sliderWidth = 0;
   sliderXabs = 0;
+  
+
+  videoStars: VideoStars[] = [];
 
   slider: SliderControl = {
     allowLeft: false,
@@ -64,14 +72,12 @@ export class ThumbnailSliderComponent {
   };
 
   constructor(@Self() private element: ElementRef) {
-   
-
     effect(() => {
       let parentSize = this.parentSize();
-      if (parentSize) {this.size = parentSize
-        console.log("parentsize", this.size);
-        
-      };
+      if (parentSize) {
+        this.size = parentSize;
+        console.log('parentsize', this.size);
+      }
     });
     effect(() => {
       let videos = this.videos();
@@ -88,7 +94,11 @@ export class ThumbnailSliderComponent {
           (this.numberOfImages - 1) * this.offsetGap;
 
         this.sliderXabs = this.sliderX + this.sliderWidth; //absolute x position (right) of the slider element
+
+     
       }
+
+     
     });
   }
 
@@ -111,8 +121,7 @@ export class ThumbnailSliderComponent {
   isItAllowedToMoveRight() {
     console.log(this.sliderXabs);
     console.log(this.windowWidth);
-    
-    
+
     return this.windowWidth <= this.sliderXabs ? true : false;
   }
 
@@ -124,7 +133,7 @@ export class ThumbnailSliderComponent {
     this.counter += 1;
 
     this.slider.allowRight = this.isItAllowedToMoveRight();
-    
+
     //check after slide animation is finished
     setTimeout(() => {
       if (this.counter > 0) this.slider.allowLeft = true;
@@ -149,7 +158,7 @@ export class ThumbnailSliderComponent {
   selectVideo(index: number) {
     this.videoService.selectedVideoIdSignal.set(index);
     this.selected = index;
-    this.videoService.slideMobileVideo.set(true)
+    this.videoService.slideMobileVideo.set(true);
   }
 
   getDuration(duration: number) {
@@ -160,4 +169,6 @@ export class ThumbnailSliderComponent {
       return min.toFixed(0) + ' min ' + sec.toFixed(0) + ' s';
     }
   }
+
+  
 }

@@ -7,7 +7,6 @@
         </div>
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
             <div class="dialog-input-frame pos-rel">
-                <!-- pattern="[a-z0-9._%+/-]+@[a-z0-9.-]+\.[a-z]{2,4}" -->
                 <input placeholder="Email Address" id="email" type="email"
                  formControlName="email" autocomplete="email">
                  @if (!loginForm.controls.email.valid && loginForm.controls.email.touched) {

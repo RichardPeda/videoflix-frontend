@@ -1,4 +1,11 @@
-import { Component, effect, ElementRef, inject, input, ViewChild } from '@angular/core';
+import {
+  Component,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  ViewChild,
+} from '@angular/core';
 import { Video } from '../../../core/models/video';
 import { PlayButtonComponent } from '../../../shared/components/buttons/play-button/play-button.component';
 import { CommonModule } from '@angular/common';
@@ -13,7 +20,7 @@ import { VideoService } from '../../../core/services/video.service';
 })
 export class TeaserComponent {
   @ViewChild('video') videoContainer!: ElementRef<HTMLVideoElement>;
-  public videoService = inject(VideoService)
+  public videoService = inject(VideoService);
 
   ngAfterViewInit() {
     const video = this.videoContainer.nativeElement;
@@ -50,6 +57,8 @@ export class TeaserComponent {
           if (window.innerWidth > 555) this.fadeOut(video, videoSrc);
           else this.changeSourceNow(video, videoSrc);
         }
+
+        this.videostars = this.getStars(video.ranking);
       }
     });
   }
@@ -67,5 +76,21 @@ export class TeaserComponent {
     setTimeout(() => {
       this.fadeActive = false;
     }, 3000);
+  }
+
+  videostars: ('full' | 'half' | 'empty')[] = [];
+
+  getStars(ranking: number) {
+    const stars: ('full' | 'half' | 'empty')[] = [];
+
+    const fullCount = Math.floor(ranking);
+    const hasHalf = ranking % 1 >= 0.25 && ranking % 1 < 0.75;
+    const emptyCount = 5 - fullCount - (hasHalf ? 1 : 0);
+
+    for (let i = 0; i < fullCount; i++) stars.push('full');
+    if (hasHalf) stars.push('half');
+    for (let i = 0; i < emptyCount; i++) stars.push('empty');
+
+    return stars;
   }
 }

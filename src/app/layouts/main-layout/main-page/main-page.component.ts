@@ -118,6 +118,7 @@ export class MainPageComponent {
   loadVideos() {
     this.videoService.getMovies().subscribe({
       next: (data: any) => {
+        console.log(data)
         this.videoData = data;
       },
       complete: () => {
