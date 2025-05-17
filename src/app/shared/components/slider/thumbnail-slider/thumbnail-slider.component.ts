@@ -15,6 +15,7 @@ import { ThumbnailPreviewComponent } from '../thumbnail-preview/thumbnail-previe
 import { Video } from '../../../../core/models/video';
 import { VideoService } from '../../../../core/services/video.service';
 import { PlayButtonComponent } from '../../buttons/play-button/play-button.component';
+import { StarsRankingComponent } from '../../ranking/stars-ranking/stars-ranking.component';
 
 interface SliderControl {
   allowRight: boolean;
@@ -32,7 +33,7 @@ interface VideoStars {
 @Component({
   selector: 'app-thumbnail-slider',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, StarsRankingComponent],
   templateUrl: './thumbnail-slider.component.html',
   styleUrl: './thumbnail-slider.component.scss',
 })
