@@ -31,11 +31,14 @@ export class LoginPageComponent {
 
   userEmail = '';
   messageText = 'Verification successful';
-  messageType: 'good' | 'bad' = 'good'
+  messageType: 'good' | 'bad' = 'good';
   showError = false;
   initialState = true;
 
   ngOnInit() {
+    let login = this.loginService.getLocalStorage('loginSuccess');
+    if (login) this.router.navigateByUrl('overview');
+
     let rem = this.loginService.getLocalStorage('remember');
     if (rem && rem == 'true') {
       let remember = true;
@@ -60,7 +63,10 @@ export class LoginPageComponent {
   }
 
   loginForm = new FormGroup({
-    email : new FormControl('', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$')]),
+    email: new FormControl('', [
+      Validators.required,
+      Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$'),
+    ]),
     password: new FormControl('', Validators.required),
     remember: new FormControl(false),
   });
@@ -68,11 +74,19 @@ export class LoginPageComponent {
   passwordType = 'password';
   isPasswordShown = false;
 
+  /**
+   * Toggles the visibility of the password field.
+   */
   togglePasswordVisible() {
     this.isPasswordShown = !this.isPasswordShown;
     this.passwordType = this.togglePasswordType(this.isPasswordShown);
   }
 
+  /**
+   * Set the type of the password field to normal text or asterix
+   * @param show a boolean to show or hide the password
+   * @returns
+   */
   togglePasswordType(show: boolean) {
     if (show) return 'text';
     else return 'password';
@@ -96,30 +110,44 @@ export class LoginPageComponent {
           },
           error: (err) => {
             if (err.status === 401) {
-             
-              this.openMessage('The combination of email and password was not found.', 'bad')
+              this.openMessage(
+                'The combination of email and password was not found.',
+                'bad'
+              );
               setTimeout(() => {
-                this.closeMessage()
+                this.closeMessage();
               }, 5000);
             }
           },
         });
       }
     }
-    console.log(this.loginForm.value.remember);
   }
 
-
-  openMessage(text: string, type:"good" | "bad") {
-    this.messageType = type
+  /**
+   * Open the floating message with a given text and type.
+   * "good" message turns green. "bad" message turns red as an error.
+   * @param text text for the message
+   * @param type type of the message
+   */
+  openMessage(text: string, type: 'good' | 'bad') {
+    this.messageType = type;
     this.showError = true;
     this.initialState = false;
     this.messageText = text;
   }
+
+  /**
+   * Close the floating message
+   */
   closeMessage() {
     this.showError = false;
   }
 
+  /**
+   * If the remember checkbox is checked, save to local storage.
+   * If the checkbox is not checked, delete password and email from local storage
+   */
   setRemember() {
     let rem = this.loginForm.value.remember;
     if (rem && rem == true)

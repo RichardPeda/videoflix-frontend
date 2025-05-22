@@ -23,19 +23,14 @@ export class ThumbnailPreviewComponent {
       setTimeout(() => {
         this.growing = false;
       }, 500);
-      console.log('grow');
     }
   }
 
   componentShrink() {
     if (this.isBig) {
       if (!this.growing) {
-        console.log('shrink');
-
         this.isBig = false;
         setTimeout(() => {
-          console.log("timeout");
-          
           this.show = false;
         }, 500);
       }

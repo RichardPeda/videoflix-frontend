@@ -1,11 +1,16 @@
-import { Directive, ElementRef, EventEmitter, HostListener, Output } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Output,
+} from '@angular/core';
 
 @Directive({
   selector: '[appClickOutside]',
-  standalone: true
+  standalone: true,
 })
 export class ClickOutsideDirective {
-
   @Output() clickOutside = new EventEmitter<void>();
 
   constructor(private elementRef: ElementRef) {}
@@ -15,12 +20,7 @@ export class ClickOutsideDirective {
     const clickedInside = this.elementRef.nativeElement.contains(target);
 
     if (!clickedInside) {
-      console.log(this.elementRef.nativeElement)
-      console.log(target)
       this.clickOutside.emit();
-      console.log("click");
-      
-      
     }
   }
 }

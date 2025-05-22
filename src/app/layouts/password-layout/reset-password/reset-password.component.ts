@@ -30,12 +30,11 @@ interface password {
 })
 export class ResetPasswordComponent {
   private route = inject(ActivatedRoute);
-  private loginService = inject(LoginService)
+  private loginService = inject(LoginService);
   userId: string | null = '';
   code: string | null = '';
-  dataValid = false
-  resetSuccessfull = false
-
+  dataValid = false;
+  resetSuccessfull = false;
 
   resetPasswordForm = new FormGroup({
     password_0: new FormControl('', Validators.required),
@@ -50,7 +49,7 @@ export class ResetPasswordComponent {
   constructor() {
     this.userId = this.route.snapshot.queryParamMap.get('user_id');
     this.code = this.route.snapshot.queryParamMap.get('code');
-    this.dataValid = this.userId && this.code ? true : false
+    this.dataValid = this.userId && this.code ? true : false;
   }
 
   togglePasswordVisible(index: number) {
@@ -82,9 +81,7 @@ export class ResetPasswordComponent {
                 }
               },
               error: (err) => {
-                // this.openMessage();
                 console.log(err);
-                
               },
             });
         }

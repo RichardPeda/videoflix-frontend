@@ -22,7 +22,7 @@ import { VideoService } from '../../../core/services/video.service';
 import { HeaderComponent } from '../../../shared/components/header/header-main/header.component';
 import { Genre } from '../../../core/models/genre';
 import { LoginService } from '../../../core/services/login.service';
-import { ThumbnailMobileComponent } from "../../../shared/components/slider/thumbnail-mobile/thumbnail-mobile.component";
+import { ThumbnailMobileComponent } from '../../../shared/components/slider/thumbnail-mobile/thumbnail-mobile.component';
 
 @Component({
   selector: 'app-main-page',
@@ -33,8 +33,8 @@ import { ThumbnailMobileComponent } from "../../../shared/components/slider/thum
     FooterComponent,
     ThumbnailSliderComponent,
     TeaserComponent,
-    ThumbnailMobileComponent
-],
+    ThumbnailMobileComponent,
+  ],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.scss',
 })
@@ -80,7 +80,6 @@ export class MainPageComponent {
   constructor(@Self() private element: ElementRef) {
     this.screenWidth = window.innerWidth;
     this.isScreenMobile = this.checkIfSreenMobile(window.innerWidth);
-    console.log(window.innerWidth);
     this.videoService.setBestVideoSize(window.innerWidth);
     effect(
       () => {
@@ -99,7 +98,6 @@ export class MainPageComponent {
   }
 
   checkIfSreenMobile(size: number) {
-    console.warn(size)
     if (size < 555) return true;
     else return false;
   }
@@ -118,7 +116,6 @@ export class MainPageComponent {
   loadVideos() {
     this.videoService.getMovies().subscribe({
       next: (data: any) => {
-        console.log(data)
         this.videoData = data;
       },
       complete: () => {
@@ -152,7 +149,9 @@ export class MainPageComponent {
     this.contentSize = this.element.nativeElement.offsetWidth;
     this.screenWidth = window.innerWidth;
     this.isScreenMobile = this.checkIfSreenMobile(window.innerWidth);
-    this.videoService.isScreenMobile = this.checkIfSreenMobile(window.innerWidth)
+    this.videoService.isScreenMobile = this.checkIfSreenMobile(
+      window.innerWidth
+    );
   }
 
   sortVideosForGenre() {
@@ -225,7 +224,6 @@ export class MainPageComponent {
               convert,
               this.videoService.recommendedResolution()
             );
-          console.log(this.teaserVideoSrc);
           this.saveVideoID(findId);
         }
       });

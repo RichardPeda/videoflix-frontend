@@ -38,7 +38,6 @@ export class PwResetPageComponent {
           next: (resp: any) => {
             if (resp.status === 200) {
               this.emailSent = true;
-              console.log('email was send');
             }
           },
           error: (err) => console.log(err),

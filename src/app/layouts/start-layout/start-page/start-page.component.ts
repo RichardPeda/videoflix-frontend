@@ -20,16 +20,15 @@ import { NetworkService } from '../../../core/services/network.service';
 })
 export class StartPageComponent {
   private loginService = inject(LoginService);
-  private networkService = inject(NetworkService)
+  private networkService = inject(NetworkService);
   private router = inject(Router);
   profileForm = new FormGroup({
     email: new FormControl('', Validators.required),
   });
 
-  ngOnInit(){
-    this.loginService.deleteLocalStorage('loginSuccess')
+  ngOnInit() {
+    this.loginService.deleteLocalStorage('loginSuccess');
   }
-  
 
   onSubmit() {
     if (this.profileForm.valid) {
@@ -41,19 +40,16 @@ export class StartPageComponent {
               if (data.message == 'user does not exist') {
                 this.router.navigateByUrl('signup');
               } else if (data.message == 'user exists' && data.email) {
-                console.log(typeof(data.email));
-                
-                this.loginService.setSessionStorage('email', data.email)
+                this.loginService.setSessionStorage('email', data.email);
 
                 this.router.navigateByUrl('login');
               }
             }
           },
 
-          error: (err) => console.log('fehler', err),
+          error: (err) => console.log(err),
         });
       }
-    }
-    else this.router.navigateByUrl('signup');
+    } else this.router.navigateByUrl('signup');
   }
 }

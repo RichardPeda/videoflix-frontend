@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +13,10 @@ export class NetworkService {
   networkResolution: number | undefined = undefined;
   testFileUrl = signal<string | undefined>(undefined);
 
+  /**
+   * If testfileUrl is undefined => get testfile and test the speed of the network.
+   * If the speed is clarified, set the resolution what the files should have, depends on network speed.
+   */
   constructor() {
     if (this.testFileUrl() == undefined) this.getTestfileURL();
 
@@ -24,18 +29,24 @@ export class NetworkService {
 
     effect(() => {
       const speed = this.speedMbps();
-      console.log(speed);
       if (speed) {
         this.networkResolution = this.classifyNetwork(speed);
-        sessionStorage.setItem('networkRes', this.networkResolution.toString())
+        sessionStorage.setItem('networkRes', this.networkResolution.toString());
       }
     });
   }
 
-  getTestFile() {
+  /**
+   * GET request to backend endpoint to get a testfile for network connection test.
+   * @returns Observable
+   */
+  getTestFile():Observable<any> {
     return this.http.get<any>(`${this.BASE_URL}api/connection/`);
   }
 
+  /**
+   * GET request to backend endpoint to receive a testfile and save it to signal.
+   */
   getTestfileURL() {
     this.getTestFile().subscribe({
       next: async (resp: any) => {
@@ -43,14 +54,20 @@ export class NetworkService {
       },
     });
   }
-  async testSpeed(testFile: string) {
-    let response = await fetch(testFile + '?nocache=' + new Date().getTime(), {
-      method: 'GET',
-    });
+
+  /**
+   * Fetch a testfile from backend. Save the time at start and end of download with a ReadableStream.
+   * Calculate download rate
+   * @param testFileUrl testfile url
+   */
+  async testSpeed(testFileUrl: string) {
+    let response = await fetch(testFileUrl + '?nocache=' + new Date().getTime(),
+      {method: 'GET',}
+    );
 
     const reader = response.body?.getReader();
     if (!reader) {
-      console.error('Reader konnte nicht erstellt werden!');
+      console.error('Reader could not be created!');
       this.speedMbps.set(5);
     } else {
       const contentLength = response.headers.get('content-length')
@@ -58,7 +75,6 @@ export class NetworkService {
         : 102400;
 
       const fileSizeInBits = contentLength * 8;
-
       let received = 0;
       const startTime = new Date().getTime();
 
@@ -69,13 +85,28 @@ export class NetworkService {
       }
 
       const endTime = new Date().getTime();
-      const durationInSeconds = (endTime - startTime) / 1000;
-      const speedMbps = fileSizeInBits / durationInSeconds / (1024 * 1024);
-      console.log(`Berechnete Geschwindigkeit: ${speedMbps.toFixed(2)} Mbps`);
-      this.speedMbps.set(speedMbps);
+      this.countDuration(fileSizeInBits, startTime, endTime);
     }
   }
 
+  /**
+   * Calculate the duration for the download and the download speed and set to signal
+   * @param fileSizeInBits file size in bits
+   * @param startTime start time of download
+   * @param endTime end time of download
+   */
+  countDuration(fileSizeInBits: number, startTime: number, endTime: number) {
+    const durationInSeconds = (endTime - startTime) / 1000;
+    const speedMbps = fileSizeInBits / durationInSeconds / (1024 * 1024);
+    this.speedMbps.set(speedMbps);
+  }
+
+  /**
+   * Depending on the download speed, different resolutions for the videos are set automatically.
+   * The better the speed, the better the resolution.
+   * @param speedMbps download speed in Mbit/s
+   * @returns resolution (120p, 360p, 720p, 1080p)
+   */
   classifyNetwork(speedMbps: number): number {
     if (speedMbps < 0.5) return 120;
     if (speedMbps < 2) return 360;

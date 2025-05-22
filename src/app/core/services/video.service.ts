@@ -1,6 +1,6 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { ConvertableVideo, Video } from '../models/video';
-import { of, tap } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment.development';
 import { LoginService } from './login.service';
@@ -23,6 +23,9 @@ export class VideoService {
 
   userSelectedResolution = signal<number | undefined>(undefined);
 
+  /**
+   * Set an general header for further requests with Authorization token
+   */
   constructor() {
     this.headers = this.headers.append(
       'Authorization',
@@ -30,97 +33,21 @@ export class VideoService {
     );
   }
 
-  // videoData: Video[] = [
-  //   {
-  //     id: 1,
-  //     title: 'Breakout',
-  //     description:
-  //       'In a high-security prison, a wrongly convicted man formulates a meticulous plan to break out and prove his innocence. He must navigate a web of alliances and betrayals to reclaim his freedom and expose the truth.',
-  //     image_url: '../../../../assets/images/thumbnail_9-min.jpg',
-  //     videoURL: '../../../../assets/videos/escape.mp4',
-  //     genre: 'Action',
-  //     duration: 20,
-  //   },
-  //   {
-  //     id: 2,
-  //     title: 'Majestic Whales',
-  //     description: 'Wale Wale',
-  //     image_url: '../../../../assets/images/thumbnail_2-min.jpg',
-  //     videoURL: '../../../../assets/videos/147535-791696855_small.mp4',
-  //     genre: 'Action',
-  //     duration: 20,
-  //   },
-  //   {
-  //     id: 3,
-  //     title: 'Beispiel Titel 1',
-  //     description: 'Beispiel Beschreibung 1',
-  //     image_url: '../../../../assets/images/thumbnail_3-min.jpg',
-  //     videoURL: '../../../../assets/videos/147535-791696855_small.mp4',
-  //     genre: 'Action',
-  //     duration: 20,
-  //   },
-  //   {
-  //     id: 4,
-  //     title: 'Beispiel Titel 2',
-  //     description: 'Beispiel Beschreibung 2',
-  //     image_url: '../../../../assets/images/thumbnail_4-min.jpg',
-  //     videoURL: '../../../../assets/videos/147535-791696855_small.mp4',
-  //     genre: 'Action',
-  //     duration: 20,
-  //   },
-  //   {
-  //     id: 5,
-  //     title: 'Beispiel Titel 3',
-  //     description: 'Beispiel Beschreibung 3',
-  //     image_url: '../../../../assets/images/thumbnail_5-min.jpg',
-  //     videoURL: '../../../../assets/videos/147535-791696855_small.mp4',
-  //     genre: 'Action',
-  //     duration: 20,
-  //   },
-  //   {
-  //     id: 6,
-  //     title: 'Beispiel Titel 4',
-  //     description: 'Beispiel Beschreibung 4',
-  //     image_url: '../../../../assets/images/thumbnail_6-min.jpg',
-  //     videoURL: '../../../../assets/videos/147535-791696855_small.mp4',
-  //     genre: 'Action',
-  //     duration: 20,
-  //   },
-  //   {
-  //     id: 7,
-  //     title: 'Beispiel Titel 5',
-  //     description: 'Beispiel Beschreibung 5',
-  //     image_url: '../../../../assets/images/thumbnail_7-min.jpg',
-  //     videoURL: '../../../../assets/videos/147535-791696855_small.mp4',
-  //     genre: 'Action',
-  //     duration: 20,
-  //   },
-  //   {
-  //     id: 8,
-  //     title: 'Beispiel Titel 6',
-  //     description: 'Beispiel Beschreibung 6',
-  //     image_url: '../../../../assets/images/thumbnail_8-min.jpg',
-  //     videoURL: '../../../../assets/videos/147535-791696855_small.mp4',
-  //     genre: 'Action',
-  //     duration: 20,
-  //   },
-  // ];
-
   private cachedVideos: Video[] | null = null;
   private cachedConvertableVideos: ConvertableVideo[] | null = null;
 
   selectedVideoIdSignal = signal<number>(0);
   selectedVideoSignal = signal<Video | undefined>(undefined);
-  slideMobileVideo = signal(false)
-  isScreenMobile = false
+  slideMobileVideo = signal(false);
+  isScreenMobile = false;
 
-  // videoSizeSetpoint = signal<number | undefined>(undefined);
   videoResolution = {
     minimal: 120,
     low: 360,
     middle: 720,
     high: 1080,
   };
+
   threshold = {
     low: 240,
     middle: 540,
@@ -131,7 +58,12 @@ export class VideoService {
 
   private BASE_URL = environment.apiUrl;
 
-  setBestVideoSize(windowSize: number) {
+  /**
+   *
+   * @param windowSize window width in pixels
+   * @returns resolution (120p, 360p, 720p, 1080p) as number
+   */
+  setBestVideoSize(windowSize: number): number {
     if (windowSize <= this.threshold.low) return this.videoResolution.minimal;
     else {
       if (windowSize > this.threshold.high) return this.videoResolution.high;
@@ -141,43 +73,66 @@ export class VideoService {
     }
   }
 
-  getMovies() {
+  /**
+   * Retrieves the list of movies from the server or returns cached data if available.
+   * If movie data has already been cached, it returns the cached data as an Observable.
+   * Otherwise, it sends an HTTP GET request to the API and caches the result for future use.
+   * @returns Observable, Array of type Video
+   */
+  getMovies(): Observable<Video[]> {
     if (this.cachedVideos) {
       return of(this.cachedVideos);
     } else {
       return this.http
-        .get<any>(`${this.BASE_URL}api/movies/`, {
+        .get<Video[]>(`${this.BASE_URL}api/movies/`, {
           headers: this.headers,
         })
-        .pipe(
-          tap((data) => (this.cachedVideos = data)) // Daten cachen
-        );
+        .pipe(tap((data) => (this.cachedVideos = data)));
     }
   }
-  getConvertedMovies() {
+
+  /**
+   * Retrieves the list of convertable movies from the server or returns cached data if available.
+   * If movie data has already been cached, it returns the cached data as an Observable.
+   * Otherwise, it sends an HTTP GET request to the API and caches the result for future use.
+   * @returns Observable, Array of type ConvertableVideo
+   */
+  getConvertedMovies(): Observable<ConvertableVideo[]> {
     if (this.cachedConvertableVideos) {
       return of(this.cachedConvertableVideos);
     } else {
       return this.http
-        .get<any>(`${this.BASE_URL}api/movies-convert/`, {
+        .get<ConvertableVideo[]>(`${this.BASE_URL}api/movies-convert/`, {
           headers: this.headers,
         })
-        .pipe(
-          tap((data) => (this.cachedConvertableVideos = data)) // Daten cachen
-        );
+        .pipe(tap((data) => (this.cachedConvertableVideos = data)));
     }
   }
 
-  getSingleConvertedMovie(id: number) {
-    return this.http.get<any>(`${this.BASE_URL}api/movie-convert/${id}`, {
-      headers: this.headers,
-    });
+  /**
+   * Retrieves a single convertable movie from the server.
+   * @param id id of the video
+   * @returns Observable
+   */
+  getSingleConvertedMovie(id: number): Observable<ConvertableVideo> {
+    return this.http.get<ConvertableVideo>(
+      `${this.BASE_URL}api/movie-convert/${id}`,
+      {
+        headers: this.headers,
+      }
+    );
   }
 
+  /**
+   * Returns the url as string for the given convertable video of the chosen resolution.
+   * @param convertable convertable video
+   * @param minRes minimum resolution
+   * @returns a string of the url for the chosen resolution
+   */
   getConvertableVideoForResolution(
     convertable: ConvertableVideo,
     minRes: number
-  ) {
+  ): string {
     switch (minRes) {
       case 120:
         return convertable.video_120p;
@@ -196,20 +151,37 @@ export class VideoService {
     }
   }
 
-  getMoviesProgress() {
+  /**
+   * Send a GET request to the endpoint and returns the progress of all videos.
+   * @returns Observable
+   */
+  getMoviesProgress():Observable<any> {
     return this.http.get<any>(`${this.BASE_URL}api/movie-progress/`, {
       headers: this.headers,
     });
   }
 
-
-  getSingleMovieProgress(videoId: number) {
-    return this.http.get<any>(`${this.BASE_URL}api/single-movie-progress/${videoId}`, {
-      headers: this.headers,
-    });
+  /**
+   * Send a GET request to the endpoint and returns the progress of one video.
+   * @param videoId id of the video
+   * @returns Observable
+   */
+  getSingleMovieProgress(videoId: number):Observable<any> {
+    return this.http.get<any>(
+      `${this.BASE_URL}api/single-movie-progress/${videoId}`,
+      {
+        headers: this.headers,
+      }
+    );
   }
-  
-  postSingleMovieProgress(videoId: number, time: number) {
+
+  /**
+   * Send a POST request to the endpoint and set the new time of the progress of the specific video.
+   * @param videoId id of the video
+   * @param time current time of the video
+   * @returns Observable
+   */
+  postSingleMovieProgress(videoId: number, time: number):Observable<any> {
     const body = {
       time: time,
     };

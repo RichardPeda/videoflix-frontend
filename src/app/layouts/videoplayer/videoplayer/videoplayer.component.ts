@@ -21,7 +21,7 @@ import { LoginService } from '../../../core/services/login.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MessageToastComponent } from '../../../shared/components/message/message-toast/message-toast.component';
 import { ErrorToastComponent } from '../../../shared/components/message/error-toast/error-toast.component';
-import { HeaderPlayerMobileComponent } from "../../../shared/components/header/header-player-mobile/header-player-mobile.component";
+import { HeaderPlayerMobileComponent } from '../../../shared/components/header/header-player-mobile/header-player-mobile.component';
 
 interface progress {
   time: number | undefined;
@@ -40,8 +40,8 @@ interface progress {
     FormsModule,
     MatProgressSpinnerModule,
     ErrorToastComponent,
-    HeaderPlayerMobileComponent
-],
+    HeaderPlayerMobileComponent,
+  ],
   templateUrl: './videoplayer.component.html',
   styleUrl: './videoplayer.component.scss',
 })
@@ -52,8 +52,8 @@ export class VideoplayerComponent {
   private videoService = inject(VideoService);
   private loginService = inject(LoginService);
 
-  videoName = ''
-  videoFullData : Video[] = []
+  videoName = '';
+  videoFullData: Video[] = [];
   video: ConvertableVideo | undefined = undefined;
   videoData: ConvertableVideo[] = [];
   videoSrc = '';
@@ -176,15 +176,15 @@ export class VideoplayerComponent {
       this.videoService.getMovies().subscribe({
         next: (data: any) => {
           if (data) {
-           this.videoFullData = data
-           this.videoFullData.forEach(element => {
-              if(element.id == Number(id)){
-                this.videoName = element.title
+            this.videoFullData = data;
+            this.videoFullData.forEach((element) => {
+              if (element.id == Number(id)) {
+                this.videoName = element.title;
               }
-           });
+            });
           }
         },
-      })
+      });
     }
 
     this.loadVideos();
@@ -215,9 +215,7 @@ export class VideoplayerComponent {
 
   findQuality(video: ConvertableVideo) {
     if (video) {
-      // let quality = this.videoService.userSelectedResolution();
       let quality = this.selectedQuality();
-      console.log('quality', quality);
 
       if (quality) {
         return this.videoService.getConvertableVideoForResolution(
@@ -264,8 +262,6 @@ export class VideoplayerComponent {
     this.duration.set(video.duration);
     this.currentTime.set(video.currentTime);
     this.updateProgressBar();
-    // this.videoPlayer.nativeElement.play();
-    console.log(this.videoPlayer.nativeElement.buffered.length);
     let lastBufferedEnd = 0;
   }
 

@@ -77,13 +77,11 @@ export class ThumbnailSliderComponent {
       let parentSize = this.parentSize();
       if (parentSize) {
         this.size = parentSize;
-        console.log('parentsize', this.size);
       }
     });
     effect(() => {
       let videos = this.videos();
       if (videos != undefined && videos.length > 0) {
-        console.log('videos', videos);
         this.numberOfImages = videos.length;
         //get single image
         let thumb = this.thumbnail?.nativeElement.getBoundingClientRect();
@@ -120,10 +118,7 @@ export class ThumbnailSliderComponent {
   }
 
   isItAllowedToMoveRight() {
-    console.log(this.sliderXabs);
-    console.log(this.windowWidth);
-
-    return this.windowWidth <= this.sliderXabs ? true : false;
+      return this.windowWidth <= this.sliderXabs ? true : false;
   }
 
   slideRight() {
