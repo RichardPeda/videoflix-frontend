@@ -48,7 +48,6 @@ export class ThumbnailSliderComponent {
 
   windowWidth = window.innerWidth;
 
-  // videoData: Video[] = [];
   size = 0;
   singeImageSize = 0;
   contentWidth = 0;
@@ -60,7 +59,6 @@ export class ThumbnailSliderComponent {
   sliderX = 0;
   sliderWidth = 0;
   sliderXabs = 0;
-  
 
   videoStars: VideoStars[] = [];
 
@@ -72,6 +70,19 @@ export class ThumbnailSliderComponent {
     minPosition: 0,
   };
 
+  /**
+   * Initializes the component and sets up reactive effects for size and video list changes.
+   *
+   * The constructor creates two reactive effects:
+   * 1. Watches for changes in the parent container size and updates the component size accordingly.
+   * 2. Watches for changes in the list of videos and recalculates:
+   *    - The number of images (videos) available.
+   *    - The size of a single thumbnail image.
+   *    - The total width of the slider content.
+   *    - The absolute slider position on the X-axis.
+   *
+   * @param {ElementRef} element - Reference to the host DOM element of the component.
+   */
   constructor(@Self() private element: ElementRef) {
     effect(() => {
       let parentSize = this.parentSize();
@@ -83,26 +94,26 @@ export class ThumbnailSliderComponent {
       let videos = this.videos();
       if (videos != undefined && videos.length > 0) {
         this.numberOfImages = videos.length;
-        //get single image
         let thumb = this.thumbnail?.nativeElement.getBoundingClientRect();
         this.singeImageSize = thumb.width;
-
-        //content size of slider
         this.sliderWidth =
           this.singeImageSize * this.numberOfImages +
           (this.numberOfImages - 1) * this.offsetGap;
 
-        this.sliderXabs = this.sliderX + this.sliderWidth; //absolute x position (right) of the slider element
-
-     
+        this.sliderXabs = this.sliderX + this.sliderWidth;
       }
-
-     
     });
   }
 
+  /**
+   * Lifecycle hook called after Angular has fully initialized the component's view.
+   *
+   * This method:
+   * - Retrieves the left (X) position of the slider container element.
+   * - Sets the initial sliderX property based on the container's position.
+   * - After a 500ms delay, checks and updates whether sliding to the right is allowed.
+   */
   ngAfterViewInit() {
-    //get the left position of slider
     let element = this.container?.nativeElement.getBoundingClientRect();
     this.sliderX = element.x;
 
@@ -111,52 +122,100 @@ export class ThumbnailSliderComponent {
     }, 500);
   }
 
+  /**
+   * Host listener that reacts to window resize events.
+   *
+   * Updates the current window width and recalculates whether sliding right
+   * is allowed based on the new window size.
+   *
+   * @param {Event} event - The resize event object
+   */
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.windowWidth = window.innerWidth;
     this.slider.allowRight = this.isItAllowedToMoveRight();
   }
 
-  isItAllowedToMoveRight() {
-      return this.windowWidth <= this.sliderXabs ? true : false;
+  /**
+   * Determines whether sliding to the right is allowed based on current window width and slider position.
+   *
+   * Compares the window width with the absolute slider position to decide
+   * if the slider can move further to the right.
+   *
+   * @returns {boolean} `true` if sliding right is allowed, otherwise `false`
+   */
+  isItAllowedToMoveRight(): boolean {
+    return this.windowWidth <= this.sliderXabs ? true : false;
   }
 
+  /**
+   * Slides the slider to the right by updating its position and state.
+   *
+   * Calculates the offset to move the slider by one image width plus the gap,
+   * updates the slider's current position and absolute position,
+   * increments the slide counter, and updates the allowed sliding directions.
+   *
+   * After the slide animation (1 second), it enables sliding to the left if applicable.
+   */
   slideRight() {
     let moveOffset = -(this.singeImageSize + this.offsetGap);
-
-    this.slider.position += moveOffset; //new slider position
-    this.sliderXabs += moveOffset; //new slider abs position
+    this.slider.position += moveOffset;
+    this.sliderXabs += moveOffset;
     this.counter += 1;
-
     this.slider.allowRight = this.isItAllowedToMoveRight();
 
-    //check after slide animation is finished
     setTimeout(() => {
       if (this.counter > 0) this.slider.allowLeft = true;
     }, 1000);
   }
 
+  /**
+   * Slides the slider to the left by updating its position and state.
+   *
+   * Calculates the offset to move the slider by one image width plus the gap,
+   * updates the slider's current position and absolute position,
+   * decrements the slide counter, and updates the allowed sliding directions accordingly.
+   *
+   * After the slide animation (1 second), it updates whether sliding to the right is allowed.
+   */
   slideLeft() {
     let moveOffset = this.singeImageSize + this.offsetGap;
-    this.slider.position += moveOffset; //new slider position
-    this.sliderXabs += moveOffset; //new slider abs position
+    this.slider.position += moveOffset;
+    this.sliderXabs += moveOffset;
     this.counter -= 1;
 
     if (this.counter > 0) this.slider.allowLeft = true;
     else this.slider.allowLeft = false;
 
-    //check after slide animation is finished
     setTimeout(() => {
       this.slider.allowRight = this.isItAllowedToMoveRight();
     }, 1000);
   }
 
+  /**
+   * Selects a video by its index and updates related states.
+   *
+   * Sets the selected video ID signal in the video service,
+   * updates the local selected index,
+   * and triggers the mobile video slide state.
+   *
+   * @param {number} index - The index of the video to select.
+   */
   selectVideo(index: number) {
     this.videoService.selectedVideoIdSignal.set(index);
     this.selected = index;
     this.videoService.slideMobileVideo.set(true);
   }
 
+  /**
+   * Converts a duration in seconds to a human-readable string format.
+   *
+   * If the duration is less than 60 seconds, it returns the seconds followed by 's'.
+   * Otherwise, it returns a string formatted as 'X min Y s'.
+   *
+   * @param {number} duration - Duration in seconds.
+   * @returns {string} The formatted duration string.
+   */
   getDuration(duration: number) {
     if (duration < 60) return duration.toFixed(0) + ' s';
     else {
@@ -165,6 +224,4 @@ export class ThumbnailSliderComponent {
       return min.toFixed(0) + ' min ' + sec.toFixed(0) + ' s';
     }
   }
-
-  
 }

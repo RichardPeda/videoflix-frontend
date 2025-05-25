@@ -11,16 +11,26 @@ import { CommonModule } from '@angular/common';
 })
 export class StarsRankingComponent {
   videoRanking = input<number | undefined>(undefined);
-  size = input<number>(10)
+  size = input<number>(10);
 
   videostars = computed(() => {
-  const ranking = this.videoRanking();
-  return ranking ? this.getStars(ranking) : [];
-});
+    const ranking = this.videoRanking();
+    return ranking ? this.getStars(ranking) : [];
+  });
 
-  getStars(ranking: number) {
+  /**
+   * Converts a numeric ranking into an array representing star ratings.
+   *
+   * The returned array contains exactly 5 elements, each being one of:
+   * - 'full' for a full star,
+   * - 'half' for a half star (if ranking fractional part is between 0.25 and 0.75),
+   * - 'empty' for an empty star.
+   *
+   * @param {number} ranking - The numeric ranking value (e.g., 3.5)
+   * @returns {('full' | 'half' | 'empty')[]} An array representing the star rating
+   */
+  getStars(ranking: number): ('full' | 'half' | 'empty')[] {
     const stars: ('full' | 'half' | 'empty')[] = [];
-
     const fullCount = Math.floor(ranking);
     const hasHalf = ranking % 1 >= 0.25 && ranking % 1 < 0.75;
     const emptyCount = 5 - fullCount - (hasHalf ? 1 : 0);

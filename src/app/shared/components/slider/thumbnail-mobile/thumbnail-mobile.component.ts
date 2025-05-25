@@ -8,19 +8,17 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './thumbnail-mobile.component.html',
-  styleUrl: './thumbnail-mobile.component.scss'
+  styleUrl: './thumbnail-mobile.component.scss',
 })
 export class ThumbnailMobileComponent {
-private videoService = inject(VideoService)
-selected: number | undefined = undefined;
-genre = input<string>();
-videos = input<Video[] | undefined>(undefined);
-
+  private videoService = inject(VideoService);
+  selected: number | undefined = undefined;
+  genre = input<string>();
+  videos = input<Video[] | undefined>(undefined);
 
   selectVideo(index: number) {
     this.videoService.selectedVideoIdSignal.set(index);
     this.selected = index;
-    this.videoService.slideMobileVideo.set(true)
+    this.videoService.slideMobileVideo.set(true);
   }
-
 }

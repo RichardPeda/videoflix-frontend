@@ -6,14 +6,17 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [],
   templateUrl: './play-button.component.html',
-  styleUrl: './play-button.component.scss'
+  styleUrl: './play-button.component.scss',
 })
 export class PlayButtonComponent {
-private router = inject(Router)
+  private router = inject(Router);
 
-navigateToPlayer(){
-  this.router.navigate(['/videoplayer'])
-}
-
-
+  /**
+   * Navigates to the video player route.
+   *
+   * Uses Angular's Router to programmatically navigate to the `/videoplayer` route.
+   */
+  navigateToPlayer() {
+    this.router.navigate(['/videoplayer']);
+  }
 }
