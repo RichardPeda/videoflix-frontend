@@ -94,14 +94,21 @@ export class MainPageComponent {
       { allowSignalWrites: true }
     );
     this.loadProgress();
-    // this.loadVideos();
   }
 
-  checkIfSreenMobile(size: number) {
-    if (size < 555) return true;
+  /**
+   * Check if the screen is mobile
+   * @param width window width
+   * @returns true, if width is smaller than 555px, otherwise false
+   */
+  checkIfSreenMobile(width: number) {
+    if (width < 555) return true;
     else return false;
   }
 
+  /**
+   * Load the progress of all movies. When finished, load videos.
+   */
   loadProgress() {
     this.videoService.getMoviesProgress().subscribe({
       next: (progress: any) => {
@@ -113,6 +120,9 @@ export class MainPageComponent {
     });
   }
 
+  /**
+   * Load all videos. When finished, sort the videos and load the converted videos.
+   */
   loadVideos() {
     this.videoService.getMovies().subscribe({
       next: (data: any) => {
@@ -126,6 +136,9 @@ export class MainPageComponent {
     });
   }
 
+  /**
+   * Load the converted videos and save to array. When finished, load the teaser.
+   */
   loadConvertableVideos() {
     this.videoService.getConvertedMovies().subscribe({
       next: (data: any) => {
@@ -143,6 +156,18 @@ export class MainPageComponent {
     this.contentSize = this.element.nativeElement.offsetWidth;
   }
 
+  /**
+   * Handles window resize events and updates layout-related properties accordingly.
+   *
+   * This method is triggered whenever the browser window is resized. It updates:
+   * - the optimal video size via the video service,
+   * - the current content width,
+   * - the screen width,
+   * - and whether the layout should be considered "mobile".
+   *
+   * It also propagates the mobile state to the video service.
+   * @param event window resize event
+   */
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.videoService.setBestVideoSize(window.innerWidth);
@@ -154,6 +179,17 @@ export class MainPageComponent {
     );
   }
 
+  /**
+   * Sorts videos by genre and populates categorized arrays accordingly.
+   *
+   * This method iterates through all available video data and distributes videos
+   * into different genre-specific arrays such as 'new', 'documentary', 'action',
+   * 'romantic', and 'drama'. If a video has already been watched (determined by
+   * matching IDs in VideosInProgress), it is added to the 'seen' category.
+   *
+   * After sorting, all genre arrays are stored in a master video array (indexed by Genre enum),
+   * and a teaser video is selected using the `findFirstVideo()` method.
+   */
   sortVideosForGenre() {
     let genre = Genre;
 
@@ -186,7 +222,16 @@ export class MainPageComponent {
     this.videoForTeaser = this.findFirstVideo(this.videoArray);
   }
 
-  findFirstVideo(multiArray: Video[][]) {
+  /**
+   * Finds and returns the first available video from a 2D video array.
+   *
+   * Iterates through each sub-array (representing a genre or category) and
+   * returns the first video found. If all sub-arrays are empty, returns undefined.
+   *
+   * @param multiArray {Video[][]} A two-dimensional array of videos grouped by genre
+   * @returns {Video | undefined} The first available video found, or undefined if none exist
+   */
+  findFirstVideo(multiArray: Video[][]): Video | undefined {
     let teaser;
     for (let index = 0; index < multiArray.length; index++) {
       const firstDimension = multiArray[index];
@@ -197,6 +242,15 @@ export class MainPageComponent {
     return teaser;
   }
 
+  /**
+   * Finds and sets the video source for the teaser video based on the recommended resolution.
+   *
+   * This method checks if a teaser video (`videoForTeaser`) is set and whether a list of
+   * converted videos (`convertVideoArray`) is available. It then searches for a matching
+   * converted video by comparing the movie ID. If a match is found, the appropriate video
+   * source for the recommended resolution is retrieved and assigned to `teaserVideoSrc`.
+   * The teaser video ID is also stored using `saveVideoID()`.
+   */
   getFirstTeaser() {
     if (this.videoForTeaser && this.convertVideoArray) {
       this.convertVideoArray.find((convert) => {
@@ -212,6 +266,18 @@ export class MainPageComponent {
     }
   }
 
+  /**
+   * Finds and prepares the teaser video and its source based on a given video ID.
+   *
+   * This method searches the list of converted videos (`convertVideoArray`) for a video
+   * that matches the given `findId`. If a match is found, it:
+   * - Retrieves the corresponding original video from `videoData`
+   * - Selects the appropriate video source based on the recommended resolution
+   * - Sets both the teaser video and its source
+   * - Stores the video ID using `saveVideoID()`
+   *
+   * @param {number} findId - The ID of the video to be used as a teaser
+   */
   getTeaser(findId: number) {
     if (this.convertVideoArray) {
       this.convertVideoArray.find((convert) => {
@@ -230,7 +296,11 @@ export class MainPageComponent {
     }
   }
 
-  saveVideoID(id: number) {
-    this.loginService.setSessionStorage('videoID', id.toString());
+  /**
+   * Stores the video Id in the session storage
+   * @param videoID video id
+   */
+  saveVideoID(videoID: number) {
+    this.loginService.setSessionStorage('videoID', videoID.toString());
   }
 }
