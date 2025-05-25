@@ -43,6 +43,17 @@ export class TeaserComponent {
   newVideoSrc: string = '';
   fadeActive = false;
 
+  /**
+   * Initializes a reactive effect to manage video playback state and transitions.
+   *
+   * This constructor sets up an Angular Signal-based effect that reacts to changes
+   * in the selected video and its source. Depending on the current screen width and
+   * whether a video is already playing, it either:
+   * - Sets the current video and source for the first time,
+   * - Or transitions to a new video using `fadeOut()` or `changeSourceNow()`.
+   *
+   * The logic ensures smooth video switching behavior tailored for desktop and mobile screen sizes.
+   */
   constructor() {
     effect(() => {
       let video = this.video();
@@ -62,11 +73,30 @@ export class TeaserComponent {
     });
   }
 
+  /**
+   * Immediately updates the current video and its source without any transition effect.
+   *
+   * This method is typically used for quick video source changes, e.g., on smaller screens
+   * where a fade-out animation is not necessary or desired.
+   *
+   * @param {Video} video - The video object to be set as the current video
+   * @param {string} videoSrc - The source URL of the selected video
+   */
   changeSourceNow(video: Video, videoSrc: string) {
     this.currentVideo = video;
     this.currentVideoSrc = videoSrc;
   }
 
+  /**
+   * Triggers a fade-out effect before switching to a new video and source.
+   *
+   * This method sets a flag to activate a fade-out animation, waits 1.5 seconds,
+   * switches the video source using `changeSourceNow()`, and then disables the
+   * fade effect after 3 seconds total.
+   *
+   * @param {Video} video - The video object to switch to after the fade-out
+   * @param {string} videoSrc - The source URL of the new video
+   */
   fadeOut(video: Video, videoSrc: string) {
     this.fadeActive = true;
     setTimeout(() => {
@@ -77,6 +107,17 @@ export class TeaserComponent {
     }, 3000);
   }
 
+  /**
+   * Converts a video duration (in seconds) to a human-readable string.
+   *
+   * This method returns the duration formatted as:
+   * - "X sec" if under 60 seconds
+   * - "X min Y sec" if over 60 seconds and has remaining seconds
+   * - "X min" if exactly divisible by 60
+   *
+   * @param {number} duration - The video duration in seconds
+   * @returns {string} The formatted duration string
+   */
   getDuration(duration: number) {
     const rounded = Math.floor(duration);
     if (rounded < 60) return rounded + ' sec';

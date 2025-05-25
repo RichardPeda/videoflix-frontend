@@ -1,8 +1,6 @@
 import {
   Component,
   ElementRef,
-  ViewChild,
-  AfterViewInit,
   inject,
   HostListener,
   Self,
@@ -39,7 +37,6 @@ import { ThumbnailMobileComponent } from '../../../shared/components/slider/thum
   styleUrl: './main-page.component.scss',
 })
 export class MainPageComponent {
-  private elementRef = inject(ElementRef);
   public videoService = inject(VideoService);
   private loginService = inject(LoginService);
 
@@ -77,6 +74,18 @@ export class MainPageComponent {
   VideosInProgress: VideoProgress[] = [];
   mobileVideoChange = false;
 
+  /**
+   * Initializes the component by setting screen-related values and subscribing to video selection changes.
+   *
+   * This constructor performs the following:
+   * - Stores a reference to the host DOM element
+   * - Detects the current screen width and whether the screen is considered "mobile"
+   * - Configures the recommended video size in the video service
+   * - Sets up a reactive effect that updates the teaser video when the selected video ID changes
+   * - Loads any persisted video progress via `loadProgress()`
+   *
+   * @param {ElementRef} element - A reference to the component's host DOM element
+   */
   constructor(@Self() private element: ElementRef) {
     this.screenWidth = window.innerWidth;
     this.isScreenMobile = this.checkIfSreenMobile(window.innerWidth);
