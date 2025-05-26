@@ -8,7 +8,6 @@
     max-height: 100vh;
     width: 100%;
     max-width: var(--content-max-width);
-    // max-width: 1440px;
     margin: auto;
     position: relative;
     display: flex;
@@ -30,23 +29,19 @@ app-header-player-mobile {
     padding-inline: 32px;
 }
 
-.spinner{
+.spinner {
     position: absolute;
     z-index: 50;
     width: 10vw !important;
     height: 10vw !important;
     top: 50%;
     transform: translateY(-50%);
-   
+
 }
 
 .player {
-   
     width: 100%;
-    // height: 100%;
     position: relative;
-   
-   
 
     video {
         width: 100%;
@@ -62,8 +57,8 @@ app-header-player-mobile {
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    // min-height: 150px;
     position: absolute;
+    z-index: 50;
     bottom: 0;
     padding-inline: 32px;
     padding-bottom: 28px;
@@ -72,11 +67,9 @@ app-header-player-mobile {
     .progress-bar {
         width: 100%;
         height: 4px;
-
         background-color: #B5B5B5;
 
         .progress-view {
-
             height: 100%;
             background-color: #413DFF;
         }
@@ -105,8 +98,6 @@ app-header-player-mobile {
         justify-content: center;
 
         svg {
-            // width: 80%;
-            // height: 80%;
             height: 40px;
 
             &:hover {
@@ -116,11 +107,6 @@ app-header-player-mobile {
         }
 
     }
-
-    // .play svg {
-    //     width: 60%;
-    //     height: 60%;
-    // }
 
     .middle {
         color: white;
@@ -150,6 +136,7 @@ app-header-player-mobile {
     transition: 0.5s ease-in-out;
     transition-delay: 1s
 }
+
 #quality:hover .app-quality {
     visibility: visible;
     opacity: 1;
@@ -199,58 +186,89 @@ input[type="range"] {
 }
 
 .full-screen {
-    // width: 100vw !important;
     max-width: unset;
-    // height: 100vh;
     margin: 0;
     overflow: hidden;
 }
 
-app-error-toast{
+app-message-toast-interactive {
     bottom: 20px;
     z-index: 50;
     transform: translateX(-100%);
     left: 0;
-    @media(max-width:555px){
+
+    @media(max-width:555px) {
         position: fixed;
         bottom: 0;
     }
 }
-.slide-message-in{
+
+app-message-toast {
+    bottom: 20px;
+    z-index: 50;
+    transform: translateX(-100%);
+    left: 0;
+
+    @media(max-width:555px) {
+        position: fixed;
+        bottom: 0;
+    }
+}
+
+.increaseBottom{
+     bottom: 150px;
+       @media(max-width:555px) {
+       
+        bottom: 250px;
+    }
+}
+
+
+.slide-message-in {
     animation: slideIn 1s ease-in-out forwards;
 }
-.slide-message-out{
+
+.slide-message-out {
     animation: slideOut 1s ease-in-out forwards;
 }
 
 @keyframes slideIn {
-    from{transform: translateX(-100%)}
-    to{transform: translateX(0);}
+    from {
+        transform: translateX(-100%)
+    }
+
+    to {
+        transform: translateX(0);
+    }
 }
 
 @keyframes slideOut {
-    from{transform: translateX(0);}
-    to{transform: translateX(-100%)}
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-100%)
+    }
 }
 
-.control-mid-mobile{
+.control-mid-mobile {
     display: flex;
-   justify-content: center;
+    justify-content: center;
     position: absolute;
     width: 100%;
     top: 50%;
     transform: translateY(-50%);
     gap: 30px;
+
     .btn {
-        width: 48px;
-        height: 48px;
+        width: 24px;
+        height: 24px;
         display: flex;
         align-items: center;
         justify-content: center;
 
         svg {
-            // width: 80%;
-            // height: 80%;
             height: 40px;
 
             &:hover {
@@ -262,9 +280,10 @@ app-error-toast{
     }
 }
 
-.controls-mobile{
+.controls-mobile {
     padding-bottom: 8px;
     gap: 8px;
+
     .btn {
         width: 32px;
         height: 32px;
@@ -273,8 +292,6 @@ app-error-toast{
         justify-content: center;
 
         svg {
-            // width: 80%;
-            // height: 80%;
             height: 40px;
 
             &:hover {

@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../../shared/components/header/header-main/header.component';
 import { LoginService } from '../../../core/services/login.service';
 import { Router } from '@angular/router';
-import { ErrorToastComponent } from '../../../shared/components/message/error-toast/error-toast.component';
+import { MessageToastInteractiveComponent } from '../../../shared/components/message/error-toast/message-toast-interactive.component';
 
 interface password {
   type: string;
@@ -26,7 +26,7 @@ interface password {
     FooterComponent,
     CommonModule,
     ReactiveFormsModule,
-    ErrorToastComponent,
+    MessageToastInteractiveComponent,
   ],
   templateUrl: './registration-page.component.html',
   styleUrl: './registration-page.component.scss',

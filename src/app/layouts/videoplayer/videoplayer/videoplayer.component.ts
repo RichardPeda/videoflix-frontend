@@ -20,8 +20,8 @@ import { VideoService } from '../../../core/services/video.service';
 import { LoginService } from '../../../core/services/login.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MessageToastComponent } from '../../../shared/components/message/message-toast/message-toast.component';
-import { ErrorToastComponent } from '../../../shared/components/message/error-toast/error-toast.component';
 import { HeaderPlayerMobileComponent } from '../../../shared/components/header/header-player-mobile/header-player-mobile.component';
+import { MessageToastInteractiveComponent } from '../../../shared/components/message/error-toast/message-toast-interactive.component';
 
 interface progress {
   time: number | undefined;
@@ -39,8 +39,9 @@ interface progress {
     QualitySelectionComponent,
     FormsModule,
     MatProgressSpinnerModule,
-    ErrorToastComponent,
+    MessageToastInteractiveComponent,
     HeaderPlayerMobileComponent,
+    MessageToastComponent,
   ],
   templateUrl: './videoplayer.component.html',
   styleUrl: './videoplayer.component.scss',
@@ -78,9 +79,7 @@ export class VideoplayerComponent {
   timeChangeValue = 5;
   playSpeed = [2.0, 1.5, 1.0];
   selectedSpeed = signal(this.playSpeed[2]);
-
   qualities = [1080, 720, 360, 120];
-  // selectedQuality = signal(this.qualities[3]);
   selectedQuality = signal(this.videoService.recommendedResolution());
 
   progressFound = signal(false);
@@ -88,79 +87,174 @@ export class VideoplayerComponent {
     id: undefined,
     time: undefined,
   };
-  showError = false;
-  initialState = true;
+  showFirstMessage = false;
+  showSecondMessage = false;
+  initialStateFirstMessage = true;
+  initialStateSecondMessage = true;
+  isSecondMessage = false;
+
   fullScreen = false;
   switchVideo = false;
-
   fadoutControls = signal(false);
-
   timeout: number | undefined;
-
   isMobile = false;
 
+  /**
+   * Initializes the video player component with responsive settings, reactive effects, and video preloading.
+   *
+   * - Detects if the current device is mobile based on window width.
+   * - Sets a timestamp for tracking purposes.
+   * - Creates reactive effects to:
+   *   - Adjust the video volume based on the current volume signal.
+   *   - Adjust the playback speed based on the selected speed signal.
+   *   - Preload and switch video quality while preserving playback time and state.
+   *   - Show a resume message if previous playback progress is found.
+   */
   constructor() {
     if (window.innerWidth < 550) this.isMobile = true;
     else this.isMobile = false;
-
     this.timestamp = Date.now();
+
+    this.setupVolumeEffect();
+    this.setupPlaybackRateEffect();
+    this.setupQualitySwitchEffect();
+    this.setupProgressFoundEffect();
+
+    setTimeout(() => {
+      this.showcurrentResolutionMessage();
+    }, 500);
+  }
+
+  /**
+   * Sets up a reactive effect to update the video volume based on the current volume signal.
+   */
+  private setupVolumeEffect() {
     effect(() => {
       this.videoPlayer.nativeElement.volume = this.volume() / 100;
     });
-    effect(() => {
-      this.videoPlayer.nativeElement.playbackRate = this.selectedSpeed();
-    });
+  }
 
+  /**
+   * Sets up a reactive effect to preload a video with the selected quality,
+   * preserve playback time, and switch the video source once the new video is ready.
+   */
+  private setupQualitySwitchEffect() {
     effect(() => {
       const videoElement = this.videoPlayer.nativeElement;
-      const currentTime = videoElement.currentTime; // Speichere aktuelle Zeit
+      const currentTime = videoElement.currentTime;
       const isPlaying = !videoElement.paused;
 
       const quality = this.selectedQuality();
       if (quality && this.video) {
-        const preloadedVideo = document.createElement('video');
-        preloadedVideo.src = this.videoService.getConvertableVideoForResolution(
-          this.video!,
-          quality
+        this.preloadVideoWithQuality(
+          quality,
+          currentTime,
+          isPlaying,
+          videoElement
         );
-        preloadedVideo.preload = 'auto';
-
-        videoElement.addEventListener('loadedmetadata', () => {
-          videoElement.currentTime = currentTime; // Stelle vorherige Zeit wieder her
-
-          if (isPlaying) videoElement.play(); // Falls es vorher spielte, weiter abspielen
-
-          this.isLoading = false;
-        });
-
-        preloadedVideo.addEventListener('canplaythrough', () => {
-          this.switchVideo = true;
-
-          // Quelle umschalten, wenn Video geladen wurde
-          this.videoSrc = preloadedVideo.src;
-          this.videoPlayer.nativeElement.currentTime = currentTime;
-
-          // console.log(time)
-          setTimeout(() => {
-            this.switchVideo = false;
-          }, 100);
-        });
-      }
-    });
-    effect(() => {
-      let foundProgress = this.progressFound();
-      if (foundProgress) {
-        this.openMessage('You already played this video. Resume playing?');
       }
     });
   }
 
+  /**
+   * Preloads a video at the specified quality and manages switching the video source smoothly.
+   *
+   * @param {number} quality - The desired video quality (resolution).
+   * @param {number} currentTime - The current playback time to restore after loading.
+   * @param {boolean} isPlaying - Indicates whether the video was playing before switching.
+   * @param {HTMLVideoElement} videoElement - The video element to update and control.
+   */
+  private preloadVideoWithQuality(
+    quality: number,
+    currentTime: number,
+    isPlaying: boolean,
+    videoElement: HTMLVideoElement
+  ) {
+    const preloadedVideo = document.createElement('video');
+    preloadedVideo.src = this.videoService.getConvertableVideoForResolution(
+      this.video!,
+      quality
+    );
+    preloadedVideo.preload = 'auto';
+
+    videoElement.addEventListener('loadedmetadata', () => {
+      videoElement.currentTime = currentTime;
+      if (isPlaying) videoElement.play();
+      this.isLoading = false;
+    });
+
+    preloadedVideo.addEventListener('canplaythrough', () => {
+      this.switchVideo = true;
+      this.videoSrc = preloadedVideo.src;
+      this.videoPlayer.nativeElement.currentTime = currentTime;
+
+      setTimeout(() => {
+        this.switchVideo = false;
+      }, 100);
+    });
+    console.log('videoquality= ', quality);
+    this.openInfoMessage();
+  }
+
+  /**
+   * Sets up a reactive effect to update the playback speed of the video
+   * based on the currently selected speed.
+   */
+  private setupPlaybackRateEffect() {
+    effect(() => {
+      this.videoPlayer.nativeElement.playbackRate = this.selectedSpeed();
+    });
+  }
+
+  /**
+   * Sets up a reactive effect to detect if there is saved playback progress
+   * and prompt the user to resume playing the video.
+   */
+  private setupProgressFoundEffect() {
+    effect(() => {
+      let foundProgress = this.progressFound();
+      if (foundProgress) {
+        this.openInteractiveMessage(
+          'You already played this video. Resume playing?'
+        );
+      }
+    });
+  }
+
+  /**
+   * Show message of active resolution. After 2s close the message
+   */
+  showcurrentResolutionMessage() {
+    if (this.showFirstMessage) {
+      this.isSecondMessage = true;
+    }
+    this.showSecondMessage = true;
+    setTimeout(() => {
+      this.closeInfoMessage();
+    }, 2000);
+  }
+
+  /**
+   * Handles the window resize event to update the mobile screen flag.
+   *
+   * Sets `isMobile` to true if the window width is less than 550 pixels,
+   * otherwise sets it to false.
+   *
+   * @param {Event} event - The resize event object.
+   */
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     if (window.innerWidth < 550) this.isMobile = true;
     else this.isMobile = false;
   }
 
+  /**
+   * Angular lifecycle hook called after component initialization.
+   *
+   * - Checks for a stored video ID in session storage.
+   * - If found, fetches the progress of that video and updates local state.
+   * - Also fetches the full list of movies and extracts the title of the video with the stored ID.
+   */
   ngOnInit() {
     let id = this.loginService.getSessionStorage('videoID');
     if (id) {
@@ -186,10 +280,15 @@ export class VideoplayerComponent {
         },
       });
     }
-
     this.loadVideos();
   }
 
+  /**
+   * Loads converted movies by subscribing to the video service.
+   *
+   * On success, stores the video data and sets the current video and its source quality.
+   * Logs any errors to the console.
+   */
   loadVideos() {
     this.videoService.getConvertedMovies().subscribe({
       next: (data: any) => {
@@ -203,7 +302,13 @@ export class VideoplayerComponent {
     });
   }
 
-  findSelectedConvertableVideo() {
+  /**
+   * Finds the video in `videoData` matching the video ID stored in session storage.
+   *
+   * @returns The matched video object if found; otherwise, undefined.
+   * Logs a warning if no session video ID is found.
+   */
+  findSelectedConvertableVideo(): ConvertableVideo | undefined {
     const sessionID = this.loginService.getSessionStorage('videoID');
     if (sessionID) {
       return this.videoData.find((video) => video.id == +sessionID);
@@ -213,10 +318,19 @@ export class VideoplayerComponent {
     }
   }
 
-  findQuality(video: ConvertableVideo) {
+  /**
+   * Determines the video source URL for the given video based on the selected quality.
+   *
+   * - If a selected quality is set, returns the video URL for that quality.
+   * - Otherwise, falls back to the recommended resolution.
+   * - Returns an empty string if no quality or video is available.
+   *
+   * @param {ConvertableVideo} video - The video object to find the quality for.
+   * @returns {string} The URL of the video with the appropriate quality or an empty string.
+   */
+  findQuality(video: ConvertableVideo): string {
     if (video) {
       let quality = this.selectedQuality();
-
       if (quality) {
         return this.videoService.getConvertableVideoForResolution(
           video,
@@ -243,6 +357,13 @@ export class VideoplayerComponent {
     }, 5000);
   }
 
+  /**
+   * Toggles playback of the video player.
+   *
+   * - If the video is paused or ended, it starts playing and sets the play state to true.
+   * - If the video is playing, it pauses the video, saves the current playback time via API,
+   *   and sets the play state to false.
+   */
   playPauseVideo() {
     if (
       this.videoPlayer.nativeElement.paused ||
@@ -258,29 +379,55 @@ export class VideoplayerComponent {
     }
   }
 
+  /**
+   * Handles the metadata loaded event for the video.
+   *
+   * Updates the video's total duration and current playback time,
+   * then updates the progress bar accordingly.
+   *
+   * @param {Event} e - The metadata event.
+   * @param {{ duration: number; currentTime: number }} video - The video object containing duration and currentTime.
+   */
   onMetadata(e: any, video: { duration: number; currentTime: any }) {
     this.duration.set(video.duration);
     this.currentTime.set(video.currentTime);
     this.updateProgressBar();
-    let lastBufferedEnd = 0;
   }
 
+  /**
+   * Rewinds the video playback by a predefined time interval.
+   *
+   * Updates the current playback time of the video player by subtracting `timeChangeValue`.
+   * Also saves the updated playback time via API if a video is currently loaded.
+   */
   replayVideo() {
     this.videoPlayer.nativeElement.currentTime -= this.timeChangeValue;
     if (this.video) this.saveTimeInAPI(this.video?.id, this.timeChangeValue);
   }
+
+  /**
+   * Fast-forwards the video playback by a predefined time interval.
+   *
+   * Increases the current playback time of the video player by `timeChangeValue`.
+   * Also saves the updated playback time via API if a video is currently loaded.
+   */
   forwardVideo() {
     this.videoPlayer.nativeElement.currentTime += this.timeChangeValue;
     if (this.video) this.saveTimeInAPI(this.video?.id, this.timeChangeValue);
   }
 
+  /**
+   * Toggles the mute state of the video.
+   *
+   * - If the current volume is greater than zero, saves the volume and mutes the video.
+   * - If already muted (volume is zero), restores the volume to the saved original level.
+   *
+   * @param {MouseEvent} event - The mouse event triggering the toggle; default behavior is prevented and propagation stopped.
+   */
   toggleMute(event: MouseEvent) {
     event.preventDefault();
     event.stopImmediatePropagation();
-    /**
-     * Save the volume before video is muted.
-     * Set the saved volume when muting is off.
-     */
+
     if (this.volume() > 0) {
       this.originalVolume = this.volume();
       this.volume.set(0);
@@ -289,11 +436,11 @@ export class VideoplayerComponent {
     }
   }
 
+  /**
+   * Work out how much of the media has played via the duration and currentTime parameters
+   * Update the progress bar's value
+   */
   updateProgressBar() {
-    /**
-     * Work out how much of the media has played via the duration and currentTime parameters
-     * Update the progress bar's value
-     */
     this.timebar = Math.floor(
       (100 / this.videoPlayer.nativeElement.duration) *
         this.videoPlayer.nativeElement.currentTime
@@ -303,6 +450,13 @@ export class VideoplayerComponent {
 
   timeStorage: number | undefined = undefined;
 
+  /**
+   * Updates the stored playback progress time and saves it via API.
+   *
+   * - If the video has ended (currentTime equals duration), resets stored time to 0.
+   * - Otherwise, saves the current playback time if at least 5 seconds have passed since the last update.
+   * - Ensures progress is only saved if a video is loaded.
+   */
   updateProgressTime() {
     const duration = this.videoPlayer.nativeElement.duration;
     const currentVideoTime = this.videoPlayer.nativeElement.currentTime;
@@ -321,28 +475,38 @@ export class VideoplayerComponent {
     }
   }
 
+  /**
+   * Saves the current playback time of a video to the backend API.
+   *
+   * @param {number} id - The ID of the video.
+   * @param {number} time - The current playback time in seconds to be saved.
+   */
   saveTimeInAPI(id: number, time: number) {
     this.videoService.postSingleMovieProgress(id, time).subscribe();
     this.timestamp = Date.now();
   }
 
-  // changeSpeed(speed: number) {
-  //   this.videoPlayer.nativeElement.playbackRate = speed;
-  // }
-
+  /**
+   * Set the currentTime of the videoplayer and save in API
+   */
   changeTime(number: Event) {
-    /**
-     * Set the currentTime of the videoplayer and save in API
-     */
     let currentTime = (this.timebar / 100) * this.duration();
     this.videoPlayer.nativeElement.currentTime = currentTime;
     if (this.video) this.saveTimeInAPI(this.video?.id, currentTime);
   }
 
+  /**
+   * Formats a duration given in seconds into a time string.
+   *
+   * Outputs formats like:
+   * - "1:01" for 61 seconds,
+   * - "4:03:59" for 4 hours, 3 minutes, 59 seconds,
+   * - "123:03:59" for durations longer than 99 hours.
+   *
+   * @param {number} duration - Duration in seconds.
+   * @returns {string} Formatted time string.
+   */
   timeFormat(duration: number): string {
-    /**
-     * Formats the duration [s] in an output like "1:01" or "4:03:59" or "123:03:59"
-     */
     const hrs = Math.floor(duration / 3600);
     const mins = Math.floor((duration % 3600) / 60);
     const secs = Math.floor(duration % 60);
@@ -358,24 +522,61 @@ export class VideoplayerComponent {
     } else return '0:00';
   }
 
+  /**
+   * Toggles the full screen mode for the view.
+   */
   toggleFullScreen() {
     this.fullScreen = !this.fullScreen;
   }
 
-  openMessage(text: string) {
-    this.showError = true;
-    this.initialState = false;
+  /**
+   * Opens an interactive message toast with the specified text.
+   *
+   * @param {string} text - The message to display in the error toast.
+   */
+  openInteractiveMessage(text: string) {
+    this.showFirstMessage = true;
+    this.initialStateFirstMessage = false;
     this.messageText = text;
   }
 
-  closeMessage() {
-    this.showError = false;
+  /**
+   * Closes the interactive message toast.
+   */
+  closeInteractiveMessage() {
+    this.showFirstMessage = false;
+    this.initialStateFirstMessage = false;
   }
 
+  /**
+   * Opens an information message
+   */
+  openInfoMessage() {
+    this.showSecondMessage = true;
+    this.initialStateSecondMessage = false;
+    setTimeout(() => {
+      this.closeInfoMessage();
+    }, 2000);
+  }
+
+  /**
+   * Closes the information message toast.
+   */
+  closeInfoMessage() {
+    this.showSecondMessage = false;
+    this.initialStateSecondMessage = false;
+  }
+
+  /**
+   * Resumes video playback from the last saved progress time.
+   *
+   * Sets the video player's current time to the stored progress and starts playback.
+   * Also sets the playback state and closes any open message.
+   */
   resumePlaying() {
     this.videoPlayer.nativeElement.currentTime = this.videoProgress.time!;
     this.videoPlayer.nativeElement.play();
     this.isVideoPlay.set(true);
-    this.closeMessage();
+    this.closeInteractiveMessage();
   }
 }

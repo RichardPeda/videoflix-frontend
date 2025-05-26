@@ -31,8 +31,23 @@ export class VideoService {
       'Authorization',
       'Token ' + this.loginService.getLocalStorage('token')
     );
+
+    effect(() => {
+      let slide = this.slideMobileVideo();
+      if (slide == false) {
+        setTimeout(() => {
+          this.scrollToTop();
+        }, 1000);
+      }
+    });
   }
 
+  /**
+   * scroll the window to the top
+   */
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
   private cachedVideos: Video[] | null = null;
   private cachedConvertableVideos: ConvertableVideo[] | null = null;
 
@@ -155,7 +170,7 @@ export class VideoService {
    * Send a GET request to the endpoint and returns the progress of all videos.
    * @returns Observable
    */
-  getMoviesProgress():Observable<any> {
+  getMoviesProgress(): Observable<any> {
     return this.http.get<any>(`${this.BASE_URL}api/movie-progress/`, {
       headers: this.headers,
     });
@@ -166,7 +181,7 @@ export class VideoService {
    * @param videoId id of the video
    * @returns Observable
    */
-  getSingleMovieProgress(videoId: number):Observable<any> {
+  getSingleMovieProgress(videoId: number): Observable<any> {
     return this.http.get<any>(
       `${this.BASE_URL}api/single-movie-progress/${videoId}`,
       {
@@ -181,7 +196,7 @@ export class VideoService {
    * @param time current time of the video
    * @returns Observable
    */
-  postSingleMovieProgress(videoId: number, time: number):Observable<any> {
+  postSingleMovieProgress(videoId: number, time: number): Observable<any> {
     const body = {
       time: time,
     };

@@ -168,8 +168,9 @@
     }
 
     @media(max-width: 555px) {
+        padding-top: 305px;
         align-items: flex-start;
-        transform: translateY(305px);
+        // transform: translateY(305px);
         padding-left: 16px;
         flex-direction: column;
     }

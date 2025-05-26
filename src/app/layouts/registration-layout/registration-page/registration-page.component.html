@@ -88,7 +88,7 @@
 
 </div>
 
-<app-error-toast [errorText]="errorText" (closeMessage)="closeMessage()" class="pos-abs"
-    [ngClass]="{'slide-message-out' : !showError && ! initialState, 'slide-message-in' : showError}"></app-error-toast>
+<app-message-toast-interactive [messageType]="'error'" [errorText]="errorText" (closeMessage)="closeMessage()" class="pos-abs"
+    [ngClass]="{'slide-message-out' : !showError && ! initialState, 'slide-message-in' : showError}"></app-message-toast-interactive>
 
 <app-footer></app-footer>

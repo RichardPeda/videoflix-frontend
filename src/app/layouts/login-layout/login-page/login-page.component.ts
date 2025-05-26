@@ -31,7 +31,7 @@ export class LoginPageComponent {
 
   userEmail = '';
   messageText = 'Verification successful';
-  messageType: 'good' | 'bad' = 'good';
+  messageType: 'info' | 'error' = 'info';
   showError = false;
   initialState = true;
 
@@ -54,7 +54,7 @@ export class LoginPageComponent {
     }
 
     if (this.loginService.verificationSuccess) {
-      this.openMessage('Verification successful, you can login now', 'good');
+      this.openMessage('Verification successful, you can login now', 'info');
       setTimeout(() => {
         this.closeMessage();
         this.loginService.verificationSuccess = false;
@@ -112,7 +112,7 @@ export class LoginPageComponent {
             if (err.status === 401) {
               this.openMessage(
                 'The combination of email and password was not found.',
-                'bad'
+                'error'
               );
               setTimeout(() => {
                 this.closeMessage();
@@ -130,7 +130,7 @@ export class LoginPageComponent {
    * @param text text for the message
    * @param type type of the message
    */
-  openMessage(text: string, type: 'good' | 'bad') {
+  openMessage(text: string, type: 'info' | 'error') {
     this.messageType = type;
     this.showError = true;
     this.initialState = false;

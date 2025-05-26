@@ -17,8 +17,12 @@
         </div>
 
         <p>{{currentVideo?.description}}</p>
-        <app-play-button></app-play-button>
+        <div class="d-flex-row gap-12">
+              <app-play-button></app-play-button>
+         <button class="fit-content" (click)="this.videoService.slideMobileVideo.set(false)">Back to Overview</button>
 
+        </div>
+      
     </div>
-    <button class="fit-content" (click)="this.videoService.slideMobileVideo.set(false)">Back to Overview</button>
+   
 </div>

@@ -1,15 +1,13 @@
 .c-main {
     width: 213px;
     aspect-ratio: 16/9;
-    // height: 350px;
-    // border: 1px solid red;
     background-color: var(--clr-bg-black);
     transition: all 175ms ease-in-out;
     position: relative;
-    
+
 }
 
-.shrink{
+.shrink {
     animation: shrink;
     animation-duration: 500ms;
     animation-timing-function: ease-in-out;
@@ -26,7 +24,6 @@
     animation-duration: 500ms;
     animation-timing-function: ease-in-out;
     animation-fill-mode: both;
-    // animation-direction: alternate;
     z-index: 50;
 
 }
@@ -34,9 +31,10 @@
 @keyframes grow {
     from {
         width: 213px;
-        opacity:  0%;
+        opacity: 0%;
         transform: translate(-0%, -0%);
     }
+
     to {
         opacity: 100%;
         width: 350px;
@@ -50,9 +48,10 @@
         width: 350px;
         transform: translate(-20%, -20%);
     }
+
     to {
         width: 213px;
-        opacity:  0%;
+        opacity: 0%;
         transform: translate(-0%, -0%);
     }
 }
@@ -83,7 +82,6 @@
 .c-sub {
     padding: 12px;
 
-
     .play-btn {
         display: flex;
         align-items: center;
@@ -111,12 +109,9 @@
 }
 
 .info {
-    // display: flex;
-    // align-items: center;
     font-size: 14px;
     color: var(--clr-gray);
     margin-block: 12px;
-    // gap: 12px;
 
     .rect {
         display: flex;
@@ -136,6 +131,5 @@
 
     &:hover {
         cursor: pointer;
-        // transform: scale(1.5);
     }
 }

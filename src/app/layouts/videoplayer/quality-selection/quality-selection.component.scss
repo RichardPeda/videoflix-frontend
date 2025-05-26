@@ -18,9 +18,15 @@
         cursor: pointer;
         opacity: 1;
     }
+
+    @media(max-width: 555px) {
+        min-width: 30px;
+        padding: 3px 3px;
+        font-size: small;
+    }
 }
 
-.selected{
+.selected {
     opacity: 1;
     border: 2px solid red;
 }

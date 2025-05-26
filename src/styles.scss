@@ -148,7 +148,6 @@ button {
     color: white;
     height: 48px;
     outline: inherit;
-    // border: none;
     padding: 12px 24px;
     transition: all 125ms ease-in-out;
 
@@ -157,6 +156,10 @@ button {
         background-color: #232ea9 !important;
         border-color: #707cf8;
 
+    }
+    @media(max-width: 555px){
+        font-size: 14px;
+         height: auto;
     }
 }
 

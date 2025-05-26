@@ -16,6 +16,10 @@
         cursor: pointer;
         opacity: 1;
     }
+      @media(max-width: 555px){
+          padding: 3px 3px;
+          font-size: small;
+    }
 }
 
 .selected{

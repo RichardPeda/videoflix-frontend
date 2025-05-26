@@ -1,60 +1,59 @@
-:host{
+:host {
     max-width: 615px;
 }
 
-.container{
-   
+.container {
     height: 80px;
     min-height: 80px;
-    // min-width: 540px;
     border-radius: 20px;
-    
-  
 }
 
-.left-corner{
+.left-corner {
     background-color: var(--clr-green);
     height: 100%;
     width: 20px;
     border-radius: 20px 0px 0px 20px;
-  
 }
 
-.bad{
+.bad {
     background-color: var(--clr-red);
 }
 
 
-.blue-field{
+.blue-field {
     flex: 1;
     gap: 16px;
     padding: 24px 32px;
-   
-
     background-color: var(--clr-blue);
     height: 100%;
     border-radius: 0px 20px 20px 0px;
-    .text{
+
+    .text {
         color: white;
         max-width: 372px;
     }
-    .divider{
+
+    .divider {
         height: 100%;
         width: 2px;
         background-color: white;
         margin-right: 8px;
     }
-    .btn-cross{
+
+    .btn-cross {
         height: 100%;
         width: 20px;
-        &:hover{
+
+        &:hover {
             cursor: pointer;
         }
-        svg{
+
+        svg {
             transition: transform 175ms ease-in-out;
         }
-       &:hover > svg {
-        transform: scale(1.3);
-       }
+
+        &:hover>svg {
+            transform: scale(1.3);
+        }
     }
 }

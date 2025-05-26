@@ -1,8 +1,5 @@
 .container {
-
-    // height: 80px;
     min-height: 80px;
-    // min-width: 540px;
     border-radius: 20px;
     max-width: 100vw;
 
@@ -13,9 +10,8 @@
 
 }
 
-.red-corner {
-    background-color: var(--clr-red);
-    // height: 100%;
+.left-corner {
+    background-color: var(--clr-green);
     width: 20px;
     border-radius: 20px 0px 0px 20px;
 
@@ -26,19 +22,19 @@
     }
 
 }
+.bad {
+    background-color: var(--clr-red);
+}
 
 .blue-field {
     flex: 1;
     gap: 16px;
     padding: 24px 32px;
-
-
     background-color: var(--clr-blue);
     height: 100%;
     border-radius: 0px 20px 20px 0px;
 
     @media(max-width: 555px) {
-
         border-radius: 0;
         align-items: flex-start;
         padding-top: 50px;
@@ -63,7 +59,8 @@
     .btn-cross {
         height: 100%;
         width: 20px;
-        @media(max-width:550px){
+
+        @media(max-width:550px) {
             height: max-content;
             transform: translateY(3px);
         }
@@ -90,11 +87,12 @@
         &:hover {
             background-color: rgb(185, 185, 185) !important;
         }
+
         @media(max-width:550px) {
-          position: absolute;
-          left: 50%;
-          transform: translateX(-50%);
-          bottom: 50px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 50px;
         }
     }
 }

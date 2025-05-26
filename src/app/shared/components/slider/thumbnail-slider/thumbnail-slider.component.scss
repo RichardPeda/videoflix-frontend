@@ -6,7 +6,6 @@ h2 {
     font-size: 22px;
     color: white;
     margin-bottom: 26px;
-
 }
 
 .main-thumbnail-container {
@@ -14,15 +13,12 @@ h2 {
     flex-direction: column;
     justify-content: center;
     width: 100%;
-    // z-index: 40;
     margin-bottom: 48px;
 
     &:hover .arrow-left,
     &:hover .arrow-right {
         background-color: rgba(0, 0, 0, 0.35);
-
     }
-
 }
 
 .thumbnail-slider {
@@ -32,7 +28,6 @@ h2 {
     height: 120px;
     transition: transform 1s ease-in-out;
     pointer-events: all;
-
 }
 
 .thumbnail-container:hover .thumbnail-preview {
@@ -44,12 +39,7 @@ h2 {
     height: 180px;
 }
 
-
-
-
-
 .thumbnail-preview {
-
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -78,10 +68,7 @@ h2 {
         height: 60%;
         object-fit: cover;
     }
-
-
 }
-
 
 .arrow-right,
 .arrow-left {
@@ -93,8 +80,6 @@ h2 {
     cursor: pointer;
     background-color: rgba(0, 0, 0, 0.35);
     pointer-events: all;
-
-
 }
 
 

@@ -10,7 +10,7 @@ import { Component, input, output } from '@angular/core';
 })
 export class MessageToastComponent {
   messageText = input('');
-  messageType = input<'good' | 'bad'>('good');
+  messageType = input.required<'info' | 'error'>();
   closeMessage = output<boolean>();
 
   dismissComponent() {

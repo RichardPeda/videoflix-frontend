@@ -6,6 +6,10 @@
     opacity: 0.8;
     padding: 14px;
 
+      @media(max-width: 555px){
+        height: 120px;
+    }
+
     .wrapper {
         height: 100%;
     }
