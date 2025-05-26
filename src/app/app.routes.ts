@@ -7,6 +7,8 @@ import { VideoplayerComponent } from './layouts/videoplayer/videoplayer/videopla
 import { VerifyPageComponent } from './layouts/verify-layout/verify-page/verify-page.component';
 import { PwResetPageComponent } from './layouts/password-layout/pw-reset-page/pw-reset-page.component';
 import { ResetPasswordComponent } from './layouts/password-layout/reset-password/reset-password.component';
+import { ImprintComponent } from './layouts/imprint/imprint.component';
+import { PrivacyPolicyComponent } from './layouts/privacy-policy/privacy-policy.component';
 
 export const routes: Routes = [
     {path: '', component: StartPageComponent},
@@ -17,4 +19,7 @@ export const routes: Routes = [
     {path: 'reset-password', component: ResetPasswordComponent},
     {path: 'overview', component: MainPageComponent},
     {path: 'videoplayer', component: VideoplayerComponent},
+    {path: 'imprint', component: ImprintComponent},
+    {path: 'privacy', component: PrivacyPolicyComponent},
+
 ];

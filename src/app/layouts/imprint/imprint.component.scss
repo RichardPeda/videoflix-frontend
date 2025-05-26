@@ -1,0 +1,33 @@
+:host {
+    display: flex;
+   
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding-inline: 96px;
+
+
+    @media (max-width: 1000px) {
+        padding-inline: 49px;
+    }
+
+    @media (max-width: 555px) {
+        padding-inline: 16px;
+    }
+}
+
+.content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    flex: 1;
+    max-width: 1440px;
+    color: white;
+    h1{
+        margin-bottom: 16px;
+    }
+   .headline{
+    color: #2E3EDF;
+   }
+}

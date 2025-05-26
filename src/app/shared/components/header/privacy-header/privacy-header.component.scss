@@ -1,0 +1,24 @@
+:host{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+   position: relative;
+    height: 108px;
+}
+
+.header-content{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    width: 100%;   
+}
+
+.btn-arrow-back{
+    cursor: pointer;
+    transform: translateY(2px);
+    &:hover svg{
+        filter: drop-shadow(0px 0px 10px rgb(255, 255, 255));
+    }
+}
+
