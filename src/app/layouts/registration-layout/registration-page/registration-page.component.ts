@@ -40,11 +40,16 @@ export class RegistrationPageComponent {
   initialState = true;
   errorText = 'Please check your entries and try again';
 
+
   registerForm = new FormGroup({
     username: new FormControl('', Validators.required),
-    email : new FormControl('', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$')]),
+    email: new FormControl('', [
+      Validators.required,
+      Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$'),
+    ]),
     password_0: new FormControl('', Validators.required),
     password_1: new FormControl('', Validators.required),
+    privacy: new FormControl(false, Validators.required),
   });
 
   passwords: password[] = [
@@ -108,4 +113,6 @@ export class RegistrationPageComponent {
   checkIfPasswordsmatch(password_0: string, password_1: string): string | null {
     return password_0 === password_1 ? password_1 : null;
   }
+
+  setPrivacy(){}
 }

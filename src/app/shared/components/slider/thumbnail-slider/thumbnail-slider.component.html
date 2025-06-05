@@ -7,8 +7,12 @@
 
 
         <div class="thumbnail-container pos-rel">
-            <img #thumbnail class="thumbnail-img" src="{{video.image_url}}" [ngClass]="{'selected': selected == index}"
-                alt="">
+            <div class="pos-rel">
+                <img #thumbnail class="thumbnail-img" src="{{video.image_url}}"
+                    [ngClass]="{'selected': selected == index}" alt="">
+                <div class="title pos-abs">{{video.title}}</div>
+            </div>
+
 
             <div (click)="selectVideo(video.id)" class="thumbnail-preview pos-abs"
                 [ngClass]="{'selected': selected == index}">

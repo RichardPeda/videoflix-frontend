@@ -1,28 +1,30 @@
 <div class="video-frame">
-    <!-- <video src="../../../../assets/videos/escape.mp4" loop muted autoplay oncanplay="this.play()" onloadedmetadata="this.muted = true"></video> -->
-    <!-- <video src="../../../../assets/videos/escape.mp4"></video> -->
     <video #video loop muted autoplay oncanplay="this.play()" onloadedmetadata="this.muted = true"
         src="{{currentVideoSrc}}"></video>
     <div class="shadow" [ngClass]="{'fade': fadeActive}"></div>
 
 </div>
+@if (currentVideo) {
 <div class="video-overlay">
     <div class="overlay-container" [ngClass]="{'slide': fadeActive}">
-        <h1>{{currentVideo?.title}}</h1>
+        <h1>{{currentVideo.title}}</h1>
 
-        <app-stars-ranking [size]="25"  [videoRanking]="currentVideo?.ranking"></app-stars-ranking>
+        <app-stars-ranking [size]="25" [videoRanking]="currentVideo.ranking"></app-stars-ranking>
         <div class="info">
 
-            FSK: {{currentVideo?.rating}} | Duration: {{this.getDuration(currentVideo?.duration!)}}
+            FSK: {{currentVideo.rating}} | Duration: {{this.getDuration(currentVideo.duration!)}}
         </div>
 
-        <p>{{currentVideo?.description}}</p>
+        <p>{{currentVideo.description}}</p>
         <div class="d-flex-row gap-12">
-              <app-play-button></app-play-button>
-         <button class="fit-content" (click)="this.videoService.slideMobileVideo.set(false)">Back to Overview</button>
-
+            <app-play-button></app-play-button>
+            <button class="fit-content" (click)="this.videoService.slideMobileVideo.set(false)">Back to
+                Overview</button>
         </div>
-      
     </div>
-   
 </div>
+}@else {
+    <div class="video-overlay">
+    No content found
+</div>
+}

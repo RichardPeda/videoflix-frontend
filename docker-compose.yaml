@@ -1,0 +1,13 @@
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend.Dockerfile
+    container_name: angular-frontend
+    ports:
+      - "4200:4200"  
+    working_dir: /app
+    command: npm start 
+    
+

@@ -22,7 +22,7 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-   
+
 
     h1 {
         font-size: 48px;
@@ -102,54 +102,72 @@ input:-webkit-autofill:active {
         width: auto;
     }
 }
-form{
+
+form {
     display: flex;
     flex-direction: column;
 }
-form button{
+
+form button {
     margin: auto;
     margin-top: 32px;
     margin-bottom: 16px;
     width: fit-content;
 }
 
-.match{
+.match {
     position: absolute;
     color: rgb(255, 0, 0);
     top: 463px;
 }
 
-.match-email{
+.match-email {
     position: absolute;
     color: rgb(255, 0, 0);
     top: 57px;
     left: 0;
+
+    @media(max-width:410px) {
+        font-size: 12px;
+    }
 }
 
-.dialog-card{
+.dialog-card {
     color: #2E3EDF;
 }
 
-app-error-toast{
+app-message-toast-interactive {
     bottom: 20px;
     z-index: 50;
     transform: translateX(-100%)
 }
-.slide-message-in{
+
+.slide-message-in {
     animation: slideIn 1s ease-in-out forwards;
 }
-.slide-message-out{
+
+.slide-message-out {
     animation: slideOut 1s ease-in-out forwards;
 }
 
 @keyframes slideIn {
-    from{transform: translateX(-100%)}
-    to{transform: translateX(0);}
+    from {
+        transform: translateX(-100%)
+    }
+
+    to {
+        transform: translateX(0);
+    }
 }
 
 @keyframes slideOut {
-    from{transform: translateX(0);}
-    to{transform: translateX(-100%)}
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-100%)
+    }
 }
 
 .dialog-card .dialog-input-frame {
@@ -168,14 +186,40 @@ form {
     .dialog-card {
 
         width: 100%;
-        padding-inline: 0;
+        padding-inline: 6px;
         margin-inline: 16px;
 
         input {
             font-size: 16px;
         }
-        .headline{
+
+        .headline {
             font-size: 40px;
         }
+
+        p {
+            text-align: center;
+        }
     }
+}
+
+.checkbox-frame {
+    display: flex;
+    align-items: center;
+    margin-top: -5px;
+    margin-bottom: 5px;
+
+    .checkbox {
+        width: auto;
+
+    }
+
+    a {
+        color: var(--clr-blue);
+        text-decoration: underline;
+    }
+}
+
+.checkbox-label {
+    margin-left: 5px;
 }

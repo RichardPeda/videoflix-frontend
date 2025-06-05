@@ -55,7 +55,7 @@
 
                 <input (change)="setRemember()" class="checkbox" type="checkbox" id="remember" name="remember" value="remember"
                     formControlName="remember">
-                <label for="remember"> Remember me</label><br>
+                <label class="checkbox-label" for="remember"> Remember me</label><br>
 
             </div>
             <button [ngClass]="{'btn-disabled': !loginForm.valid}" type="submit" [disabled]="!loginForm.valid">Log
@@ -65,7 +65,7 @@
         <div class="d-flex-row gap-24">
             <p>New to videoflix
             </p>
-            <a class="dialog-card-link" href="">Sign up now</a>
+            <a class="dialog-card-link" href="/signup">Sign up now</a>
         </div>
     </div>
 </div>

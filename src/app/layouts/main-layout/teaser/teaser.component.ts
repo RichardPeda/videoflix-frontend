@@ -101,10 +101,10 @@ export class TeaserComponent {
     this.fadeActive = true;
     setTimeout(() => {
       this.changeSourceNow(video, videoSrc);
-    }, 1500);
+    }, 750);
     setTimeout(() => {
       this.fadeActive = false;
-    }, 3000);
+    }, 1500);
   }
 
   /**

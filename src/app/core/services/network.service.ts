@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -40,17 +40,17 @@ export class NetworkService {
    * GET request to backend endpoint to get a testfile for network connection test.
    * @returns Observable
    */
-  getTestFile():Observable<any> {
+  getTestFile(): Observable<any> {
     return this.http.get<any>(`${this.BASE_URL}api/connection/`);
   }
 
   /**
-   * GET request to backend endpoint to receive a testfile and save it to signal.
+   * GET request to backend endpoint to receive a testfile, when exists, and save it to signal.
    */
   getTestfileURL() {
     this.getTestFile().subscribe({
       next: async (resp: any) => {
-        this.testFileUrl.set(resp.file);
+        if (resp) this.testFileUrl.set(resp.file);
       },
     });
   }
@@ -61,8 +61,9 @@ export class NetworkService {
    * @param testFileUrl testfile url
    */
   async testSpeed(testFileUrl: string) {
-    let response = await fetch(testFileUrl + '?nocache=' + new Date().getTime(),
-      {method: 'GET',}
+    let response = await fetch(
+      testFileUrl + '?nocache=' + new Date().getTime(),
+      { method: 'GET' }
     );
 
     const reader = response.body?.getReader();

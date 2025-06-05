@@ -143,8 +143,8 @@ export class VideoplayerComponent {
       const videoElement = this.videoPlayer.nativeElement;
       const currentTime = videoElement.currentTime;
       const isPlaying = !videoElement.paused;
-
       const quality = this.selectedQuality();
+
       if (quality && this.video) {
         this.preloadVideoWithQuality(
           quality,
@@ -192,7 +192,6 @@ export class VideoplayerComponent {
         this.switchVideo = false;
       }, 100);
     });
-    console.log('videoquality= ', quality);
     this.openInfoMessage();
   }
 
@@ -311,7 +310,7 @@ export class VideoplayerComponent {
   findSelectedConvertableVideo(): ConvertableVideo | undefined {
     const sessionID = this.loginService.getSessionStorage('videoID');
     if (sessionID) {
-      return this.videoData.find((video) => video.id == +sessionID);
+      return this.videoData.find((video) => video.movie == +sessionID);
     } else {
       console.warn('video not found');
       return undefined;
@@ -375,7 +374,7 @@ export class VideoplayerComponent {
       this.videoPlayer.nativeElement.pause();
       let time = this.videoPlayer.nativeElement.currentTime;
       this.isVideoPlay.set(false);
-      if (this.video) this.saveTimeInAPI(this.video?.id, time);
+      if (this.video) this.saveTimeInAPI(this.video?.movie, time);
     }
   }
 
@@ -402,7 +401,7 @@ export class VideoplayerComponent {
    */
   replayVideo() {
     this.videoPlayer.nativeElement.currentTime -= this.timeChangeValue;
-    if (this.video) this.saveTimeInAPI(this.video?.id, this.timeChangeValue);
+    if (this.video) this.saveTimeInAPI(this.video?.movie, this.timeChangeValue);
   }
 
   /**
@@ -413,7 +412,7 @@ export class VideoplayerComponent {
    */
   forwardVideo() {
     this.videoPlayer.nativeElement.currentTime += this.timeChangeValue;
-    if (this.video) this.saveTimeInAPI(this.video?.id, this.timeChangeValue);
+    if (this.video) this.saveTimeInAPI(this.video?.movie, this.timeChangeValue);
   }
 
   /**
@@ -467,10 +466,10 @@ export class VideoplayerComponent {
     if (this.video?.id) {
       if (currentVideoTime == duration) {
         this.timeStorage = 0;
-        this.saveTimeInAPI(this.video.id, this.timeStorage);
+        this.saveTimeInAPI(this.video.movie, this.timeStorage);
       } else if (this.timestamp + 5000 < actTime) {
         this.timeStorage = currentVideoTime;
-        this.saveTimeInAPI(this.video.id, this.timeStorage);
+        this.saveTimeInAPI(this.video.movie, this.timeStorage);
       }
     }
   }
@@ -486,13 +485,23 @@ export class VideoplayerComponent {
     this.timestamp = Date.now();
   }
 
+  private saveTimeTimeout: any;
+
   /**
-   * Set the currentTime of the videoplayer and save in API
+   * Set the currentTime of the videoplayer and save in API.
+   * Prevents the time from being sent to the backend too often
    */
   changeTime(number: Event) {
     let currentTime = (this.timebar / 100) * this.duration();
     this.videoPlayer.nativeElement.currentTime = currentTime;
-    if (this.video) this.saveTimeInAPI(this.video?.id, currentTime);
+
+    if (this.saveTimeTimeout) {
+      clearTimeout(this.saveTimeTimeout);
+    }
+
+    this.saveTimeTimeout = setTimeout(() => {
+      if (this.video) this.saveTimeInAPI(this.video.movie, currentTime);
+    }, 500);
   }
 
   /**

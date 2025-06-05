@@ -2,7 +2,7 @@ import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { ConvertableVideo, Video } from '../models/video';
 import { Observable, of, tap } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { LoginService } from './login.service';
 import { NetworkService } from './network.service';
 
@@ -107,21 +107,15 @@ export class VideoService {
   }
 
   /**
-   * Retrieves the list of convertable movies from the server or returns cached data if available.
-   * If movie data has already been cached, it returns the cached data as an Observable.
-   * Otherwise, it sends an HTTP GET request to the API and caches the result for future use.
+   * Retrieves the list of convertable movies from the server.
    * @returns Observable, Array of type ConvertableVideo
    */
   getConvertedMovies(): Observable<ConvertableVideo[]> {
-    if (this.cachedConvertableVideos) {
-      return of(this.cachedConvertableVideos);
-    } else {
-      return this.http
-        .get<ConvertableVideo[]>(`${this.BASE_URL}api/movies-convert/`, {
-          headers: this.headers,
-        })
-        .pipe(tap((data) => (this.cachedConvertableVideos = data)));
-    }
+    return this.http
+      .get<ConvertableVideo[]>(`${this.BASE_URL}api/movies-convert/`, {
+        headers: this.headers,
+      })
+      .pipe(tap((data) => (this.cachedConvertableVideos = data)));
   }
 
   /**

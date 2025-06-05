@@ -105,6 +105,10 @@ input:-webkit-autofill:active {
     }
 }
 
+.checkbox-label {
+    margin-left: 5px;
+}
+
 form {
     display: flex;
     flex-direction: column;
