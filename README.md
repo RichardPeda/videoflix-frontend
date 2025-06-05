@@ -47,7 +47,7 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 If you prefer to run the project using Docker instead of a local development server, follow the steps below:
 
 ### Prerequisites
- - Install Docker Desktop (https://www.docker.com/products/docker-desktop/)
+1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
 ### 🔧 Setup Instructions
 
@@ -58,6 +58,19 @@ docker-compose up --build
 ```
 ---
 
+#### 🧹 Stop Containers
+To stop all running containers:
+
+```bash
+docker-compose down
+```
+
+To stop and remove all volumes:  
+
+```bash
+docker-compose down -v
+```
+---
 
 ## Code scaffolding
 

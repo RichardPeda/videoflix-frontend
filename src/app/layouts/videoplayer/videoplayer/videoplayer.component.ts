@@ -74,7 +74,14 @@ export class VideoplayerComponent {
     else return 0;
   });
 
-  timeView = computed(() => this.timeFormat(this.timeRemaining()));
+  timePlayed = computed(() => {
+    let time = this.currentTime();
+    return time;
+  });
+
+  timeRemainingView = computed(() => this.timeFormat(this.timeRemaining()));
+  timePlayedView = computed(() => this.timeFormat(this.timePlayed()));
+
   timebar = 0;
   timeChangeValue = 5;
   playSpeed = [2.0, 1.5, 1.0];

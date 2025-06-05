@@ -47,8 +47,8 @@
 
             <div class="flex ai-center full-width gap-12 font-12">
                 <input #speedControl (input)="changeTime($event)" type="range" min="0" max="100" [(ngModel)]="timebar">
-                <div class="flex row font-clr-white">
-                    {{timeView()}}
+                <div class="flex row font-clr-white time-view">
+                     {{timePlayedView()}} / {{timeRemainingView()}}
                 </div>
             </div>
 
@@ -98,16 +98,10 @@
                                     fill="white" />
                             </svg>
                         </div>
-
                     </div>
-
                 </div>
             </div>
-
-
         </div>
-
-
     </div>
     }
     @else {
@@ -123,8 +117,8 @@
 
             <div class="flex ai-center full-width gap-12 font-12">
                 <input #speedControl (input)="changeTime($event)" type="range" min="0" max="100" [(ngModel)]="timebar">
-                <div class="flex row font-clr-white">
-                    {{timeView()}}
+                <div class="flex row font-clr-white time-view">
+                  {{timePlayedView()}} / {{timeRemainingView()}}
                 </div>
             </div>
 

@@ -302,3 +302,12 @@ app-message-toast {
 
     }
 }
+
+.time-view{
+    min-width: 65px;
+    justify-content: flex-end;
+    @media(max-width: 550px){
+        font-size: 10px;
+        min-width: 55px;
+    }
+}

@@ -4,7 +4,7 @@ export interface Video {
   description: string;
   genre: string;
   duration: number;
-  image_url: string;
+  image_file: string;
   videoURL: string;
   ranking: number;
   rating: number;

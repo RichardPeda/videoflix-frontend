@@ -4,7 +4,7 @@
         @for (video of videos(); track $index; let index = $index) {
         <div class="thumbnail-container pos-rel">
             <div class="pos-rel">
-                <img (click)="selectVideo(video.id)" class="thumbnail-img" src="{{video.image_url}}"
+                <img (click)="selectVideo(video.id)" class="thumbnail-img" src="{{video.image_file}}"
                     [ngClass]="{'selected': selected == index}" alt="">
                 <div class="title pos-abs">{{video.title}}</div>
             </div>
