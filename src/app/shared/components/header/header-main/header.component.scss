@@ -17,6 +17,9 @@
     @media (max-width: 555px) {
         padding-inline: 16px;
     }
+    @media (max-height: 720px) {
+      height: 70px;
+    }
 }
 
 .header-content {

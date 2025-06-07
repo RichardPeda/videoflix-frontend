@@ -27,7 +27,10 @@ export class PwResetPageComponent {
   emailSent = false;
 
   emailForm = new FormGroup({
-    email: new FormControl('', Validators.required),
+    email: new FormControl('', [
+      Validators.required,
+      Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$'),
+    ]),
   });
 
   onSubmit() {

@@ -10,7 +10,7 @@
             <div class="dialog-input-frame">
 
                 <input placeholder="Email Address" id="email" type="email"
-                    pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-zA-Z]{2,4}" formControlName="email" autocomplete="email">
+                     formControlName="email" autocomplete="email">
             </div>
             <button class="mg-top-0" [ngClass]="{'btn-disabled': !emailForm.valid}" type="submit"
                 [disabled]="!emailForm.valid">Send

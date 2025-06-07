@@ -72,13 +72,15 @@ p {
     flex-direction: column;
 }
 
-.ai-center{
+.ai-center {
     align-items: center;
 }
-.jc-center{
+
+.jc-center {
     justify-content: center;
 }
-.flex-centered{
+
+.flex-centered {
     align-items: center;
     justify-content: center;
 }
@@ -135,7 +137,8 @@ p {
 .font-12 {
     font-size: 12px;
 }
-.font-clr-white{
+
+.font-clr-white {
     color: white;
 }
 
@@ -157,9 +160,10 @@ button {
         border-color: #707cf8;
 
     }
-    @media(max-width: 555px){
+
+    @media(max-width: 555px) {
         font-size: 14px;
-         height: auto;
+        height: auto;
     }
 }
 
@@ -193,13 +197,28 @@ a {
     justify-content: center;
     position: relative;
 
+    @media(max-width:1100px) {
+        padding: 14px 30px;
+    }
+
+    @media(max-height:720px) {
+        padding-block: 4px;
+    }
+
     .headline {
         font-size: 48px;
         font-weight: 700;
         color: #2E3EDF;
-        margin-bottom: 32px;
+        margin-bottom: 24px;
         line-height: 62.5px;
 
+        @media(max-width:1100px) {
+            margin-bottom: 16px;
+        }
+
+        @media(max-height:650px) {
+            margin-bottom: 5px;
+        }
     }
 
     .dialog-input-frame {
@@ -210,6 +229,11 @@ a {
         border-radius: 12px;
         width: 408px;
         margin-bottom: 32px;
+
+
+        @media(max-height:720px) {
+            margin-bottom: 26px;
+        }
 
         >* {
             color: #2E3EDF;
@@ -253,32 +277,38 @@ input {
     --clr-green: #51ff00;
     --content-max-width: 1920px;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 
 
 // Customize the entire app. Change :root to your selector if you want to scope the styles.
 :root {
-  @include mat.progress-spinner-overrides((
-    size : 20
-  ));
+    @include mat.progress-spinner-overrides((size : 20));
 }
 
 /* width */
 ::-webkit-scrollbar {
     width: 5px;
     height: 5px;
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
+}
+
+/* Track */
+::-webkit-scrollbar-track {
     box-shadow: inset 0 0 5px grey;
     border-radius: 10px;
-  }
-  
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
     background: var(--clr-blue);
     border-radius: 10px;
-  }
+}

@@ -7,6 +7,10 @@
     left: 0;
     right: 0;
     height: 108px;
+
+    @media(max-height:720px){
+        height: 70px;
+    }
 }
 
 .content{
