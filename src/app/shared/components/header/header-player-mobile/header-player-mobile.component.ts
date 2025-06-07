@@ -10,7 +10,7 @@ import { Location } from '@angular/common'
   styleUrl: './header-player-mobile.component.scss'
 })
 export class HeaderPlayerMobileComponent {
-  private router = inject(Router)
+  
   private location = inject(Location)
   name = input<string>()
   
